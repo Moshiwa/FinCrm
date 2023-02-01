@@ -44,15 +44,16 @@ class FieldsCrudController extends CrudController
         CRUD::column('name')->label('Название');
         CRUD::column('type')
             ->label('Тип')
-            ->type('model_function')
-            ->function_name('getType');
+            ->type('closure')
+            ->function(function($entry) {
+                return match ($entry->type) {
+                    Field::STRING => 'Строка',
+                    Field::ARRAY => 'Селект',
+                    Field::DATE => 'Дата',
+                    default => '',
+                };
+            });
         CRUD::column('options')->label('Варианты');
-
-        /**
-         * Columns can be defined using the fluent syntax or array syntax:
-         * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']);
-         */
     }
 
     /**
@@ -75,12 +76,6 @@ class FieldsCrudController extends CrudController
             ]);
         CRUD::field('name')->label('Наименование');
         CRUD::field('options')->label('Варианты');
-
-        /**
-         * Field can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number']));
-         */
     }
 
     /**

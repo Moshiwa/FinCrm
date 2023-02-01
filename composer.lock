@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "941f5018fa7e8046f3c2f8da30b78a95",
+    "content-hash": "815d0030c355d2df0177e09c6f28c045",
     "packages": [
         {
             "name": "backpack/crud",
@@ -176,6 +176,75 @@
                 "source": "https://github.com/Laravel-Backpack/PermissionManager/tree/6.0.15"
             },
             "time": "2022-04-18T13:32:50+00:00"
+        },
+        {
+            "name": "backpack/pro",
+            "version": "1.6.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:Laravel-Backpack/PRO.git",
+                "reference": "352fd756e76704c26ad1680d216052d48eee6aa8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.backpackforlaravel.com/dist/backpack/pro/backpack-pro-352fd756e76704c26ad1680d216052d48eee6aa8-zip-067d5c.zip",
+                "reference": "352fd756e76704c26ad1680d216052d48eee6aa8",
+                "shasum": "56fda5bdff321b5e3532549241f129f8f1adede4"
+            },
+            "require": {
+                "backpack/crud": "^5.4.9"
+            },
+            "require-dev": {
+                "orchestra/testbench": "~5|~6",
+                "phpunit/phpunit": "~9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Backpack\\Pro\\AddonServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Backpack\\Pro\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Backpack\\Pro\\Tests\\": "tests"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "vendor/bin/phpunit --testdox"
+                ]
+            },
+            "license": [
+                "Proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Cristian Tabacitu",
+                    "email": "cristian.tabacitu@backpackforlaravel.com",
+                    "homepage": "https://backpackforlaravel.com"
+                }
+            ],
+            "description": "Operations, Fields, Columns, Filters and Widgets for not-so-simple admin panels.",
+            "homepage": "https://github.com/digitallyhappy/backpack-pro",
+            "keywords": [
+                "Backpack",
+                "Backpack Addon",
+                "Backpack for Laravel",
+                "Laravel",
+                "Pro"
+            ],
+            "support": {
+                "source": "https://github.com/Laravel-Backpack/PRO/tree/1.6.0",
+                "issues": "https://github.com/Laravel-Backpack/PRO/issues"
+            },
+            "time": "2023-01-31T03:55:29+00:00"
         },
         {
             "name": "brick/math",
@@ -8743,7 +8812,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.0.2"
+        "php": "^8.1"
     },
     "platform-dev": [],
     "plugin-api-version": "2.1.0"
