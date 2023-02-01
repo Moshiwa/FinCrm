@@ -10,24 +10,20 @@ return new class extends Migration
     public function up()
     {
         $schema = Schema::connection(SpaceService::getDefaultConnectionName());
-
-        if($schema->hasTable('users')) {
+        if($schema->hasTable('spaces'))
             return;
-        }
 
-        $schema->create('users', function (Blueprint $table) {
+        $schema->create('spaces', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->string('code')->unique();
+            $table->boolean('active');
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::connection(SpaceService::getDefaultConnectionName())->dropIfExists('users');
+        Schema::connection(SpaceService::getDefaultConnectionName())->dropIfExists('spaces');
     }
 };
