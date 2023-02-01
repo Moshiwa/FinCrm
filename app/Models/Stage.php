@@ -5,6 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Stage extends Model
 {
@@ -17,8 +18,13 @@ class Stage extends Model
 
     protected $guarded = ['id'];
 
-    public function status()
+    public function status(): BelongsTo
     {
         return $this->belongsTo(Status::class);
+    }
+
+    public function pipeline(): BelongsTo
+    {
+        return $this->belongsTo(Pipeline::class);
     }
 }

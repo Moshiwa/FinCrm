@@ -7,5 +7,6 @@
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('user') }}"><i class="nav-icon la la-group"></i> Users</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('fields') }}"><i class="nav-icon la la-book"></i> Fields</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('stages') }}"><i class="nav-icon la la-book"></i> Stages</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('pipelines') }}"><i class="nav-icon la la-book"></i> Pipelines</a></li>
     </ul>
 </li>

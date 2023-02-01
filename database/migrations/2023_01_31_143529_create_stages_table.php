@@ -11,8 +11,12 @@ return new class extends Migration
         Schema::create('stages', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('color')->default('FFFFFF');
+            $table->string('color')->default('#ffffff');
             $table->foreignId('status_id')
+                ->constrained()
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+            $table->foreignId('pipeline_id')
                 ->constrained()
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();

@@ -2,19 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\StageRequest;
-use App\Http\Requests\StagesRequest;
-use App\Models\Stage;
-use App\Models\Status;
+use App\Http\Requests\PipelinesRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class StagesCrudController
+ * Class PipelinesCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class StagesCrudController extends CrudController
+class PipelinesCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -29,9 +26,9 @@ class StagesCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(Stage::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/stages');
-        CRUD::setEntityNameStrings('stages', 'stages');
+        CRUD::setModel(\App\Models\Pipeline::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/pipelines');
+        CRUD::setEntityNameStrings('pipelines', 'pipelines');
     }
 
     /**
@@ -42,18 +39,7 @@ class StagesCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::column('color')
-            ->wrapper([
-                'style' => function($crud, $column, $entry, $related_key) {
-                    return 'background:' . $entry->color;
-                }
-            ]);
-        CRUD::column('name')
-            ->label('Наименование');
-        CRUD::column('status_id')
-            ->label('Статус')
-            ->entity('status')
-            ->model('App\Models\Status');
+        CRUD::column('name')->label('Наименование');
     }
 
     /**
@@ -64,22 +50,14 @@ class StagesCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(StageRequest::class);
+        CRUD::setValidation(PipelinesRequest::class);
 
-        CRUD::field('status_id')
-            ->label('Статус')
-            ->type('select')
-            ->entity('status')
-            ->model('App\Models\Status');
-        CRUD::field('pipeline_id')
-            ->label('Воронка')
-            ->type('select')
-            ->entity('pipeline')
-            ->model('App\Models\Pipeline');
         CRUD::field('name')->label('Наименование');
-        CRUD::field('color')
-            ->label('Цвет')
-            ->type('color');
+        CRUD::field('stages')
+            ->label('Стадии')
+            ->type('text')
+            ->entity('stages')
+            ->model('App\Models\Stage');
     }
 
     /**
