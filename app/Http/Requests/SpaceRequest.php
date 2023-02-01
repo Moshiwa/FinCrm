@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StageRequest extends FormRequest
+class SpaceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,9 +25,8 @@ class StageRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:2',
-            'status_id' => 'required',
-            'pipeline_id' => 'required'
+            'name' => 'required|min:3|max:255',
+            'code' => 'required|regex:/^[a-z]+$/u|min:3|max:255',
         ];
     }
 

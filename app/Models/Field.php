@@ -16,9 +16,6 @@ class Field extends Model
     public const ARRAY = 'array';
     public const DATE = 'date';
 
-
-    protected $table = 'fields';
-
     public $timestamps = false;
 
     protected $guarded = ['id'];

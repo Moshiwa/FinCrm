@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Admin\SpaceCrudController;
 // --------------------------
 // Custom Backpack Routes
 // --------------------------
@@ -18,6 +18,10 @@ Route::group([
 ], function () { // custom admin routes
     Route::crud('user', 'UserCrudController');
     Route::crud('fields', 'FieldsCrudController');
-    Route::crud('stages', 'StagesCrudController');
     Route::crud('pipelines', 'PipelinesCrudController');
-}); // this should be the absolute last line of this file
+    Route::crud('space', 'SpaceCrudController');
+
+//ToDo Завернуть в permission middleware
+    Route::get('space-change/{code}', [SpaceCrudController::class, 'spaceChange'])->name('space.change');
+});
+

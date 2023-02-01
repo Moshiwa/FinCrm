@@ -11,8 +11,6 @@ class Status extends Model
     use HasFactory,
         CrudTrait;
 
-    protected $table = 'statuses';
-
     public $timestamps = false;
 
     protected $fillable = ['name'];

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\PipelinesRequest;
+use App\Services\Space\SpaceService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -53,11 +54,31 @@ class PipelinesCrudController extends CrudController
         CRUD::setValidation(PipelinesRequest::class);
 
         CRUD::field('name')->label('Наименование');
-        CRUD::field('stages')
-            ->label('Стадии')
-            ->type('text')
-            ->entity('stages')
-            ->model('App\Models\Stage');
+        CRUD::field('stages')->label('Стадии')->type('relationship')->subfields([
+            [
+                'name' => 'color',
+                'type' => 'color',
+                'wrapper' => [
+                    'class' => 'form-group col-md-1',
+                ],
+            ],
+            [
+                'name' => 'name',
+                'type' => 'text',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6',
+                ],
+            ],
+            [
+                'name' => 'status_id',
+                'type' => 'select',
+                'entity' => 'status',
+                'model' => 'App\Models\Status',
+                'wrapper' => [
+                    'class' => 'form-group col-md-4',
+                ],
+            ],
+        ]);
     }
 
     /**

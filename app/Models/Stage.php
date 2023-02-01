@@ -12,8 +12,6 @@ class Stage extends Model
     use CrudTrait;
     use HasFactory;
 
-    protected $table = 'stages';
-
     public $timestamps = false;
 
     protected $guarded = ['id'];

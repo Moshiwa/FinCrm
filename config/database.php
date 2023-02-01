@@ -33,7 +33,7 @@ return [
     |
     */
 
-    'connections' => [
+    'connections' => array_merge([
 
         'sqlite' => [
             'driver' => 'sqlite',
@@ -92,8 +92,9 @@ return [
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
-
     ],
+        @include_once base_path('config/database_spaces.php')
+    ),
 
     /*
     |--------------------------------------------------------------------------

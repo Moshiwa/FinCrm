@@ -3,8 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Services\Space\SpaceService;
+use App\Traits\ModelBaseConnectionTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -17,7 +21,12 @@ class User extends Authenticatable
         HasFactory,
         Notifiable,
         CrudTrait,
-        HasRoles;
+        HasRoles,
+        ModelBaseConnectionTrait;
+
+    protected $table = 'users';
+    protected $connection = 'pgsql';
+    protected $spaceAccessTmp;
 
     /**
      * The attributes that are mass assignable.
@@ -48,4 +57,36 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function spaces(): BelongsToMany
+    {
+        return $this->belongsToMany(Space::class, 'user_spaces')
+            ->using(UserSpace::class);
+    }
+
+    public function availableSpaces(): Collection
+    {
+        if ($this->isFirstUser())
+            return Space::all();
+
+        return $this->spaces()
+            ->where('active', true)
+            ->get();
+    }
+
+    protected static function booted()
+    {
+        static::saved(function (self $user) {
+            if(!is_null($user->spaceAccessTmp)) {
+                $space = SpaceService::getCurrentSpaceModel();
+                if((int) $user->spaceAccessTmp) {
+                    if($user->spaces()->where('space_id', $space->id)->count() == 0) {
+                        $user->spaces()->attach($space->id);
+                    }
+                } else {
+                    $user->spaces()->detach($space->id);
+                }
+            }
+        });
+    }
 }

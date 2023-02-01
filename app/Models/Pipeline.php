@@ -12,8 +12,6 @@ class Pipeline extends Model
     use CrudTrait;
     use HasFactory;
 
-    protected $table = 'pipelines';
-
     protected $guarded = ['id'];
 
     public function stages(): HasMany
