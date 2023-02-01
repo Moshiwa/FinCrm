@@ -10,7 +10,7 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-        User::query()->create([
+        User::query()->firstOrCreate([ 'email' => 'admin@mail.ru' ], [
             'name' => 'admin',
             'email' => 'admin@mail.ru',
             'password' => bcrypt('itpolice')
