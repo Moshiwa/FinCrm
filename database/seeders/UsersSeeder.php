@@ -6,7 +6,7 @@ use App\Models\Status;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
-class UserSeeder extends Seeder
+class UsersSeeder extends Seeder
 {
     public function run()
     {

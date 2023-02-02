@@ -36,6 +36,7 @@ class SpaceService
     public static function getCurrentSpaceModel($force = false): Space
     {
         $spaceCode = self::getCurrentSpaceCode();
+
         if (!self::$model || $force) {
             self::$model = Space::query()->where('code', $spaceCode)->get()->first();
         }

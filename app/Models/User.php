@@ -74,6 +74,10 @@ class User extends Authenticatable
             ->get();
     }
 
+    public function isFirstUser() {
+        return $this->id === User::query()->select('id')->orderBy('id','asc')->first()->id;
+    }
+
     protected static function booted()
     {
         static::saved(function (self $user) {

@@ -23,5 +23,5 @@ Route::group([
 
 //ToDo Завернуть в permission middleware
     Route::get('space-change/{code}', [SpaceCrudController::class, 'spaceChange'])->name('space.change');
+    Route::crud('deal', 'DealCrudController');
 });
-

@@ -8,7 +8,9 @@ class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        (new UserSeeder())->run();
+        (new UsersSeeder())->run();
+        (new SpacesSeeder())->run();
         (new StatusesSeeder())->run();
+        (new PermissionSeeder())->run();
     }
 }
