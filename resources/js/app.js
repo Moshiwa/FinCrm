@@ -1,9 +1,11 @@
 import './bootstrap';
-import {createApp} from 'vue'
+import '../css/app.css';
+
+import {createApp} from 'vue/dist/vue.esm-bundler.js';
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import App from './App.vue'
+import DetailContract from "./Components/Detail.vue";
 
 if (document.getElementById("vue-app")) {
 
@@ -11,10 +13,9 @@ if (document.getElementById("vue-app")) {
         .use(ElementPlus)
         .mixin({
             components: {
-
+                Detail
             }
         });
-    //app.config.globalProperties.$dayjs = dayjs
 
     for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
         app.component(key, component)
