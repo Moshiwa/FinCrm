@@ -4,9 +4,7 @@
 
 
 @endphp
-@vite('resources/js/app.js')
-@section('content')
-    <div id="vue-app">
 
-    </div>
+@section('content')
+
 @endsection

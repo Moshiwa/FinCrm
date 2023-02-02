@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\DealRequest;
 use App\Models\Pipeline;
+use App\Models\Stage;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Support\Arr;
@@ -20,6 +21,7 @@ class DealCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use \App\Http\Controllers\Admin\Operations\DealOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -30,8 +32,7 @@ class DealCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\Deal::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/deal');
-        CRUD::setEntityNameStrings('deal', 'deals');
-    }
+        CRUD::setEntityNameStrings('deal', 'deals');}
 
     /**
      * Define what happens when the List operation is loaded.
@@ -46,6 +47,7 @@ class DealCrudController extends CrudController
         CRUD::column('pipeline_id');
         CRUD::column('created_at');
         CRUD::column('updated_at');
+        CRUD::denyAccess(['update', 'delete']);
 
         $pipelines = Pipeline::query()->select('id', 'name')->get()->toArray();
         $pipelines = Arr::pluck($pipelines, 'name', 'id');
@@ -56,46 +58,36 @@ class DealCrudController extends CrudController
         ], $pipelines, function($value) { // if the filter is active (the GET parameter "draft" exits)
             $this->crud->addClause('where', 'pipeline_id', $value);
         });
+
+        $stages = Stage::query()->select('id', 'name')->get()->toArray();
+        $stages = Arr::pluck($stages, 'name', 'id');
+        CRUD::addFilter([
+            'type'  => 'dropdown',
+            'name'  => 'stage',
+            'label' => 'Стадия'
+        ], $stages, function($value) { // if the filter is active (the GET parameter "draft" exits)
+            $this->crud->addClause('where', 'stage_id', $value);
+        });
     }
 
-    /**
-     * Define what happens when the Create operation is loaded.
-     *
-     * @see https://backpackforlaravel.com/docs/crud-operation-create
-     * @return void
-     */
-    protected function setupCreateOperation()
-    {
-        CRUD::setValidation(DealRequest::class);
+    protected function setupDealOperation(){
+        $this->crud->addField([
+            'name' => 'from',
+            'type' => 'text',
+            'value' => config('mail.from.address'),
+            'wrapper' => [
+                'class' => 'form-group col-md-4',
+            ],
+            'validationRules' => 'required|email'
+        ]);
 
-        CRUD::field('name');
-        CRUD::field('comment');
-        CRUD::field('pipeline_id')
-            ->type('select')
-            ->entity('pipeline')
-            ->model('App\Models\Pipeline');
-
-        CRUD::field('stage_id')
-            ->type('select')
-            ->entity('stage')
-            ->model('App\Models\Stage');
-
-
-        /**
-         * Fields can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number']));
-         */
+        $this->crud->addSaveAction([
+            'name' => 'send_email',
+            'redirect' => function ($crud, $request, $itemId) {
+                return $crud->route;
+            },
+            'button_text' => 'Send Email',
+        ]);
     }
 
-    /**
-     * Define what happens when the Update operation is loaded.
-     *
-     * @see https://backpackforlaravel.com/docs/crud-operation-update
-     * @return void
-     */
-    protected function setupUpdateOperation()
-    {
-        $this->setupCreateOperation();
-    }
 }

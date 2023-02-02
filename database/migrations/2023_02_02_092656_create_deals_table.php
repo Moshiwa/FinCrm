@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('deals', function (Blueprint $table) {
@@ -18,17 +13,15 @@ return new class extends Migration
             $table->string('name');
             $table->string('comment')->nullable();
             $table->foreignId('pipeline_id')->constrained();
+            $table->foreignId('responsible_id')
+                ->constrained('users')
+                ->references('id');
             $table->foreignId('stage_id')->constrained();
 
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('deals');
