@@ -6,50 +6,44 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class DealRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
         // only allow updates if the user is logged in
         return backpack_auth()->check();
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
+    public function rules(): array
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'id' => 'required|exists:deals,id',
+            'name' => 'required|max:255',
+            'comment' => 'nullable|max:255',
+            'stage.id' => 'nullable|exists:stages,id',
+            'pipeline.id' => 'nullable|exists:pipelines,id',
+            'responsible.id' => 'nullable|exists:users,id',
+            'client.id' => 'nullable|exists:clients,id',
+            'client.*' => 'nullable',
         ];
     }
 
-    /**
-     * Get the validation attributes that apply to the request.
-     *
-     * @return array
-     */
-    public function attributes()
+    public function attributes(): array
     {
         return [
             //
         ];
     }
 
-    /**
-     * Get the validation messages that apply to the request.
-     *
-     * @return array
-     */
-    public function messages()
+    public function messages(): array
     {
         return [
-            //
+            'id.exists' => 'Сделка с таким id не существует',
+            'name.required' => 'Наименование сделки является обязательным полем',
+            'name.max' => 'Наименование не должно превышать :max',
+            'comment.max' => 'Комментарий не должен превышать :max',
+            'stage.id.exists' => 'Стадии с таким id не существует',
+            'pipeline.id.exists' => 'Воронки с таким id не существует',
+            'responsible.id.exists' => 'Пользователя с таким id не существует',
+            'client.id.exists' => 'Клиента с таким id не существует',
         ];
     }
 }

@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('responsible_id')
                 ->constrained('users')
                 ->references('id');
+            $table->foreignId('client_id')
+                ->constrained();
             $table->foreignId('stage_id')->constrained();
 
             $table->timestamps();

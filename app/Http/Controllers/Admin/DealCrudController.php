@@ -47,7 +47,7 @@ class DealCrudController extends CrudController
         CRUD::column('pipeline_id');
         CRUD::column('created_at');
         CRUD::column('updated_at');
-        CRUD::denyAccess(['update', 'delete']);
+        CRUD::denyAccess(['update', 'delete', 'show']);
 
         $pipelines = Pipeline::query()->select('id', 'name')->get()->toArray();
         $pipelines = Arr::pluck($pipelines, 'name', 'id');
@@ -71,16 +71,6 @@ class DealCrudController extends CrudController
     }
 
     protected function setupDealOperation(){
-        $this->crud->addField([
-            'name' => 'from',
-            'type' => 'text',
-            'value' => config('mail.from.address'),
-            'wrapper' => [
-                'class' => 'form-group col-md-4',
-            ],
-            'validationRules' => 'required|email'
-        ]);
-
         $this->crud->addSaveAction([
             'name' => 'send_email',
             'redirect' => function ($crud, $request, $itemId) {

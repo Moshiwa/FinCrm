@@ -4,4 +4,8 @@
     outline:none;
     border-bottom: 1px #c2c2c2 solid;
 }
-
+.contenteditable {
+    min-width: 50px;
+    min-height: 25px;
+    max-width: 300px;
+}
