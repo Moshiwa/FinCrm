@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Space;
 use App\Models\Status;
 use Illuminate\Database\Seeder;
 

@@ -4,12 +4,14 @@ namespace App\Models;
 
 use App\Services\Space\SpaceService;
 use App\Traits\ModelBaseConnectionTrait;
+use App\Traits\SpaceableTrait;
 use Illuminate\Database\Eloquent\Builder;
 use \Backpack\PermissionManager\app\Models\Role as BackpackRole;
 
 class Role extends BackpackRole
 {
     use ModelBaseConnectionTrait;
+    use SpaceableTrait;
 
     protected $table = 'roles';
     protected $connection = 'pgsql';

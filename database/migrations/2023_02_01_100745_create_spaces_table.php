@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('code')->unique();
             $table->boolean('active');
+            $table->boolean('enable');
             $table->timestamps();
         });
     }

@@ -13,6 +13,14 @@ class SpacesSeeder extends Seeder
             'code' => 'main',
             'name' => 'Основное',
             'active' => true,
+            'enable' => true
+        ]);
+
+        Space::query()->firstOrCreate(['code' => 'test'], [
+            'code' => 'test',
+            'name' => 'Test',
+            'active' => true,
+            'enable' => false
         ]);
     }
 }

@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Artisan;
 |
 */
 
-Artisan::command('inspire', function () {
+/*Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
@@ -38,4 +38,4 @@ Artisan::command('migrate2:reset {space}', function ($space) {
 });
 Artisan::command('migrate2:fresh {space}', function ($space) {
     SpaceService::migrateFresh($space);
-});
+});*/
