@@ -12,5 +12,7 @@ class DatabaseSeeder extends Seeder
         (new SpacesSeeder())->run();
         (new StatusesSeeder())->run();
         (new PermissionSeeder())->run();
+        (new PipelineSeeder())->run();
+        (new StagesSeeder())->run();
     }
 }
