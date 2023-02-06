@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\SpaceRequest;
+use App\Models\Space;
 use App\Services\Space\SpaceService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -97,11 +98,6 @@ class SpaceCrudController extends CrudController
         ])->value($entry->code);
     }
 
-    public function spaceChange($code) {
-        SpaceService::setCurrentSpaceCode($code);
-        return redirect()->back();
-    }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -114,9 +110,9 @@ class SpaceCrudController extends CrudController
         $id = $this->crud->getCurrentEntryId() ?? $id;
 
         $entry = CRUD::getCurrentEntry();
-        if($entry->code == SpaceService::$mainCode) {
+       /* if($entry->code == SpaceService::$mainCode) {
             throw new AccessDeniedException(trans('backpack::crud.unauthorized_access', ['access' => 'delete']));
-        }
+        }*/
         return $this->crud->delete($id);
     }
 }

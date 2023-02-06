@@ -4,7 +4,6 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Services\Space\SpaceService;
-use App\Traits\ModelBaseConnectionTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,8 +20,7 @@ class User extends Authenticatable
         HasFactory,
         Notifiable,
         CrudTrait,
-        HasRoles,
-        ModelBaseConnectionTrait;
+        HasRoles;
 
     protected $table = 'users';
     protected $connection = 'pgsql';

@@ -18,11 +18,15 @@ class DealRequest extends FormRequest
             'id' => 'required|exists:deals,id',
             'name' => 'required|max:255',
             'comment' => 'nullable|max:255',
-            'stage.id' => 'nullable|exists:stages,id',
-            'pipeline.id' => 'nullable|exists:pipelines,id',
+            'stage_id' => 'nullable|exists:stages,id',
+            'pipeline_id' => 'nullable|exists:pipelines,id',
             'responsible.id' => 'nullable|exists:users,id',
             'client.id' => 'nullable|exists:clients,id',
             'client.*' => 'nullable',
+            'comments.*' => 'nullable',
+
+            'new.*' => 'array',
+            'new.comment' => 'array',
         ];
     }
 

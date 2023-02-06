@@ -9,22 +9,18 @@ return new class extends Migration
 {
     public function up()
     {
-        $schema = Schema::connection(SpaceService::getDefaultConnectionName());
-        if($schema->hasTable('spaces'))
-            return;
-
-        $schema->create('spaces', function (Blueprint $table) {
+        Schema::create('spaces', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('code')->unique();
-            $table->boolean('active');
-            $table->boolean('enable');
+            $table->boolean('active')->default(false);
+            $table->boolean('enable')->default(false);
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::connection(SpaceService::getDefaultConnectionName())->dropIfExists('spaces');
+        Schema::dropIfExists('spaces');
     }
 };

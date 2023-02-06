@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('color')->default('#ffffff');
+            $table->boolean('default')->default(false);
             $table->foreignId('status_id')
                 ->constrained()
                 ->cascadeOnDelete()

@@ -11,8 +11,7 @@ return new class extends Migration
         Schema::create('spaceables', function (Blueprint $table) {
             $table->id();
             $table->morphs('spaceable');
-            $table->foreignId('space_id')->constrained();
-            $table->timestamps();
+            $table->foreignId('space_id')->constrained()->cascadeOnDelete();
         });
     }
 

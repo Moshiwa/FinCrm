@@ -8,19 +8,16 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('comments', function (Blueprint $table) {
+        Schema::create('logables', function (Blueprint $table) {
             $table->id();
-            $table->string('type')->default('text');
-            $table->text('content');
-            $table->foreignId('author_id')
-                ->constrained('users')
-                ->references('id');
+            $table->morphs('logable');
+            $table->foreignId('comment_id')->constrained();
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('comments');
+        Schema::dropIfExists('logables');
     }
 };

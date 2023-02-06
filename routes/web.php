@@ -20,4 +20,5 @@ Route::get('/', function () {
 
 Route::prefix('deal')->name('deal.')->group(function () {
     Route::post('/update', [DealController::class, 'update'])->name('update');
+    Route::get('/get_stages/{pipeline}', [DealController::class, 'getStagesByPipeline'])->name('stages');
 });

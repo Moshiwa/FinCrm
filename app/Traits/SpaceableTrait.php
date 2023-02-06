@@ -3,6 +3,8 @@
 namespace App\Traits;
 
 use App\Models\Space;
+use App\Services\Space\SpaceService;
+use Illuminate\Database\Eloquent\Builder;
 
 trait SpaceableTrait
 {
@@ -11,22 +13,18 @@ trait SpaceableTrait
         return static::morphToMany(Space::class, 'spaceable');
     }
 
-    public function scopeSpace($query)
-    {
-        $space = Space::query()->where('enable', true)->first();
-        $space_id = $space->id;
-
-        return $query->whereHas('spaces', function ($query) use ($space_id) {
-            $query->where('spaces.id', $space_id);
-        });
-    }
-
     protected static function bootSpaceableTrait()
     {
         static::created(function ($model) {
-            $space = Space::query()->where('enable', true)->first();
+            $space_id = SpaceService::getCurrentSpace()->id;
             $model->load('spaces');
-            $model->spaces()->sync($space->id);
+            $model->spaces()->sync($space_id);
+        });
+        static::addGlobalScope('spaces', function(Builder $builder) {
+            $space_id = SpaceService::getCurrentSpace()->id;
+            $builder->whereHas('spaces', function($query) use ($space_id) {
+                $query->where('spaces.id', $space_id);
+            });
         });
     }
 }

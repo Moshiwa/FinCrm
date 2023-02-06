@@ -8,6 +8,7 @@ trait CommentableTrait
 {
     public function comments()
     {
-        return static::morphMany(Comment::class, 'commentable');
+        return static::morphToMany(Comment::class, 'logable');
     }
+
 }

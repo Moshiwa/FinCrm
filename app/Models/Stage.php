@@ -27,4 +27,13 @@ class Stage extends Model
     {
         return $this->belongsTo(Pipeline::class);
     }
+
+    protected static function booted()
+    {
+        static::saving(function (self $stage) {
+            /*Stage::query()->update([''])
+            $stage->
+            dd(12);*/
+        });
+    }
 }

@@ -22,6 +22,7 @@ class StagesSeeder extends Seeder
                 'name' => 'В работе',
                 'status_id' => $status_process->id,
                 'pipeline_id' => $pipeline_id->id,
+                'default' => true,
                 'color' => '#0050FF'
             ],
             [

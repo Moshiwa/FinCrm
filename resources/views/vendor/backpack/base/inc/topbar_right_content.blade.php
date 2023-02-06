@@ -4,7 +4,7 @@
     use \App\Services\Space\SpaceService;
     use Illuminate\Support\Facades\Auth;
 
-    $currentSpace = SpaceService::getCurrentSpaceModel();
+    $currentSpace = \App\Models\Space::query()->where('enable', true)->first();
     $spaces = Auth::user()->availableSpaces();
 @endphp
 

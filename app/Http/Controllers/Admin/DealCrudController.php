@@ -32,7 +32,8 @@ class DealCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\Deal::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/deal');
-        CRUD::setEntityNameStrings('deal', 'deals');}
+        CRUD::setEntityNameStrings('deal', 'deals');
+    }
 
     /**
      * Define what happens when the List operation is loaded.
