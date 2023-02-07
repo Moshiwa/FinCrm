@@ -31,6 +31,7 @@
         <detail-deal
             :deal="{{ $entry }}"
             :pipelines="{{ $pipelines }}"
+            :fields="{{ $fields }}"
         />
     </div>
 </div>

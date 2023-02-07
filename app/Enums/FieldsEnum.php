@@ -4,9 +4,10 @@ namespace App\Enums;
 
 enum FieldsEnum: string
 {
-    case string = 'Текст';
-    case number = 'Номер';
-    case select = 'Выборка';
-    case checkbox = 'Чекбокс';
-    case date = 'Дата и время';
+    case phone = 'phone';
+    case email = 'email';
+    case number = 'number';
+    case select = 'select';
+    case radio = 'radio';
+    case date = 'date';
 }

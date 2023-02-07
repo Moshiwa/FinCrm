@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Operations;
 
+use App\Models\Field;
 use App\Models\Pipeline;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Support\Facades\Route;
@@ -36,11 +37,24 @@ trait DealOperation
         $this->crud->hasAccessOrFail('deal');
         $this->crud->setHeading('Сделка');
 
-        $entry->load(['stage', 'pipeline', 'responsible', 'client', 'comments']);
+        $entry->load([
+            'stage',
+            'pipeline',
+            'responsible',
+            'client',
+            'client.fields',
+            'comments' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            },
+            'comments.author' => function ($query) {
+                $query->select('id', 'name');
+            }
+        ]);
 
         $this->data['crud'] = $this->crud;
         $this->data['entry'] = $entry;
         $this->data['pipelines'] = Pipeline::query()->select('id', 'name')->get();
+        $this->data['fields'] = Field::query()->get();
         $this->data['saveAction'] = $this->crud->getSaveAction();
 
         return view('crud::deal', $this->data);

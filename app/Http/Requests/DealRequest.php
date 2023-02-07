@@ -23,6 +23,8 @@ class DealRequest extends FormRequest
             'responsible.id' => 'nullable|exists:users,id',
             'client.id' => 'nullable|exists:clients,id',
             'client.*' => 'nullable',
+            'comments.*' => 'nullable',
+            'deleteComments.*' => 'nullable|array'
         ];
     }
 

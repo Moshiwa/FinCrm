@@ -2,12 +2,12 @@
 
 namespace App\Traits;
 
-use App\Models\Comment;
+use App\Models\DealComment;
 
 trait CommentableTrait
 {
     public function comments()
     {
-        return static::morphMany(Comment::class, 'commentable');
+        return static::morphMany(DealComment::class, 'commentable');
     }
 }

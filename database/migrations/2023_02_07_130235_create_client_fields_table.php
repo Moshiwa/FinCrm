@@ -8,15 +8,16 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('clients', function (Blueprint $table) {
+        Schema::create('client_fields', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->timestamps();
+            $table->foreignId('client_id')->constrained();
+            $table->foreignId('field_id')->constrained();
+            $table->string('value')->default('');
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('clients');
+        Schema::dropIfExists('client_fields');
     }
 };
