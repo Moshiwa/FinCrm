@@ -2,164 +2,196 @@
     <div class="wrap">
         <div class="card">
             <div class="card-left">
-                <el-descriptions
-                    direction="vertical"
-                    title="Общее"
-                    column="1"
-                    size="large"
-                    border
-                >
-                    <el-descriptions-item label="Наименование">
-                        <contenteditable
-                            v-model="deal.name"
-                            @send="send"
-                        />
-                    </el-descriptions-item>
-                    <el-descriptions-item label="Ответственный">
-                        <a href="">{{ deal.responsible?.name }}</a>
-                    </el-descriptions-item>
-                    <el-descriptions-item v-for="field in dealFields" :label="field.name">
-                        <div v-if="field.type === 'select'">
-                            <el-select
-                                v-model="field.pivot.value"
-                                @change="send"
-                            >
-                                <el-option
-                                    v-for="(option, index) in field.options"
-                                    :key="index"
-                                    :label="option"
-                                    :value="option"
+                <el-collapse v-model="active">
+                    <el-collapse-item title="Общее" name="1">
+                        <el-descriptions
+                            direction="vertical"
+                            column="1"
+                            size="large"
+                            border
+                        >
+                            <el-descriptions-item label="Наименование">
+                                <contenteditable
+                                    v-model="deal.name"
+                                    @send="send"
                                 />
-                            </el-select>
-                        </div>
-                        <div v-else-if="field.type === 'date'">
-                            <el-input
-                                v-model="field.pivot.value"
-                                type="date"
-                                @change="send"
-                            />
-                        </div>
-                        <contenteditable
-                            v-else
-                            v-model="field.pivot.value"
-                            @send="send"
-                        />
-                    </el-descriptions-item>
-                    <el-descriptions-item label="Добавить">
-                        <selected-field
-                            :fields="fields"
-                            @updateField="addNewDealField($event)"
-                        />
-                    </el-descriptions-item>
-<!--                    <el-descriptions-item label="Комментарий">
-                        <contenteditable
-                            v-model="deal.comment"
-                            @send="send"
-                        />
-                    </el-descriptions-item>-->
-                </el-descriptions>
-                <el-descriptions
-                    direction="vertical"
-                    title="Клиент"
-                    column="1"
-                    size="large"
-                    border
-                >
-                    <el-descriptions-item label="Имя">
-                        <contenteditable
-                            v-model="client.name"
-                            @send="send"
-                        />
-                    </el-descriptions-item>
-                    <el-descriptions-item v-for="field in clientFields" :label="field.name">
-                        <div v-if="field.type === 'select'">
-                            <el-select
-                                v-model="field.pivot.value"
-                                @change="send"
-                            >
-                                <el-option
-                                    v-for="(option, index) in field.options"
-                                    :key="index"
-                                    :label="option"
-                                    :value="option"
+                            </el-descriptions-item>
+                            <el-descriptions-item label="Ответственный">
+                                <a href="">{{ deal.responsible?.name }}</a>
+                            </el-descriptions-item>
+                            <el-descriptions-item v-for="field in dealFields" :label="field.name">
+                                <div v-if="field.type === 'select'">
+                                    <el-select
+                                        v-model="field.pivot.value"
+                                        @change="send"
+                                    >
+                                        <el-option
+                                            v-for="(option, index) in field.options"
+                                            :key="index"
+                                            :label="option"
+                                            :value="option"
+                                        />
+                                    </el-select>
+                                </div>
+                                <div v-else-if="field.type === 'date'">
+                                    <el-input
+                                        v-model="field.pivot.value"
+                                        type="date"
+                                        @change="send"
+                                    />
+                                </div>
+                                <contenteditable
+                                    v-else
+                                    v-model="field.pivot.value"
+                                    @send="send"
                                 />
-                            </el-select>
+                            </el-descriptions-item>
+                            <el-descriptions-item label="Добавить">
+                                <selected-field
+                                    :fields="fields"
+                                    @updateField="addNewDealField($event)"
+                                />
+                            </el-descriptions-item>
+                        </el-descriptions>
+                    </el-collapse-item>
+                </el-collapse>
+
+                <el-collapse v-model="active">
+                    <el-collapse-item title="Данные о клиенте" name="2">
+                        <el-descriptions
+                            direction="vertical"
+                            column="1"
+                            size="large"
+                            border
+                        >
+                            <el-descriptions-item label="Имя">
+                                <contenteditable
+                                    v-model="client.name"
+                                    @send="send"
+                                />
+                            </el-descriptions-item>
+                            <el-descriptions-item v-for="field in clientFields" :label="field.name">
+                                <div v-if="field.type === 'select'">
+                                    <el-select
+                                        v-model="field.pivot.value"
+                                        @change="send"
+                                    >
+                                        <el-option
+                                            v-for="(option, index) in field.options"
+                                            :key="index"
+                                            :label="option"
+                                            :value="option"
+                                        />
+                                    </el-select>
+                                </div>
+                                <div v-else-if="field.type === 'date'">
+                                    <el-input
+                                        v-model="field.pivot.value"
+                                        type="date"
+                                        @change="send"
+                                    />
+                                </div>
+                                <contenteditable
+                                    v-else
+                                    v-model="field.pivot.value"
+                                    @send="send"
+                                />
+                            </el-descriptions-item>
+                            <el-descriptions-item label="Добавить">
+                                <selected-field
+                                    :fields="fields"
+                                    @updateField="addNewClientField($event)"
+                                />
+                            </el-descriptions-item>
+                        </el-descriptions>
+                    </el-collapse-item>
+                </el-collapse>
+
+                <el-collapse v-model="active">
+                    <el-collapse-item title="Документы" name="3">
+                        <div class="document_container" v-for="comment in allFiles">
+                            <div v-if="comment.files.length > 0" v-for="doc in comment.files">
+                                <div class="document_item">
+                                    <div class="document-date">
+                                        {{ doc.created_at }}
+                                    </div>
+                                    <div class="document-name">
+                                        {{ doc.original_name }}
+                                    </div>
+                                    <div class="document-actions">
+                                        <el-button-group class="ml-4">
+                                            <el-button type="primary" :icon="Edit" />
+                                            <el-button type="primary" :icon="Share" />
+                                        </el-button-group>
+                                    </div>
+                                </div>
+                            </div>
+                            <el-button type="success" class="w-100" @click="visibleFileUploadForm = true">Прикрепить файл</el-button>
                         </div>
-                        <div v-else-if="field.type === 'date'">
-                            <el-input
-                                v-model="field.pivot.value"
-                                type="date"
-                                @change="send"
-                            />
-                        </div>
-                        <contenteditable
-                            v-else
-                            v-model="field.pivot.value"
-                            @send="send"
-                        />
-                    </el-descriptions-item>
-                    <el-descriptions-item label="Добавить">
-                        <selected-field
-                            :fields="fields"
-                            @updateField="addNewClientField($event)"
-                        />
-                    </el-descriptions-item>
-                </el-descriptions>
+                    </el-collapse-item>
+                </el-collapse>
+
+
             </div>
 
             <div class="card-right">
                 <div class="card-body row">
 
-                    <div
-                        class="inline-flex comment-row"
-                        v-for="comment in comments"
-                    >
-                        <div class="row-left">
-                            <el-icon>
-                                <ChatDotSquare v-if="comment.type === 'comment'"/>
-                                <Document v-if="comment.type === 'document'"/>
-                            </el-icon>
-                        </div>
-                        <div class="row-right">
-                            <div class="row-right__upper">
-                                <div class="row-right__title">
-                                    <div class="row-right__type-name">
-                                        {{ definitionCommentType(comment.type) }}
+<!--                    <div class="card-title">События сделки</div>-->
+                    <el-timeline>
+                        <div
+                            class="inline-flex comment-row"
+                            v-for="comment in comments"
+                        >
+                            <el-timeline-item timestamp="2018/4/12" placement="top">
+                                <div class="row-left">
+                                    <el-icon>
+                                        <ChatDotSquare v-if="comment.type === 'comment'"/>
+                                        <Document v-if="comment.type === 'document'"/>
+                                    </el-icon>
+                                </div>
+                                <div class="row-right">
+                                <div class="row-right__upper">
+                                    <div class="row-right__title">
+                                        <div class="row-right__type-name">
+                                            {{ definitionCommentType(comment.type) }}
+                                        </div>
+                                        <div class="row-right__date"> {{ comment.updated_at }}</div>
                                     </div>
-                                    <div class="row-right__date"> {{ comment.updated_at }}</div>
+                                    <div class="row-right__delete" @click="removeComment(comment)">
+                                        x
+                                    </div>
                                 </div>
-                                <div class="row-right__delete" @click="removeComment(comment)">
-                                    x
-                                </div>
-                            </div>
-                            <div class="row-right__lower">
-                                <div class="row-right__content">
-                                    <contenteditable
-                                        v-if="comment.type === 'comment'"
-                                        v-model="comment.content"
-                                        @send="send"
-                                    />
-                                    <div
-                                        v-else-if="comment.type === 'document'"
-                                        class="flex-inline"
-                                    >
-                                        <el-image
-                                            v-for="file in comment.files"
-                                            style="width: 100px; height: 100px"
-                                            :src="file.full_path"
-                                            :zoom-rate="1.2"
-                                            :preview-src-list="[file.full_path]"
-                                            :initial-index="4"
-                                            fit="cover"
+                                <div class="row-right__lower">
+                                    <div class="row-right__content">
+                                        <contenteditable
+                                            v-if="comment.type === 'comment'"
+                                            v-model="comment.content"
+                                            @send="send"
                                         />
+                                        <div
+                                            v-else-if="comment.type === 'document'"
+                                            class="flex-inline"
+                                        >
+                                            <el-image
+                                                v-for="file in comment.files"
+                                                style="width: 100px; height: 100px"
+                                                :src="file.full_path"
+                                                :zoom-rate="1.2"
+                                                :preview-src-list="[file.full_path]"
+                                                :initial-index="4"
+                                                fit="cover"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="row-right__author">
+                                        {{ comment.author?.name }}
                                     </div>
                                 </div>
-                                <div class="row-right__author">
-                                    {{ comment.author?.name }}
-                                </div>
                             </div>
+                            </el-timeline-item>
                         </div>
-                    </div>
+                    </el-timeline>
                 </div>
             </div>
         </div>
@@ -169,7 +201,7 @@
                 <el-button class="w-100" @click="visibleCommentForm = true">Оставить комментарий</el-button>
             </div>
             <div class="w-100">
-                <el-button class="w-100" @click="visibleFileUploadForm = true">Прикрепить файл</el-button>
+                <el-button type="danger" class="w-100">Удалить сделку</el-button>
             </div>
             <hr>
         </div>
@@ -204,6 +236,7 @@
 
 <script>
 import { ElInput } from 'element-plus';
+
 export default {
     name: 'DetailDeal',
     props: {
@@ -226,7 +259,7 @@ export default {
     },
     mounted() {
         console.log(this.deal)
-        console.log(this.pipelines);
+        console.log(this.allFiles);
     },
     computed: {
         clientName() {
@@ -238,6 +271,7 @@ export default {
     },
     data() {
         return {
+            active: ['1'],
             visibleCommentForm: false,
             visibleFileUploadForm: false,
 
@@ -251,6 +285,12 @@ export default {
             dealFields: this.deal.fields ?? [],
 
             deleteCommentId: 0,
+
+            allFiles: this.deal.comments.filter(comment => {
+                if (comment.files.length > 0) {
+                    return comment.files.flat(1);
+                }
+            }),
 
             files: [],
             newComment: { type: 'comment', content: '', author_id: null, files: [] },
@@ -380,12 +420,12 @@ export default {
         },
         definitionCommentType(text) {
             switch (text) {
-                case 'text':
+                case 'comment':
                     return 'Комментарий'
                 case 'audio':
                     return 'Аудиозапись'
                 case 'document':
-                    return 'Документ'
+                    return 'Файлы'
                 case 'image':
                     return 'Изображение'
             }
@@ -422,20 +462,16 @@ export default {
     flex-wrap: wrap;
     gap: 10px;
 }
-.bold-labels {
-    padding-left: 0px;
-}
-.row-label {
-    min-width: 125px;
-}
 .comment-row {
     display: flex;
     width: 100%;
     gap: 10px;
     border-bottom: 1px solid #b6b6b6;
-    max-height: 160px;
-    min-height: 160px;
+    min-height: 100px;
     padding: 16px;
+}
+.card-title {
+
 }
 .row-right {
     display: flex;
@@ -461,5 +497,17 @@ export default {
 }
 .row-right__delete {
     cursor: pointer;
+}
+.document_container {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.document_item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10px;
 }
 </style>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\FieldsEnum;
 use App\Http\Requests\FieldsRequest;
 use App\Models\Field;
+use App\Services\SettingService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -47,12 +48,7 @@ class FieldsCrudController extends CrudController
             ->label('Тип')
             ->type('closure')
             ->function(function($entry) {
-                return match ($entry->type) {
-                    FieldsEnum::string => 'Строка',
-                    FieldsEnum::select => 'Селект',
-                    FieldsEnum::date => 'Дата',
-                    default => '',
-                };
+                return __('fields.type.' . $entry->type);
             });
         CRUD::column('options')->label('Варианты');
     }
@@ -70,11 +66,9 @@ class FieldsCrudController extends CrudController
         CRUD::field('type')
             ->label('Тип')
             ->type('select_from_array')
-            ->options([
-                FieldsEnum::string,
-                FieldsEnum::select,
-                FieldsEnum::date,
-            ]);
+            ->options(
+                SettingService::convertEnumToArray(FieldsEnum::cases())
+            );
         CRUD::field('name')->label('Наименование');
         CRUD::field('options')->label('Варианты');
     }

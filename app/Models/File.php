@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class File extends Model
@@ -20,6 +21,7 @@ class File extends Model
         'type',
         'size',
         'meme',
+        'original_name',
         'path'
     ];
 
@@ -34,7 +36,7 @@ class File extends Model
             if(Storage::disk('public')->exists($file->path)){
                 Storage::disk('public')->delete($file->path);
             }else{
-                dd('File does not exists.');
+                Log::error('Cant delete' . $file->path);
             }
         });
     }

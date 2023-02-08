@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('files', function (Blueprint $table) {
             $table->id();
             $table->string('size')->default('');
+            $table->string('original_name')->default('');
             $table->string('meme')->default('');
             $table->string('path');
             $table->timestamps();

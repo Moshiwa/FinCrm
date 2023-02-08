@@ -86,6 +86,7 @@ class DealService
                     $file = File::query()->create([
                         'size' => $file->getSize(),
                         'meme' => $file->getClientOriginalExtension(),
+                        'original_name' => $file->getClientOriginalName(),
                         'path' => $path
                     ]);
 
