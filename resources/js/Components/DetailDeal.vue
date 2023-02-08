@@ -15,12 +15,48 @@
                             @send="send"
                         />
                     </el-descriptions-item>
-                    <el-descriptions-item label="Комментарий">
+                    <el-descriptions-item label="Ответственный">
+                        <a href="">{{ deal.responsible?.name }}</a>
+                    </el-descriptions-item>
+                    <el-descriptions-item v-for="field in dealFields" :label="field.name">
+                        <div v-if="field.type === 'select'">
+                            <el-select
+                                v-model="field.pivot.value"
+                                @change="send"
+                            >
+                                <el-option
+                                    v-for="(option, index) in field.options"
+                                    :key="index"
+                                    :label="option"
+                                    :value="option"
+                                />
+                            </el-select>
+                        </div>
+                        <div v-else-if="field.type === 'date'">
+                            <el-input
+                                v-model="field.pivot.value"
+                                type="date"
+                                @change="send"
+                            />
+                        </div>
+                        <contenteditable
+                            v-else
+                            v-model="field.pivot.value"
+                            @send="send"
+                        />
+                    </el-descriptions-item>
+                    <el-descriptions-item label="Добавить">
+                        <selected-field
+                            :fields="fields"
+                            @updateField="addNewDealField($event)"
+                        />
+                    </el-descriptions-item>
+<!--                    <el-descriptions-item label="Комментарий">
                         <contenteditable
                             v-model="deal.comment"
                             @send="send"
                         />
-                    </el-descriptions-item>
+                    </el-descriptions-item>-->
                 </el-descriptions>
                 <el-descriptions
                     direction="vertical"
@@ -209,6 +245,7 @@ export default {
             stages: this.stages ?? [],
             comments: this.deal.comments ?? [],
             clientFields: this.deal.client?.fields ?? [],
+            dealFields: this.deal.fields ?? [],
 
             deleteComments: [],
 
@@ -244,6 +281,22 @@ export default {
             this.clientFields.push(newField);
             this.send();
         },
+        addNewDealField(event) {
+            let newField = {
+                id: event.field.id,
+                options: event.field.options,
+                type: event.field.type,
+                name: event.field.name,
+                pivot: {
+                    client_id: this.client.id,
+                    field_id: event.field.id,
+                    value: event.value
+                }
+            }
+
+            this.dealFields.push(newField);
+            this.send();
+        },
         sendComment() {
             this.visibleCommentForm = false;
             this.send();
@@ -276,7 +329,7 @@ export default {
             this.deal.stage_id = this.stage.id;
             this.deal.comments = this.comments;
             if (this.newComment.content.length > 0) {
-                this.deal.comments.push(this.newComment);
+                this.deal.comments.shift(this.newComment);
             }
 
             console.log( this.deal)
@@ -313,7 +366,7 @@ export default {
     padding: 8px;
 }
 .card-right {
-
+    width: inherit;
 }
 .flex-column {
     display: flex;

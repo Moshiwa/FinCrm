@@ -12,7 +12,6 @@ return new class extends Migration
         Schema::create('deals', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('comment')->nullable();
             $table->foreignId('pipeline_id')->constrained();
             $table->foreignId('client_id')
                 ->constrained();

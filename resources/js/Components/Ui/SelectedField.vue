@@ -39,7 +39,12 @@
                 v-model="fieldValue"
             />
         </div>
-        <el-button @click="save">Сохранить</el-button>
+        <el-button
+            type="success"
+            @click="save"
+        >
+            Добавить
+        </el-button>
     </div>
 </template>
 
@@ -82,5 +87,6 @@ export default {
     display: flex;
     flex-direction: row;
     gap: 10px;
+    justify-content: space-between;
 }
 </style>

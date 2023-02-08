@@ -25,6 +25,7 @@ class DealRequest extends FormRequest
             'client_id' => 'nullable|exists:clients,id',
 
             'client.*' => 'nullable',
+            'fields.*' => 'nullable',
             'comments.*' => 'nullable',
             'deleteComments.*' => 'nullable|array'
         ];

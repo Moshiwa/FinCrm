@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\CommentableTrait;
+use App\Traits\FieldableTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +13,7 @@ class Deal extends Model
 {
     use CrudTrait;
     use HasFactory;
-    use CommentableTrait;
+    use FieldableTrait;
 
     protected $guarded = ['id'];
 

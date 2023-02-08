@@ -42,6 +42,7 @@ trait DealOperation
             'pipeline',
             'responsible',
             'client',
+            'fields',
             'client.fields',
             'comments' => function ($query) {
                 $query->orderBy('created_at', 'desc');

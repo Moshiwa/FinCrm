@@ -31,12 +31,18 @@ class DealService
     {
         $deal->update([
             'name' => $data['name'] ?? '',
-            'comment' => $data['comment'] ?? '',
             'pipeline_id' => $data['pipeline_id'],
             'client_id' => $data['client_id'],
             'stage_id' => $data['stage_id'],
             'responsible_id' => $data['responsible_id'],
         ]);
+
+        $fields = [];
+        foreach ($data['fields'] as $field) {
+            $fields[$field['id']] = ['value' => $field['pivot']['value']];
+        }
+
+        $deal->fields()->sync($fields);
     }
 
     public function updateClient($deal, array $data): void
@@ -45,16 +51,12 @@ class DealService
             'name' => $data['client']['name'] ?? ''
         ]);
 
-        $client = $deal->client;
         $fields = [];
-
         foreach ($data['client']['fields'] as $field) {
-
             $fields[$field['id']] = ['value' => $field['pivot']['value']];
         }
 
-        $client->fields()->sync($fields);
-        dd($client);
+        $deal->client->fields()->sync($fields);
     }
 
     public function updateComments($deal, array $data): void

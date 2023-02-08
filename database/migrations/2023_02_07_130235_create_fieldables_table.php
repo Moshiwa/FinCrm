@@ -8,9 +8,9 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('client_fields', function (Blueprint $table) {
+        Schema::create('fieldables', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('client_id')->constrained();
+            $table->morphs('fieldable');
             $table->foreignId('field_id')->constrained();
             $table->string('value')->default('');
         });
@@ -18,6 +18,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('client_fields');
+        Schema::dropIfExists('fieldables');
     }
 };
