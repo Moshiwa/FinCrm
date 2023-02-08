@@ -4,6 +4,7 @@ namespace App\Services\Deal;
 
 use App\Enums\CommentTypeEnum;
 use App\Models\DealComment;
+use Illuminate\Database\Query\Builder;
 
 class DealService
 {
@@ -26,7 +27,37 @@ class DealService
         return CommentTypeEnum::text;
     }
 
-    public function saveComments($deal, array $data): void
+    public function saveDeal($deal, array $data): void
+    {
+        $deal->update([
+            'name' => $data['name'] ?? '',
+            'comment' => $data['comment'] ?? '',
+            'pipeline_id' => $data['pipeline_id'],
+            'client_id' => $data['client_id'],
+            'stage_id' => $data['stage_id'],
+            'responsible_id' => $data['responsible_id'],
+        ]);
+    }
+
+    public function updateClient($deal, array $data): void
+    {
+        $deal->client()->update([
+            'name' => $data['client']['name'] ?? ''
+        ]);
+
+        $client = $deal->client;
+        $fields = [];
+
+        foreach ($data['client']['fields'] as $field) {
+
+            $fields[$field['id']] = ['value' => $field['pivot']['value']];
+        }
+
+        $client->fields()->sync($fields);
+        dd($client);
+    }
+
+    public function updateComments($deal, array $data): void
     {
         $deal_id = $deal->id;
 

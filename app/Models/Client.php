@@ -5,6 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Client extends Model
 {
@@ -20,6 +21,17 @@ class Client extends Model
             ->withPivot('value');
     }
 
+    public function deal(): HasOne
+    {
+        return $this->hasOne(Deal::class);
+    }
+
+    protected static function booted()
+    {
+        static::deleting(function (self $client) {
+            $client->deal()->delete();
+        });
+    }
     /*public function fields()
     {
         return $this->belongsToMany(

@@ -39,6 +39,7 @@
                         <div v-if="field.type === 'select'">
                             <el-select
                                 v-model="field.pivot.value"
+                                @change="send"
                             >
                                 <el-option
                                     v-for="(option, index) in field.options"
@@ -47,6 +48,13 @@
                                     :value="option"
                                 />
                             </el-select>
+                        </div>
+                        <div v-else-if="field.type === 'date'">
+                            <el-input
+                                v-model="field.pivot.value"
+                                type="date"
+                                @change="send"
+                            />
                         </div>
                         <contenteditable
                             v-else
@@ -234,7 +242,7 @@ export default {
             }
 
             this.clientFields.push(newField);
-            console.log(event)
+            this.send();
         },
         sendComment() {
             this.visibleCommentForm = false;
@@ -301,7 +309,7 @@ export default {
     width: 100%;
 }
 .card-left {
-    min-width: 65%;
+    min-width: 55%;
     padding: 8px;
 }
 .card-right {
@@ -323,8 +331,8 @@ export default {
     width: 100%;
     gap: 10px;
     border-bottom: 1px solid #b6b6b6;
-    max-height: 170px;
-    min-height: 170px;
+    max-height: 160px;
+    min-height: 160px;
     padding: 16px;
 }
 .row-right {
