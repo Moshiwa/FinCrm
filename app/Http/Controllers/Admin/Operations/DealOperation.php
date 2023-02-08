@@ -47,6 +47,7 @@ trait DealOperation
             'comments' => function ($query) {
                 $query->orderBy('created_at', 'desc');
             },
+            'comments.files',
             'comments.author' => function ($query) {
                 $query->select('id', 'name');
             }

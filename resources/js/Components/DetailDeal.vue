@@ -116,10 +116,8 @@
                     >
                         <div class="row-left">
                             <el-icon>
-                                <ChatDotSquare v-if="comment.type === 'text'"/>
+                                <ChatDotSquare v-if="comment.type === 'comment'"/>
                                 <Document v-if="comment.type === 'document'"/>
-                                <Picture v-if="comment.type === 'image'"/>
-                                <Microphone v-if="comment.type === 'audio'"/>
                             </el-icon>
                         </div>
                         <div class="row-right">
@@ -130,26 +128,31 @@
                                     </div>
                                     <div class="row-right__date"> {{ comment.updated_at }}</div>
                                 </div>
-                                <div class="row-right__delete" @click="deleteComment(comment)">
+                                <div class="row-right__delete" @click="removeComment(comment)">
                                     x
                                 </div>
                             </div>
                             <div class="row-right__lower">
                                 <div class="row-right__content">
                                     <contenteditable
-                                        v-if="comment.type === 'text'"
+                                        v-if="comment.type === 'comment'"
                                         v-model="comment.content"
                                         @send="send"
                                     />
-                                    <el-image
-                                        v-else-if="comment.type === 'image'"
-                                        style="width: 100px; height: 100px"
-                                        :src="'/storage/'+comment.content"
-                                        :zoom-rate="1.2"
-                                        :preview-src-list="['/storage/'+comment.content]"
-                                        :initial-index="4"
-                                        fit="cover"
-                                    />
+                                    <div
+                                        v-else-if="comment.type === 'document'"
+                                        class="flex-inline"
+                                    >
+                                        <el-image
+                                            v-for="file in comment.files"
+                                            style="width: 100px; height: 100px"
+                                            :src="file.full_path"
+                                            :zoom-rate="1.2"
+                                            :preview-src-list="[file.full_path]"
+                                            :initial-index="4"
+                                            fit="cover"
+                                        />
+                                    </div>
                                 </div>
                                 <div class="row-right__author">
                                     {{ comment.author?.name }}
@@ -247,9 +250,10 @@ export default {
             clientFields: this.deal.client?.fields ?? [],
             dealFields: this.deal.fields ?? [],
 
-            deleteComments: [],
+            deleteCommentId: 0,
 
-            newComment: { type: 'text', content: '', author_id: null },
+            files: [],
+            newComment: { type: 'comment', content: '', author_id: null, files: [] },
         }
     },
     methods: {
@@ -299,41 +303,80 @@ export default {
         },
         sendComment() {
             this.visibleCommentForm = false;
+            if (this.newComment.content.length > 0) {
+                this.deal.comments.unshift(this.newComment);
+            }
+
             this.send();
-            this.newComment = { type: 'text', content: '', author_id: null };
+            this.newComment = { type: 'comment', content: '', author_id: null, files: [] };
         },
-        deleteComment(comment) {
+        sendFiles(event) {
+            this.visibleFileUploadForm = false;
+            this.newComment.files = event;
+            this.newComment.type = 'document';
+            if (this.newComment.files.length > 0) {
+                this.deal.comments.unshift(this.newComment);
+            }
+
+            this.send();
+            this.newComment = { type: 'comment', content: '', author_id: null, files: [] };
+        },
+        removeComment(comment) {
             this.comments.forEach((item, index) => {
                 if (item.id === comment.id) {
                     this.comments.splice(index, 1);
-                    this.deleteComments.push(item.id);
+                    this.deleteCommentId = item.id;
                 }
             });
 
             this.send();
         },
-        sendFiles(event) {
-            const formData = new FormData();
-            event.forEach((item, index) => {
-                formData.append('file[' + index + ']', item);
-            });
-
-            axios.post('/deal/' + this.deal.id + '/save_files',  formData)
-                .then((response) => { location.reload() });
-        },
         send() {
-            this.deal.new = {};
-            this.deal.client = this.client;
+            /*this.deal.client = this.client;
             this.deal.pipeline_id = this.pipeline.id;
             this.deal.responsible = this.responsible;
             this.deal.stage_id = this.stage.id;
             this.deal.comments = this.comments;
-            if (this.newComment.content.length > 0) {
-                this.deal.comments.shift(this.newComment);
-            }
+            if (this.newComment.content.length > 0 || this.newComment.files) {
+                this.deal.comments.unshift(this.newComment);
+            }*/
+
+
+            const formData = new FormData();
+            formData.append('id', this.deal.id);
+            formData.append('name', this.deal.name);
+            formData.append('pipeline_id', this.deal.pipeline_id);
+            formData.append('stage_id', this.deal.stage_id);
+            formData.append('responsible_id', this.deal.responsible_id);
+            formData.append('client_id', this.deal.client_id);
+
+            formData.append('delete_comment_id', this.deleteCommentId);
+
+            this.deal.fields = this.deal.fields ?? [];
+            this.deal?.fields.forEach((field, fieldIndex) => {
+                formData.append('fields[' + field.id + '][value]', field.pivot?.value ?? '');
+            });
+
+            this.deal.client = this.deal.client ?? [];
+            formData.append('client[name]', this.deal.client?.name);
+            this.deal.client?.fields.forEach((field, fieldIndex) => {
+                formData.append('client[fields][' + field.id + '][value]', field.pivot?.value ?? '');
+            });
+
+            this.deal.comments = this.deal?.comments ?? [];
+            this.deal?.comments.forEach((comment, commentIndex) => {
+                formData.append('comments[' + commentIndex + '][id]', comment.id ?? '');
+                formData.append('comments[' + commentIndex + '][deal_id]', this.deal.id);
+                formData.append('comments[' + commentIndex + '][type]', comment.type);
+                formData.append('comments[' + commentIndex + '][content]', comment.content);
+                comment.files = comment.files ?? [];
+                comment.files.forEach((file, fileIndex) => {
+                    formData.append('comments[' + commentIndex + '][files][' + fileIndex + ']', file);
+                })
+            });
 
             console.log( this.deal)
-            axios.post('/deal/update',  this.deal)
+            axios.post('/deal/update',  formData)
         },
         definitionCommentType(text) {
             switch (text) {
@@ -371,6 +414,12 @@ export default {
 .flex-column {
     display: flex;
     flex-direction: column;
+    gap: 10px;
+}
+.flex-inline {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     gap: 10px;
 }
 .bold-labels {

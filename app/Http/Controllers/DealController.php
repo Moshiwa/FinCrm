@@ -29,9 +29,6 @@ class DealController extends Controller
         $this->service->saveDeal($deal, $data);
         $this->service->updateClient($deal, $data);
         $this->service->updateComments($deal, $data);
-
-        $deal->client()->update($data['client']);
-
     }
 
     public function getStagesByPipeline(Pipeline $pipeline)
@@ -41,7 +38,7 @@ class DealController extends Controller
 
     public function saveFiles(Request $request, Deal $deal)
     {
-        if ($request->hasFile('file')) {
+        /*if ($request->hasFile('file')) {
             $files = $request->file;
             foreach ($files as $file) {
                 $type = $this->service->definitionCommentType($file);
@@ -55,6 +52,6 @@ class DealController extends Controller
                     'author_id' => backpack_user()->id,
                 ]);
             }
-        }
+        }*/
     }
 }

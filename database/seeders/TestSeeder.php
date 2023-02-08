@@ -21,7 +21,6 @@ class TestSeeder extends Seeder
 
         Deal::query()->firstOrcreate(['name' => 'deal 1', 'pipeline_id' => 1,], [
             'name' => 'deal 1',
-            'comment' => 'some comment',
             'pipeline_id' => 1,
             'responsible_id' => 1,
             'client_id' => 1,

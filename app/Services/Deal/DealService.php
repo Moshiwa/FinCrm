@@ -3,12 +3,16 @@
 namespace App\Services\Deal;
 
 use App\Enums\CommentTypeEnum;
+use App\Enums\FilesTypeEnum;
 use App\Models\DealComment;
+use App\Models\File;
+use App\Services\Space\SpaceService;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Storage;
 
 class DealService
 {
-    public function definitionCommentType($data)
+    public function definitionCommentType($data): string
     {
         if (is_uploaded_file($data)) {
             $ext = $data->getClientOriginalExtension();
@@ -16,7 +20,6 @@ class DealService
                 case 'png':
                 case 'jpg':
                 case 'jpeg':
-                    return CommentTypeEnum::image->value;
                 case 'doc':
                 case 'pdf':
                 case 'txt':
@@ -24,7 +27,7 @@ class DealService
             }
         }
 
-        return CommentTypeEnum::text;
+        return CommentTypeEnum::comment->value;
     }
 
     public function saveDeal($deal, array $data): void
@@ -37,12 +40,7 @@ class DealService
             'responsible_id' => $data['responsible_id'],
         ]);
 
-        $fields = [];
-        foreach ($data['fields'] as $field) {
-            $fields[$field['id']] = ['value' => $field['pivot']['value']];
-        }
-
-        $deal->fields()->sync($fields);
+        $deal->fields()->sync($data['fields'] ?? []);
     }
 
     public function updateClient($deal, array $data): void
@@ -51,38 +49,69 @@ class DealService
             'name' => $data['client']['name'] ?? ''
         ]);
 
-        $fields = [];
-        foreach ($data['client']['fields'] as $field) {
-            $fields[$field['id']] = ['value' => $field['pivot']['value']];
-        }
-
-        $deal->client->fields()->sync($fields);
+        $deal->client->fields()->sync($data['client']['fields'] ?? []);
     }
 
     public function updateComments($deal, array $data): void
     {
         $deal_id = $deal->id;
+        $comments = $data['comments'] ?? [];
 
-        if (! empty($data['comments'])) {
-            foreach ($data['comments'] as $comment) {
-                if (empty($comment['id']) && ! empty($comment['content'])) {
-                    DealComment::query()->create([
-                        'type' => $this->definitionCommentType($comment['type'] ?? ''),
-                        'content' => $comment['content'],
-                        'deal_id' => $deal_id,
-                        'author_id' => backpack_user()->id,
-                    ]);
-                } elseif (! empty($comment['id']) && empty($comment['content'])) {
-                    $model_comment = DealComment::query()->find($comment['id']);
-                    $model_comment->delete();
-                } elseif (! empty($comment['id']) && ! empty($comment['content'])) {
-                    $model_comment = DealComment::query()->find($comment['id']);
-                    $model_comment->update([
-                        'content' => $comment['content'],
-                        'author_id' => backpack_user()->id,
-                    ]);
+        foreach ($comments as $comment) {
+            if (empty($comment['id'])) {
+                $model_comment = DealComment::query()->create([
+                    'type' => $comment['type'] ?? CommentTypeEnum::comment,
+                    'content' => $comment['content'],
+                    'deal_id' => $comment['deal_id'] ?? $deal_id,
+                    'author_id' => backpack_user()->id,
+                ]);
+
+                if (empty($comment['files'])) {
+                    continue;
                 }
+
+                $files = is_array($comment['files'])
+                    ? $comment['files']
+                    : [$comment['files']];
+
+                foreach ($files as $file) {
+                    if (! is_uploaded_file($file)) {
+                        continue;
+                    }
+
+                    $space = SpaceService::getCurrentSpaceCode();
+                    $name = "/deal_$space/$deal->id";
+                    $path = Storage::disk('public')->put($name, $file);
+
+                    $file = File::query()->create([
+                        'size' => $file->getSize(),
+                        'meme' => $file->getClientOriginalExtension(),
+                        'path' => $path
+                    ]);
+
+                    $model_comment->files()->attach($file->id);
+
+                }
+
+            } else {
+                $model_comment = DealComment::query()->find($comment['id']);
+                $model_comment->update([
+                    'type' => $comment['type'] ?? CommentTypeEnum::comment,
+                    'content' => $comment['content'],
+                    'deal_id' => $comment['deal_id'] ?? $deal_id,
+                    'author_id' => backpack_user()->id,
+                ]);
             }
+        }
+
+        if (! empty($data['delete_comment_id'])) {
+            $model_comment = DealComment::query()->find($data['delete_comment_id']);
+            foreach ($model_comment->files as $file) {
+                $file->delete();
+            }
+
+            $model_comment->files()->sync([]);
+            $model_comment->delete();
         }
     }
 }

@@ -4,8 +4,7 @@ namespace App\Enums;
 
 enum CommentTypeEnum: string
 {
-    case text = 'text';
-    case image = 'image';
+    case comment = 'comment';
     case document = 'document';
     case audio = 'audio';
     case action = 'action';

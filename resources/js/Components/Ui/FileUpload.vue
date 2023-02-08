@@ -15,7 +15,7 @@
             <div class="file-upload__item" v-for="(file, index) in files">
                 <div v-if="file.type === `image/png`">
                     <div class="file-remove" @click="removeFile(file)">x</div>
-                    <img class="img-thumbnail" :src="file.base64">
+                    <img class="img-thumbnail" :src="file.full_path">
                 </div>
                 <div v-else>
                     <div class="file-remove" @click="removeFile(file)">x</div>
@@ -57,7 +57,7 @@ export default {
                 files.forEach((file) => {
                     var reader = new FileReader();
                     reader.onload = (e) => {
-                        file.base64 = e.target.result;
+                        file.full_path = e.target.result;
                         this.files.push(file);
                     }
 
@@ -67,13 +67,14 @@ export default {
         },
         removeFile(file) {
             this.files.forEach((item, index) => {
-                if (item.base64 === file.base64) {
+                if (item.full_path === file.full_path) {
                     this.files.splice(index, 1);
                 }
             });
         },
         send() {
             this.$emit('send', this.files);
+            this.files = [];
         },
         openDirectory() {
             const elem = this.$refs.inputFile
