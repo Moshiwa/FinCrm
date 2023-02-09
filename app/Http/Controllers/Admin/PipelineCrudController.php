@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\PipelinesRequest;
+use App\Http\Requests\PipelineRequest;
 use App\Models\Status;
 use App\Services\Space\SpaceService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -13,7 +13,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class PipelinesCrudController extends CrudController
+class PipelineCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -52,7 +52,7 @@ class PipelinesCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(PipelinesRequest::class);
+        CRUD::setValidation(PipelineRequest::class);
 
         $status_process = Status::query()->select('id')->where('name', 'process')->first();
         $status_done = Status::query()->select('id')->where('name', 'done')->first();

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FieldsRequest extends FormRequest
+class PipelineRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,9 @@ class FieldsRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'name' => 'required|max:255',
+            'stages.*' => 'required|array',
+            'stages.*.name' => 'required|max:255'
         ];
     }
 

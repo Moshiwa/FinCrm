@@ -24,13 +24,8 @@ trait DealOperation
             'uses'      => $controller.'@getDealForm',
             'operation' => 'deal',
         ]);
-
-        Route::post($segment . '/deal/save/{id}', [
-            'as'        => $routeName . '.deal-send',
-            'uses'      => $controller . '@postDealForm',
-            'operation' => 'deal',
-        ]);
     }
+
 
     public function getDealForm()
     {
@@ -59,36 +54,8 @@ trait DealOperation
         $this->data['pipelines'] = Pipeline::query()->select('id', 'name')->get();
         $this->data['stages'] = Stage::query()->where('pipeline_id', $entry->pipeline->id)->get();
         $this->data['fields'] = Field::query()->get();
-        $this->data['saveAction'] = $this->crud->getSaveAction();
 
         return view('crud::deal', $this->data);
-    }
-
-    public function postDealForm()
-    {
-        $this->crud->hasAccessOrFail('deal');
-        $request = $this->crud->validateRequest();
-
-        $entry = $this->crud->getCurrentEntry();
-        try {
-            dd($request);
-            // send the actual email
-            Mail::raw($request['message'], function ($message) use ($entry, $request) {
-                $message->from($request->from);
-                $message->replyTo($request->reply_to);
-                $message->to($entry->email, $entry->name);
-                $message->subject($request['subject']);
-            });
-
-            Alert::success('Mail Sent')->flash();
-
-            return redirect(url($this->crud->route));
-        } catch (Exception $e) {
-            // show a bubble with the error message
-            Alert::error("Error, " . $e->getMessage())->flash();
-
-            return redirect()->back()->withInput();
-        }
     }
 
     /**
@@ -104,24 +71,6 @@ trait DealOperation
 
         CRUD::operation('list', function () {
             CRUD::addButton('line', 'deal', 'view', 'crud::buttons.deal');
-            // CRUD::addButton('line', 'deal', 'view', 'crud::buttons.deal');
         });
-    }
-
-    /**
-     * Show the view for performing the operation.
-     *
-     * @return Response
-     */
-    public function deal()
-    {
-        CRUD::hasAccessOrFail('deal');
-
-        // prepare the fields you need to show
-        $this->data['crud'] = $this->crud;
-        $this->data['title'] = CRUD::getTitle() ?? 'Deal '.$this->crud->entity_name;
-
-        // load the view
-        return view('crud::operations.deal', $this->data);
     }
 }

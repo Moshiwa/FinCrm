@@ -69,14 +69,4 @@ class DealCrudController extends CrudController
         });
     }
 
-    protected function setupDealOperation(){
-        $this->crud->addSaveAction([
-            'name' => 'send_email',
-            'redirect' => function ($crud, $request, $itemId) {
-                return $crud->route;
-            },
-            'button_text' => 'Send Email',
-        ]);
-    }
-
 }

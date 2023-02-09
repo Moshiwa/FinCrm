@@ -7,7 +7,7 @@ namespace App\Http\Controllers;
 use App\Models\Deal;
 use Illuminate\Http\Request;
 
-class FieldsController extends Controller
+class FieldController extends Controller
 {
     public function saveField(Request $request)
     {

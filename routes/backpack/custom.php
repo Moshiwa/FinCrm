@@ -17,11 +17,12 @@ Route::group([
     'namespace'  => 'App\Http\Controllers\Admin',
 ], function () { // custom admin routes
     Route::crud('user', 'UserCrudController');
-    Route::crud('fields', 'FieldsCrudController');
-    Route::crud('pipelines', 'PipelinesCrudController');
+    Route::crud('fields', 'FieldCrudController');
+    Route::crud('pipelines', 'PipelineCrudController');
     Route::crud('space', 'SpaceCrudController');
 
 //ToDo Завернуть в permission middleware
     Route::get('space-change/{code}', [SpaceCrudController::class, 'spaceChange'])->name('space.change');
     Route::crud('deal', 'DealCrudController');
+    Route::crud('deal-setting', 'DealSettingCrudController');
 });

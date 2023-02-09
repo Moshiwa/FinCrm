@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\FieldsEnum;
-use App\Http\Requests\FieldsRequest;
+use App\Http\Requests\FieldRequest;
 use App\Models\Field;
 use App\Services\SettingService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -14,7 +14,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class FieldsCrudController extends CrudController
+class FieldCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -61,7 +61,7 @@ class FieldsCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(FieldsRequest::class);
+        CRUD::setValidation(FieldRequest::class);
 
         CRUD::field('type')
             ->label('Тип')
