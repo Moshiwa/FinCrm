@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\SettingableTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +12,7 @@ class Stage extends Model
 {
     use CrudTrait;
     use HasFactory;
+    use SettingableTrait;
 
     protected $fillable = [
         'name',

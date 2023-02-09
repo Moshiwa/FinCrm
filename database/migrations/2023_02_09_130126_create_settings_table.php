@@ -8,16 +8,15 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('fields', function (Blueprint $table) {
+        Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('type')->default('string');
             $table->string('name');
-            $table->json('options')->nullable();
+            $table->text('description')->nullable();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('fields');
+        Schema::dropIfExists('settings');
     }
 };

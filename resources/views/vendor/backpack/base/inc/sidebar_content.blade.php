@@ -23,5 +23,4 @@
     </ul>
 </li>
 
-
-<li class="nav-item"><a class="nav-link" href="{{ backpack_url('deal-setting') }}"><i class="nav-icon la la-question"></i> Deal settings</a></li>
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('settings') }}"><i class="nav-icon la la-question"></i> Settings</a></li>

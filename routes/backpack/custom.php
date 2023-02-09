@@ -20,9 +20,10 @@ Route::group([
     Route::crud('fields', 'FieldCrudController');
     Route::crud('pipelines', 'PipelineCrudController');
     Route::crud('space', 'SpaceCrudController');
+    Route::crud('deal', 'DealCrudController');
+
 
 //ToDo Завернуть в permission middleware
     Route::get('space-change/{code}', [SpaceCrudController::class, 'spaceChange'])->name('space.change');
-    Route::crud('deal', 'DealCrudController');
-    Route::crud('deal-setting', 'DealSettingCrudController');
+    Route::crud('settings', 'SettingsCrudController');
 });
