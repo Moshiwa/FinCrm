@@ -9,3 +9,22 @@
     min-height: 25px;
     max-width: 300px;
 }
+
+/*Vue style update*/
+.deal-comment-item .el-timeline-item__node--large {
+    width: 32px !important;
+    height: 32px !important;
+}
+.deal-comment-item .el-timeline {
+    padding: 0 !important;
+}
+.deal-comment-item .el-timeline-item__wrapper {
+    padding-left: 54px !important;
+}
+.deal-comment-item  .el-timeline-item__tail {
+    display: block !important;
+    position: absolute;
+    left: 13px;
+    height: 100%;
+    border-left: 2px solid #ecf5ff;
+}

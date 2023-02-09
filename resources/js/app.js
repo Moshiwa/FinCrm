@@ -5,10 +5,7 @@ import {createApp} from 'vue/dist/vue.esm-bundler.js';
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import Contenteditable from "./Components/Ui/Contenteditable.vue";
-import FileUpload from "./Components/Ui/FileUpload.vue";
-import SelectedField from "./Components/Ui/SelectedField.vue";
-import DetailDeal from "./Components/DetailDeal.vue";
+import DetailDeal from "./Pages/Deal/DetailDeal.vue";
 
 if (document.getElementById("vue-app")) {
 
@@ -16,7 +13,7 @@ if (document.getElementById("vue-app")) {
         .use(ElementPlus)
         .mixin({
             components: {
-                DetailDeal, Contenteditable, FileUpload, SelectedField
+                DetailDeal,
             }
         });
 

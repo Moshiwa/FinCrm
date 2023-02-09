@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Events\ChangePipeline;
+use App\Events\ChangeStage;
+use App\Listeners\ChangePipelineNotification;
 use App\Traits\FieldableTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -40,5 +43,26 @@ class Deal extends Model
     public function comments(): HasMany
     {
         return $this->hasMany(DealComment::class);
+    }
+
+    protected static function booted()
+    {
+        static::updating(function (self $deal) {
+            if ($deal->isDirty('pipeline_id')) {
+                $old_data = [
+                    'pipeline_id' => $deal->getOriginal('pipeline_id'),
+                    'stage_id' => $deal->getOriginal('stage_id')
+                ];
+
+                event(new ChangePipeline($deal, $old_data));
+            }
+            if ($deal->isDirty('stage_id')) {
+                $old_data = [
+                    'stage_id' => $deal->getOriginal('stage_id')
+                ];
+
+                event(new ChangeStage($deal, $old_data));
+            }
+        });
     }
 }

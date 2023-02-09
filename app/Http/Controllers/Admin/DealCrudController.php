@@ -43,10 +43,9 @@ class DealCrudController extends CrudController
     protected function setupListOperation()
     {
         CRUD::column('name');
-        CRUD::column('comment');
         CRUD::column('pipeline_id');
+        CRUD::column('stage_id');
         CRUD::column('created_at');
-        CRUD::column('updated_at');
         CRUD::denyAccess(['update', 'delete', 'show']);
 
         $pipelines = Pipeline::query()->select('id', 'name')->get()->toArray();

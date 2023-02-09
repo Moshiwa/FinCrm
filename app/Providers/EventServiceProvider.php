@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\ChangePipeline;
+use App\Events\ChangeStage;
+use App\Listeners\ChangePipelineNotification;
+use App\Listeners\ChangeStageNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -18,6 +22,12 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        ChangePipeline::class => [
+            ChangePipelineNotification::class
+        ],
+        ChangeStage::class => [
+            ChangeStageNotification::class
+        ]
     ];
 
     /**

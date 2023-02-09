@@ -25,7 +25,9 @@ class PipelinesRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|max:255'
+            'name' => 'required|max:255',
+            'stages.*' => 'required|array',
+            'stages.*.name' => 'required|max:255'
         ];
     }
 

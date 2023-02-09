@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CommentTypeEnum;
+use App\Events\ChangePipeline;
 use App\Http\Requests\DealRequest;
 use App\Models\Deal;
 use App\Models\DealComment;
@@ -29,6 +31,25 @@ class DealController extends Controller
         $this->service->saveDeal($deal, $data);
         $this->service->updateClient($deal, $data);
         $this->service->updateComments($deal, $data);
+
+        $deal->load([
+            'stage',
+            'pipeline',
+            'responsible',
+            'client',
+            'fields',
+            'client.fields',
+            'comments' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            },
+            'comments.files',
+            'comments.author' => function ($query) {
+                $query->select('id', 'name');
+            }
+        ]);
+
+        return $deal;
+
     }
 
     public function getStagesByPipeline(Pipeline $pipeline)

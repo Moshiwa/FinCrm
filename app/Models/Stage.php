@@ -12,7 +12,12 @@ class Stage extends Model
     use CrudTrait;
     use HasFactory;
 
-    public $timestamps = false;
+    protected $fillable = [
+        'name',
+        'color',
+        'status_id',
+        'pipeline_id',
+    ];
 
     protected $guarded = ['id'];
 
