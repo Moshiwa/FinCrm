@@ -57,8 +57,8 @@
                                         <el-option
                                             v-for="(option, index) in field.options"
                                             :key="index"
-                                            :label="option"
-                                            :value="option"
+                                            :label="option.value"
+                                            :value="option.value"
                                         />
                                     </el-select>
                                 </div>

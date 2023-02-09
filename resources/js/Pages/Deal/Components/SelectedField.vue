@@ -20,9 +20,9 @@
             >
                 <el-option
                     v-for="(option, index) in selectedField.options"
-                    :key="index"
-                    :label="option"
-                    :value="option"
+                    :key="index.value"
+                    :label="option.value"
+                    :value="option.value"
                 />
             </el-select>
         </div>

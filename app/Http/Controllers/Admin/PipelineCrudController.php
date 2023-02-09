@@ -29,8 +29,8 @@ class PipelineCrudController extends CrudController
     public function setup()
     {
         CRUD::setModel(\App\Models\Pipeline::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/pipelines');
-        CRUD::setEntityNameStrings('pipelines', 'pipelines');
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/pipeline');
+        CRUD::setEntityNameStrings('pipeline', 'pipeline');
     }
 
     /**

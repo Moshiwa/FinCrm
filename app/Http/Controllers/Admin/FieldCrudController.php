@@ -31,8 +31,8 @@ class FieldCrudController extends CrudController
     {
 
         CRUD::setModel(Field::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/fields');
-        CRUD::setEntityNameStrings('fields', 'fields');
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/field');
+        CRUD::setEntityNameStrings('field', 'field');
     }
 
     /**
@@ -50,7 +50,7 @@ class FieldCrudController extends CrudController
             ->function(function($entry) {
                 return __('fields.type.' . $entry->type);
             });
-        CRUD::column('options')->label('Варианты');
+        //CRUD::column('options')->label('Варианты');
     }
 
     /**

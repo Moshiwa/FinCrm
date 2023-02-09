@@ -31,8 +31,12 @@ class TestSeeder extends Seeder
             'name' => 'Выберите кое что',
             'type' => FieldsEnum::select->value,
             'options' => [
-                'кое', 'что'
-            ]
-        ]);
+                [
+                    'value' => 'кое'
+                ],
+                [
+                    'value' => 'что'
+                ]
+            ]]);
     }
 }

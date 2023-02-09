@@ -14,7 +14,8 @@ return new class extends Migration
             $table->string('name');
             $table->foreignId('pipeline_id')->constrained();
             $table->foreignId('client_id')
-                ->constrained();
+                ->constrained()
+                ->cascadeOnDelete();
             $table->foreignId('stage_id')->constrained();
 
             $table->timestamps();
