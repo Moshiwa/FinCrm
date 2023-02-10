@@ -8,6 +8,6 @@ trait SettingableTrait
 {
     public function settings()
     {
-        return static::morphToMany(Setting::class, 'settingable')->withPivot('is_enabled');
+        return static::morphToMany(Setting::class, 'settingable')->withPivot('is_enable');
     }
 }

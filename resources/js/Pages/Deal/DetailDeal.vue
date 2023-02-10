@@ -148,13 +148,12 @@
                                 </div>
                                 <div class="document-actions">
                                     <el-button-group class="ml-4">
-                                        <el-button type="primary" :icon="Edit" />
-                                        <el-button type="primary" :icon="Share" />
+                                        <el-button type="primary" icon="" />
+                                        <el-button type="primary" icon="" />
                                     </el-button-group>
                                 </div>
                             </div>
                         </div>
-                        <el-button type="success" class="w-100" @click="visibleFileUploadForm = true">Прикрепить файл</el-button>
                     </el-collapse-item>
                 </el-collapse>
             </div>
@@ -228,41 +227,13 @@
             </div>
         </div>
 
-        <div class="card-body flex-column">
-            <div class="w-100">
-                <el-button class="w-100" @click="visibleCommentForm = true">Оставить комментарий</el-button>
-            </div>
-            <div class="w-100">
-                <el-button type="danger" class="w-100">Удалить сделку</el-button>
-            </div>
-            <hr>
-        </div>
-    </div>
+        <settings-button
+            :settings="stage.settings"
 
-
-    <el-drawer v-model="visibleCommentForm" :show-close="false">
-        <template #header="{ close, titleId, titleClass }">
-            <h4 :id="titleId" :class="titleClass">Оставте комментарий</h4>
-        </template>
-        <el-input
-            v-model="newComment.content"
-            rows="5"
-            type="textarea"
+            @commentSend="sendComment($event)"
+            @fileUploadSend="sendFiles($event)"
         />
-        <el-button
-            class="w-100 mt-3"
-            type="success"
-            @click="sendComment"
-        >
-            Отправить
-        </el-button>
-    </el-drawer>
-    <el-drawer v-model="visibleFileUploadForm" :show-close="false">
-        <template #header="{ close, titleId, titleClass }">
-            <h4 :id="titleId" :class="titleClass">Выберите файлы</h4>
-        </template>
-        <file-upload @send="sendFiles($event)"/>
-    </el-drawer>
+    </div>
 </template>
 
 <script>
@@ -270,19 +241,21 @@ import { ElInput } from 'element-plus';
 import SelectedField from "./Components/SelectedField.vue"
 import Contenteditable from "./Components/Contenteditable.vue";
 import FileUpload from "./Components/FileUpload.vue";
-import {ChatDotSquare, Document, Paperclip, Bell} from "@element-plus/icons-vue";
+import { ElNotification } from 'element-plus'
+import SettingsButton from "./Components/SettingsButtons.vue";
+import {ChatDotSquare, Document, Paperclip, Bell, Edit, Share} from "@element-plus/icons-vue";
 
 export default {
     name: 'DetailDeal',
-    components: {SelectedField, Contenteditable, FileUpload},
+    components: {SelectedField, Contenteditable, FileUpload, SettingsButton},
     props: {
         deal: {
-            type: [Array, Object],
-            default: null
+            type: Object,
+            required: true
         },
         pipelines: {
             type: Array,
-            default: null
+            default: [{}]
         },
         stages: {
             type: Array,
@@ -291,11 +264,7 @@ export default {
         fields: {
             type: Array,
             default: [{}]
-        }
-    },
-    mounted() {
-        console.log(this.deal)
-        console.log(this.allFiles);
+        },
     },
     data() {
         return {
@@ -314,24 +283,18 @@ export default {
 
             deleteCommentId: 0,
 
-            allFiles: this.collectFilesFromComments(),
+            allFiles: this.deal.comments.reduce((acc, item) => {
+                return [...acc,...item.files];
+            }, []),
 
             files: [],
             newComment: { id: '', type: 'comment', content: '', author_id: null, files: [] },
         }
     },
+    mounted() {
+        console.log(this.deal);
+    },
     methods: {
-        collectFilesFromComments() {
-            var files = [];
-            this.deal.comments.forEach((comment) => {
-                let commentFiles = comment.files ?? [];
-                commentFiles.forEach((file) => {
-                    files.push(file);
-                });
-            })
-
-            return files;
-        },
         changePipeline(item) {
             this.send();
             axios
@@ -375,8 +338,9 @@ export default {
             this.dealFields.push(newField);
             this.send();
         },
-        sendComment() {
+        sendComment(e) {
             this.visibleCommentForm = false;
+            this.newComment.content = e;
             if (this.newComment.content.length > 0) {
                 this.comments.unshift(this.newComment);
             }
@@ -426,10 +390,6 @@ export default {
                 formData.append('client[fields][' + field.id + '][value]', field.pivot?.value ?? '');
             });
 
-          /*  console.log(this.deal.comments)
-            console.log(this.comments)
-            return;*/
-
             this.deal.comments = this.comments ?? [];
             this.deal?.comments.forEach((comment, commentIndex) => {
                 formData.append('comments[' + commentIndex + '][id]', comment.id ?? '');
@@ -443,12 +403,16 @@ export default {
             });
 
             console.log( this.deal)
-            /*return;*/
             axios
                 .post('/deal/update',  formData)
                 .then((response) => {
                     this.comments = response.data.comments;
                     this.stage = response.data.stage;
+                    ElNotification({
+                        title: 'Сохранено',
+                        type: 'success',
+                        position: 'bottom-right',
+                    });
                 }
             )
         },
@@ -487,6 +451,9 @@ export default {
 }
 </script>
 <style scoped>
+.test{
+    width: 1000px;
+}
 .wrap {
     display:flex;
     flex-direction: row;

@@ -1,7 +1,7 @@
 <template>
     <div class="wrap">
         <el-tabs tab-position='left'>
-            <el-tab-pane  v-for="pipeline in pipelines" :label="pipeline.name">
+            <el-tab-pane  v-for="pipeline in newpipelines" :label="pipeline.name">
                 <div class="stage-container">
                     {{ pipeline.name }}
                     <hr>
@@ -14,6 +14,7 @@
                 </div>
             </el-tab-pane>
         </el-tabs>
+        <el-button @click="addNewPipeline">New</el-button>
     </div>
 </template>
 
@@ -25,9 +26,21 @@ export default {
             type: Array
         }
     },
+    data() {
+        return {
+            newpipelines: this.pipelines || [],
+        }
+    },
+    mounted() {
+        console.log(this.pipelines)
+    },
     methods: {
         selectStage(stage) {
             alert('Вы выбрали' + stage.id)
+        },
+        addNewPipeline() {
+            console.log('1')
+            this.newpipelines.push({ name: 'new', stages: [] })
         }
     }
 }

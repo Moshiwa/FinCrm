@@ -9,6 +9,7 @@
 
   // if breadcrumbs aren't defined in the CrudController, use the default breadcrumbs
   $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
+  $comments = json_encode($comments);
 @endphp
 
 
@@ -33,6 +34,7 @@
             :pipelines="{{ $pipelines }}"
             :stages="{{ $stages }}"
             :fields="{{ $fields }}"
+            :comments="{{ $comments }}"
         />
     </div>
 </div>
