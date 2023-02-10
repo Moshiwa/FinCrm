@@ -26,8 +26,6 @@ class PipelineRequest extends FormRequest
     {
         return [
             'name' => 'required|max:255',
-            'stages.*' => 'required|array',
-            'stages.*.name' => 'required|max:255'
         ];
     }
 

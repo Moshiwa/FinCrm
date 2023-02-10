@@ -1,6 +1,6 @@
 <template>
     <div class="card-body flex-column">
-        <div class="w-100" v-for="setting in settings">
+        <div v-for="setting in settings">
             <el-button
                 v-if="setting.pivot.is_enable"
                 class="w-100"
@@ -96,5 +96,6 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    width: 200px;
 }
 </style>

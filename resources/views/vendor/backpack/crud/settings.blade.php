@@ -30,7 +30,9 @@
             </section>
             <settings-main
                 :pipelines="{{ $entry }}"
-
+                :settings="{{ $settings }}"
+                :statuses="{{ $statuses }}"
+                :fields="{{ $fields }}"
             />
         </div>
     </div>

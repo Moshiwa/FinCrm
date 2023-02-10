@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Admin\Operations;
 
+use App\Models\Field;
 use App\Models\Pipeline;
+use App\Models\Setting;
+use App\Models\Status;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Support\Facades\Route;
 
@@ -53,12 +56,17 @@ trait SettingsOperation
         $entry = Pipeline::query()->get();
 
         $entry->load([
-            'stages'
+            'stages',
+            'stages.settings',
+            'stages.status'
         ]);
 
         // prepare the fields you need to show
         $this->data['crud'] = $this->crud;
         $this->data['entry'] = $entry;
+        $this->data['statuses'] = Status::query()->get();
+        $this->data['settings'] = Setting::query()->get();
+        $this->data['fields'] = Field::query()->get();
         $this->data['title'] = CRUD::getTitle() ?? 'Settings '.$this->crud->entity_name;
 
         // load the view
