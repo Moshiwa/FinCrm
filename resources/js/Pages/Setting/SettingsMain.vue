@@ -4,7 +4,6 @@
             <el-tab-pane label="Сделки">
                 <settings-deal
                     :pipelines="pipelines"
-                    :statuses="statuses"
                 />
             </el-tab-pane>
             <el-tab-pane label="Этапы">
@@ -54,9 +53,6 @@ export default {
         },
         settings: {
             type: Array
-        },
-        statuses: {
-
         },
         fields: {
 

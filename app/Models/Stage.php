@@ -7,6 +7,7 @@ use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Stage extends Model
 {
@@ -17,15 +18,14 @@ class Stage extends Model
     protected $fillable = [
         'name',
         'color',
-        'status_id',
         'pipeline_id',
     ];
 
     protected $guarded = ['id'];
 
-    public function status(): BelongsTo
+    public function deals(): HasMany
     {
-        return $this->belongsTo(Status::class);
+        return $this->hasMany(Deal::class);
     }
 
     public function pipeline(): BelongsTo

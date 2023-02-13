@@ -28,6 +28,15 @@ Route::prefix('deal')->name('deal.')->group(function () {
     Route::post('/{deal}/change_pipeline', [DealController::class, 'changePipeline'])->name('changePipeline');
 });
 
+Route::prefix('pipeline')->name('pipeline.')->group(function () {
+    Route::post('/', [PipelineController::class, 'create'])->name('create');
+    Route::get('/{pipeline}', [PipelineController::class, 'get'])->name('get');
+    Route::delete('/{pipeline}', [PipelineController::class, 'delete'])->name('delete');
+    Route::post('/update', [PipelineController::class, 'update'])->name('update');
+});
+
+
+//ToDo удалить
 Route::prefix('settings')->name('settings.')->group(function () {
     Route::prefix('pipeline')->name('pipeline.')->group(function () {
         Route::post('/', [PipelineController::class, 'create'])->name('create');
@@ -43,7 +52,5 @@ Route::prefix('settings')->name('settings.')->group(function () {
 
         $stage = Stage::query()->find($stage_id);
         $stage->settings()->attach([$setting_id => ['is_enable' => $is_enable]]);
-
-
     });
 });

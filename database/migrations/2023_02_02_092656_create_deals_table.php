@@ -12,10 +12,10 @@ return new class extends Migration
         Schema::create('deals', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('pipeline_id')->constrained();
+            $table->foreignId('pipeline_id')
+                ->constrained();
             $table->foreignId('client_id')
-                ->constrained()
-                ->cascadeOnDelete();
+                ->constrained();
             $table->foreignId('stage_id')->constrained();
 
             $table->timestamps();

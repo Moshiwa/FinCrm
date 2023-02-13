@@ -25,7 +25,9 @@ class PipelineRequest extends FormRequest
     public function rules()
     {
         return [
+            'id' => 'nullable',
             'name' => 'required|max:255',
+            'stages' => 'nullable|array',
         ];
     }
 

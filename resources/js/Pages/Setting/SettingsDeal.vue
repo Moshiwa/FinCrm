@@ -27,7 +27,7 @@
             Новая воронка
         </el-button>
     </div>
-
+    <hr>
 
     <div class="settings-container">
         <el-form label-position="left" label-width="200px">
@@ -48,18 +48,6 @@
                             class="w-50"
                             v-model="stage.name"
                         />
-                        <el-select
-                            class="w-50"
-                            v-model="stage.status"
-                            value-key="id"
-                        >
-                            <el-option
-                                v-for="status in statuses"
-                                :key="status.id"
-                                :label="status.name"
-                                :value="status"
-                            />
-                        </el-select>
                         <el-color-picker v-model="stage.color" />
                         <el-button
                             @click="deleteStage(stage)"
@@ -80,11 +68,18 @@
                 </div>
             </el-form-item>
         </el-form>
+        <el-button
+            type="primary"
+            @click="update"
+        >
+            Сохранить
+        </el-button>
     </div>
 </template>
 
 <script>
 import StageItem from './Components/StageItem.vue'
+import { ElNotification } from 'element-plus'
 export default {
     name: 'SettingsDeal',
     components: { StageItem },
@@ -92,29 +87,47 @@ export default {
         pipelines: {
             type: Array
         },
-        statuses: {
-            type: Array
-        }
     },
     data() {
         return {
             allPipelines: this.pipelines ?? [],
             selectedPipeline: this.pipelines[0] ?? {},
-            stages: [],
-            newStage: { name: '', color: '', status_id: '' }
+            newStage: { name: '', color: '' }
         }
     },
     methods: {
+        update() {
+            console.log(this.selectedPipeline);
+            axios.post('/pipeline/update', this.selectedPipeline).then((response) => {
+
+            });
+        },
         createNewPipeline() {
-            axios.post('/settings/pipeline', { name: 'Новая' }).then((response) => {
-                this.selectedPipeline = response.data;
-                this.allPipelines.push(this.selectedPipeline);
+            axios.post('/pipeline', { name: 'Новая' }).then((response) => {
+                if (response.data.success === true) {
+                    this.selectedPipeline = response.data.data;
+                    this.allPipelines.push(this.selectedPipeline);
+                }
             });
         },
         deletePipeline(pipeline) {
-            axios.delete('/settings/pipeline/' + pipeline.id).then((response) => {
-                this.allPipelines = response.data;
-                this.selectedPipeline = response.data[response.data.length - 1] ?? {};
+            axios.delete('/pipeline/' + pipeline.id).then((response) => {
+                if (response.data.success === false) {
+                    ElNotification({
+                        title: 'Не удалось удалить сделку',
+                        message: response.data.message,
+                        type: 'error',
+                        position: 'bottom-right',
+                    });
+                } else {
+                    this.allPipelines.forEach((item, index) => {
+                        if (item.id === pipeline.id) {
+                            this.allPipelines.splice(index, 1);
+                        }
+                    });
+
+                    this.selectedPipeline = this.allPipelines[this.allPipelines.length - 1] ?? {};
+                }
             });
         },
         getPipelineInfo(pipeline) {

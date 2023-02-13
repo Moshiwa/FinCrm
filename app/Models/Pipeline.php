@@ -22,23 +22,17 @@ class Pipeline extends Model
     protected static function booted()
     {
         static::created(function (self $pipeline) {
-            $status_process = Status::query()->select('id')->where('name', 'process')->first();
-            $status_done = Status::query()->select('id')->where('name', 'done')->first();
-            $status_cancel = Status::query()->select('id')->where('name', 'cancel')->first();
             $stages = [
                 [
                     'name' => 'В работе',
-                    'status_id' => $status_process->id,
                     'color' => '#0050FF'
                 ],
                 [
                     'name' => 'Выполнено',
-                    'status_id' => $status_done->id,
                     'color' => '#28FC2A'
                 ],
                 [
                     'name' => 'Отменено',
-                    'status_id' => $status_cancel->id,
                     'color' => '#FE3F6D'
                 ],
 
