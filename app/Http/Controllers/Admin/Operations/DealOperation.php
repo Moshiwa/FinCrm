@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin\Operations;
 
 use App\Models\Field;
+use App\Models\FieldClientSetting;
+use App\Models\FieldDealSetting;
 use App\Models\Pipeline;
 use App\Models\Stage;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -34,6 +36,8 @@ trait DealOperation
         $this->crud->setHeading('Сделка');
 
         $comments = $entry->comments()->orderBy('created_at', 'desc')->with(['author', 'files'])->paginate(5);
+        $included_deal_fields = FieldDealSetting::query()->select('field_id')->pluck('field_id')->toArray();
+        $included_client_fields = FieldClientSetting::query()->select('field_id')->pluck('field_id')->toArray();
 
         $entry->load([
             'stage',
@@ -41,8 +45,12 @@ trait DealOperation
             'pipeline',
             'responsible',
             'client',
-            'fields',
-            'client.fields',
+            'fields' => function ($query) use ($included_deal_fields) {
+                $query->whereIn('field_id', $included_deal_fields);
+            },
+            'client.fields' => function ($query) use ($included_client_fields) {
+                $query->whereIn('field_id', $included_client_fields);
+            },
             'comments' => function ($query) {
                 $query->orderBy('created_at', 'desc');
             },
@@ -51,6 +59,7 @@ trait DealOperation
                 $query->select('id', 'name');
             }
         ]);
+
 
         $this->data['crud'] = $this->crud;
         $this->data['entry'] = $entry;

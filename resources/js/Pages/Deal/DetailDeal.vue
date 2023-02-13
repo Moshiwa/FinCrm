@@ -247,7 +247,12 @@ import {ChatDotSquare, Document, Paperclip, Bell, Edit, Share} from "@element-pl
 
 export default {
     name: 'DetailDeal',
-    components: {SelectedField, Contenteditable, FileUpload, SettingsButton},
+    components: {
+        SelectedField,
+        Contenteditable,
+        FileUpload,
+        SettingsButton
+    },
     props: {
         deal: {
             type: Object,
@@ -292,7 +297,8 @@ export default {
         }
     },
     mounted() {
-        console.log(this.deal);
+        console.log(this.includedDealFields);
+        console.log(this.dealFields);
     },
     methods: {
         changePipeline(item) {
