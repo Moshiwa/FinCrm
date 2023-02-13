@@ -2,30 +2,37 @@
 
 namespace App\Http\Controllers;
 
-
-
-use App\Models\Deal;
-use Illuminate\Http\Request;
+use App\Http\Requests\SettingFieldsRequest;
+use App\Models\Field;
+use Illuminate\Support\Arr;
 
 class FieldController extends Controller
 {
-    public function saveField(Request $request)
-    {
-        $entity_id = $request->get('id');
-        $entity = $request->get('entity');
-        $field = $request->get('field');
-        $model = $this->getModel($entity, $entity_id);
-        $m = Deal::query()->find(1);
-        dd($m->client());
-        dd($request->get('id'));
-    }
 
-    private function getModel(string $entity, $entity_id)
+    public function save(SettingFieldsRequest $request)
     {
-        $entities = explode('.', $entity);
-        $model = $entities[0];
-        $model = ucfirst($model);
-        $model = "App\Models\\$model";
-        return $model::query()->find($entity_id);
+        $data = $request->validated();
+
+        $fields = Arr::pluck($data, 'id');
+        $fields = Field::query()
+           ->with('settings')
+           ->whereIn('id', $fields)
+           ->get();
+
+        foreach ($fields as $field) {
+            foreach ($data as $field_item) {
+                if ($field->id !== $field_item['id']) {
+                    continue;
+                }
+
+                $save = [];
+                foreach ($field_item['settings'] as $setting) {
+                    $save[$setting['id']] = ['is_enable' => $setting['pivot']['is_enable']];
+                }
+
+                $field->settings()->sync($save);
+            }
+       }
+
     }
 }

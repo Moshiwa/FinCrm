@@ -63,11 +63,11 @@ export default {
     },
     methods: {
         buttonClick(setting) {
-            if (setting.name === 'comment-button') {
+            if (setting.name === 'comment' && setting.type === 'button') {
                 this.commentClick();
             }
 
-            if (setting.name === 'file-upload-button') {
+            if (setting.name === 'file-upload' && setting.type === 'button') {
                 this.fileUploadClick();
             }
         },

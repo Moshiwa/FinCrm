@@ -6,46 +6,26 @@
                     :pipelines="pipelines"
                 />
             </el-tab-pane>
-            <el-tab-pane label="Этапы">
-
-            </el-tab-pane>
-            <el-tab-pane label="Клиенты">
-                <settings-client
+            <el-tab-pane
+                label="Поля"
+            >
+                <settings-field
                     :fields="fields"
                 />
             </el-tab-pane>
+
         </el-tabs>
-<!--        <el-tabs tab-position='left'>
-            <el-tab-pane  v-for="pipeline in newpipelines" :label="pipeline.name">
-                <div class="stage-container">
-                    {{ pipeline.name }}
-                    <hr>
-                    Стадии
-                    <el-tabs type="card" >
-                        <el-tab-pane v-for="(stage, index) in pipeline.stages" :label="stage.name">
-                            <div v-for="setting in mergeSettings(stage)">
-                                <el-checkbox
-                                    :label="setting.description"
-                                    :checked="setting.pivot?.is_enable"
-                                    @change="selectSetting($event, setting)"
-                                />
-                            </div>
-                        </el-tab-pane>
-                    </el-tabs>
-                </div>
-            </el-tab-pane>
-        </el-tabs>-->
     </div>
 </template>
 
 <script>
 import SettingsDeal from "./SettingsDeal.vue";
-import SettingsClient from "./SettingsClient.vue";
+import SettingsField from "./SettingsField.vue";
 export default {
     name: 'SettingsMain',
     components: {
         SettingsDeal,
-        SettingsClient
+        SettingsField
     },
     props: {
         pipelines: {
@@ -62,9 +42,6 @@ export default {
         return {
             newpipelines: this.pipelines || [],
         }
-    },
-    mounted() {
-        console.log(this.pipelines)
     },
     methods: {
         selectStage(stage) {
@@ -104,7 +81,7 @@ export default {
     background: white;
     border-radius: 4px;
     width: 100%;
-    height: 100vh;
+    height: 100%;
     padding: 10px;
 }
 .stage-container {

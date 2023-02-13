@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DealController;
+use App\Http\Controllers\FieldController;
 use App\Http\Controllers\PipelineController;
 use App\Models\Stage;
 use Illuminate\Http\Request;
@@ -33,6 +34,10 @@ Route::prefix('pipeline')->name('pipeline.')->group(function () {
     Route::get('/{pipeline}', [PipelineController::class, 'get'])->name('get');
     Route::delete('/{pipeline}', [PipelineController::class, 'delete'])->name('delete');
     Route::post('/update', [PipelineController::class, 'update'])->name('update');
+});
+
+Route::prefix('field')->name('field.')->group(function () {
+    Route::post('/save', [FieldController::class, 'save'])->name('.save');
 });
 
 

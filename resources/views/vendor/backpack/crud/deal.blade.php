@@ -10,8 +10,6 @@
   // if breadcrumbs aren't defined in the CrudController, use the default breadcrumbs
   $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
   $comments = json_encode($comments);
-  $included_client_fields = json_encode($included_client_fields);
-  $included_deal_fields = json_encode($included_deal_fields);
 @endphp
 
 

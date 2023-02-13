@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin\Operations;
 
 use App\Models\Field;
+use App\Models\FieldClientSetting;
+use App\Models\FieldSetting;
 use App\Models\Pipeline;
 use App\Models\Setting;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -55,7 +57,9 @@ trait SettingsOperation
         $entry = Pipeline::query()->orderBy('created_at', 'ASC')->get();
 
         $entry->load([
-            'stages',
+            'stages' => function ($query) {
+                $query->orderBy('created_at', 'ASC');
+            },
             'stages.settings',
         ]);
 
@@ -63,7 +67,7 @@ trait SettingsOperation
         $this->data['crud'] = $this->crud;
         $this->data['entry'] = $entry;
         $this->data['settings'] = Setting::query()->get();
-        $this->data['fields'] = Field::query()->get();
+        $this->data['fields'] = Field::query()->with(['settings'])->get();
         $this->data['title'] = CRUD::getTitle() ?? 'Settings '.$this->crud->entity_name;
 
         // load the view

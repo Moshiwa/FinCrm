@@ -75,12 +75,6 @@
                                     @send="send"
                                 />
                             </el-descriptions-item>
-                            <el-descriptions-item label="Добавить">
-                                <selected-field
-                                    :fields="fields"
-                                    @updateField="addNewDealField($event)"
-                                />
-                            </el-descriptions-item>
                         </el-descriptions>
                     </el-collapse-item>
                 </el-collapse>
@@ -126,39 +120,10 @@
                                     @send="send"
                                 />
                             </el-descriptions-item>
-                            <el-descriptions-item label="Добавить">
-                                <selected-field
-                                    :fields="fields"
-                                    @updateField="addNewClientField($event)"
-                                />
-                            </el-descriptions-item>
                         </el-descriptions>
                     </el-collapse-item>
                 </el-collapse>
-
-                <el-collapse v-model="active">
-                    <el-collapse-item title="Документы" name="3">
-                        <div class="document_container" v-for="file in allFiles">
-                            <div class="document_item">
-                                <div class="document-date">
-                                    {{ file.created_at }}
-                                </div>
-                                <div class="document-name">
-                                    {{ file.original_name }}
-                                </div>
-                                <div class="document-actions">
-                                    <el-button-group class="ml-4">
-                                        <el-button type="primary" icon="" />
-                                        <el-button type="primary" icon="" />
-                                    </el-button-group>
-                                </div>
-                            </div>
-                        </div>
-                    </el-collapse-item>
-                </el-collapse>
             </div>
-
-
 
             <div class="card-right">
                 <div class="card-body row">
@@ -273,7 +238,7 @@ export default {
     },
     data() {
         return {
-            active: ['1'],
+            active: ['1', '2'],
             visibleCommentForm: false,
             visibleFileUploadForm: false,
 
@@ -297,7 +262,6 @@ export default {
         }
     },
     mounted() {
-        console.log(this.includedDealFields);
         console.log(this.dealFields);
     },
     methods: {

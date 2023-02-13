@@ -8,15 +8,18 @@ class DatabaseSeeder extends Seeder
 {
     public function run()
     {
+        (new SettingsSeeder())->run();
+
         (new UsersSeeder())->run();
         (new SpacesSeeder())->run();
-        (new StatusesSeeder())->run();
         (new PermissionSeeder())->run();
         (new PipelineSeeder())->run();
         (new StagesSeeder())->run();
-        (new FieldsSeeder())->run();
+
 
         (new TestSeeder())->run();
+        (new FieldsSeeder())->run();
+
 
     }
 }

@@ -16,7 +16,7 @@ class TestSeeder extends Seeder
             ['name' => 'Aleks Fider',],
             ['name' => 'Aleks Fider',]
         );
-        $client->fields()->sync([1, ['value' => '+79875227611']]);
+       //$client->fields()->sync([1, ['value' => '+79875227611']]);
 
 
         Deal::query()->firstOrcreate(['name' => 'deal 1', 'pipeline_id' => 1,], [
@@ -27,16 +27,5 @@ class TestSeeder extends Seeder
             'stage_id' => 1
         ]);
 
-        Field::query()->firstOrCreate(['name' => 'Выберите кое что', 'type' => FieldsEnum::select->value], [
-            'name' => 'Выберите кое что',
-            'type' => FieldsEnum::select->value,
-            'options' => [
-                [
-                    'value' => 'кое'
-                ],
-                [
-                    'value' => 'что'
-                ]
-            ]]);
     }
 }

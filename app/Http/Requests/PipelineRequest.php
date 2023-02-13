@@ -28,6 +28,7 @@ class PipelineRequest extends FormRequest
             'id' => 'nullable',
             'name' => 'required|max:255',
             'stages' => 'nullable|array',
+            'deleted_stages' => 'nullable|array'
         ];
     }
 
@@ -53,5 +54,12 @@ class PipelineRequest extends FormRequest
         return [
             //
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'deleted_stages' => $this->deletedStages ?? [],
+        ]);
     }
 }

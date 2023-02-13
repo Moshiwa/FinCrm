@@ -92,19 +92,53 @@ export default {
         return {
             allPipelines: this.pipelines ?? [],
             selectedPipeline: this.pipelines[0] ?? {},
-            newStage: { name: '', color: '' }
+            newStage: { name: '', color: '' },
+            deletedStages: [],
         }
     },
     methods: {
         update() {
-            console.log(this.selectedPipeline);
-            axios.post('/pipeline/update', this.selectedPipeline).then((response) => {
+            const formData = new FormData();
+            formData.append('id', this.selectedPipeline.id);
+            formData.append('name', this.selectedPipeline.name);
+            this.selectedPipeline.stages = this.selectedPipeline.stages ?? [];
+            this.selectedPipeline.stages.forEach((stage, stageIndex) => {
+                formData.append('stages[' + stageIndex + '][id]', stage.id ?? 0);
+                formData.append('stages[' + stageIndex + '][color]', stage.color ?? '#FFFFFF');
+                formData.append('stages[' + stageIndex + '][pipeline_id]', this.selectedPipeline.id ?? null);
+                formData.append('stages[' + stageIndex + '][name]', stage.name ?? '');
+            });
 
+            this.deletedStages.forEach((stageId, index) => {
+                formData.append('deletedStages[' + index + ']', stageId ?? null);
+            });
+
+            axios.post('/pipeline/update', formData).then((response) => {
+                if (response.data.errors.length > 0) {
+                    response.data.errors.forEach((error) => {
+                        ElNotification({
+                            title: 'Не удалось обновить',
+                            message: error,
+                            type: 'error',
+                            position: 'bottom-right',
+                        });
+                    });
+                } else {
+                    ElNotification({
+                        title: 'Сохранено',
+                        type: 'success',
+                        position: 'bottom-right',
+                    });
+
+                    this.selectedPipeline = response.data.data;
+                }
             });
         },
         createNewPipeline() {
             axios.post('/pipeline', { name: 'Новая' }).then((response) => {
-                if (response.data.success === true) {
+                if (response.data.errors.length > 0) {
+
+                } else {
                     this.selectedPipeline = response.data.data;
                     this.allPipelines.push(this.selectedPipeline);
                 }
@@ -112,13 +146,15 @@ export default {
         },
         deletePipeline(pipeline) {
             axios.delete('/pipeline/' + pipeline.id).then((response) => {
-                if (response.data.success === false) {
-                    ElNotification({
-                        title: 'Не удалось удалить сделку',
-                        message: response.data.message,
-                        type: 'error',
-                        position: 'bottom-right',
-                    });
+                if (response.data.errors.length > 0) {
+                    response.data.errors.forEach((error) => {
+                        ElNotification({
+                            title: 'Не удалось удалить сделку',
+                            message: error,
+                            type: 'error',
+                            position: 'bottom-right',
+                        });
+                    })
                 } else {
                     this.allPipelines.forEach((item, index) => {
                         if (item.id === pipeline.id) {
@@ -134,10 +170,26 @@ export default {
             this.selectedPipeline = pipeline;
         },
         createNewStage() {
-            this.selectedPipeline.stages.push(this.newStage);
+            let emptyExist = false;
+            this.selectedPipeline.stages.forEach((item, index) => {
+                if (item.name === '') {
+                    emptyExist = true;
+                }
+            });
+
+            if (!emptyExist) {
+                this.selectedPipeline.stages.push(this.newStage);
+            }
+
+            this.newStage = { name: '', color: '' };
         },
-        deleteStage() {
-            console.log('delte')
+        deleteStage(stage) {
+            this.selectedPipeline.stages.forEach((item, index) => {
+                if (item.id === stage.id) {
+                    this.selectedPipeline.stages.splice(index, 1);
+                    this.deletedStages.push(stage.id);
+                }
+            });
         }
     }
 }

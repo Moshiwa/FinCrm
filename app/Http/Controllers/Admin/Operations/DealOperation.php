@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin\Operations;
 
+use App\Models\Deal;
 use App\Models\Field;
 use App\Models\FieldClientSetting;
-use App\Models\FieldDealSetting;
+use App\Models\FieldSetting;
 use App\Models\Pipeline;
+use App\Models\Setting;
 use App\Models\Stage;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Support\Facades\Route;
@@ -36,8 +38,6 @@ trait DealOperation
         $this->crud->setHeading('Сделка');
 
         $comments = $entry->comments()->orderBy('created_at', 'desc')->with(['author', 'files'])->paginate(5);
-        $included_deal_fields = FieldDealSetting::query()->select('field_id')->pluck('field_id')->toArray();
-        $included_client_fields = FieldClientSetting::query()->select('field_id')->pluck('field_id')->toArray();
 
         $entry->load([
             'stage',
@@ -45,11 +45,17 @@ trait DealOperation
             'pipeline',
             'responsible',
             'client',
-            'fields' => function ($query) use ($included_deal_fields) {
-                $query->whereIn('field_id', $included_deal_fields);
+            'fields' => function ($query) {
+                $query->whereHas('settings', function ($query_settings) {
+                    $setting = Setting::displayInDeal()->pluck('id')->toArray();
+                    $query_settings->whereIn('setting_id', $setting)->where('is_enable', true);
+                });
             },
-            'client.fields' => function ($query) use ($included_client_fields) {
-                $query->whereIn('field_id', $included_client_fields);
+            'client.fields' => function ($query) {
+                $query->whereHas('settings', function ($query_settings) {
+                    $setting = Setting::displayInClient()->pluck('id')->toArray();
+                    $query_settings->whereIn('setting_id', $setting)->where('is_enable', true);
+                });
             },
             'comments' => function ($query) {
                 $query->orderBy('created_at', 'desc');
@@ -59,6 +65,7 @@ trait DealOperation
                 $query->select('id', 'name');
             }
         ]);
+
 
 
         $this->data['crud'] = $this->crud;

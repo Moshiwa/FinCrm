@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->morphs('fieldable');
             $table->foreignId('field_id')->constrained();
-            $table->string('value')->default('');
+            $table->string('value')->nullable();
         });
     }
 

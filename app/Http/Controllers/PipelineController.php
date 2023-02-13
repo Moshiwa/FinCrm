@@ -5,56 +5,63 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PipelineRequest;
 use App\Models\Pipeline;
 use App\Models\Stage;
+use Illuminate\Support\Arr;
 
 class PipelineController extends Controller
 {
+    private array $errors = [];
+
     public function update(PipelineRequest $request)
     {
         $data = $request->validated();
 
         if (empty($data['id'])) {
+            $this->errors[] = 'Не указан идентификатор воронки';
             return response()->json([
-                'success' => false,
-                'message' => 'Не указан идентификатор воронки'
+                'errors' => $this->errors
             ]);
         }
 
         $pipeline = Pipeline::query()->find($data['id']);
         $pipeline->name = $data['name'] ?? $pipeline->name;
-        $pipeline->update();
+        $pipeline->save();
 
-        if (empty($data['stages'])) {
-            return response()->json([
-                'success' => true,
-                'message' => 'ok'
-            ]);
-        }
+        if (! empty($data['deleted_stages'])) {
+            $stages = Stage::query()->with('deals', function ($query) {
+                $query->select('id');
+            })->whereIn('id', $data['deleted_stages'])->get();
+            foreach ($stages as $stage) {
+                if ($stage->deals()->exists()) {
+                    $this->errors[] = 'У стадии ' . $stage->name . ' имеется сделка';
+                    continue;
+                }
 
-        foreach ($data['stages'] as $stage) {
-            if (empty($stage['id'])) {
-                Stage::query()->create([
-                    'name' => $stage['name'] ?? '',
-                    'color' => $stage['color'] ?? '',
-                    'pipeline_id' => $pipeline->id,
-                ]);
-            } else {
-                $stage = Stage::query()->find($stage['id']);
-                $stage->name = $stage['name'] ?? $stage->name;
-                $stage->color = $stage['color'] ?? $stage->color;
-                $stage->pipeline_id = $pipeline->id;
-                $stage->update();
+                $stage->delete();
             }
         }
-    }
 
-    public function get(Pipeline $pipeline)
-    {
-        $pipeline->load([
-            'stages',
-            'stages.settings'
+        if (! empty($data['stages'])) {
+            foreach ($data['stages'] as $stage) {
+                $stage['color'] = $stage['color'] ?? '#FFFFFF';
+                $stage['pipeline_id'] = $pipeline->id;
+                if (empty($stage['id'])) {
+                    Stage::query()->create([
+                        'name' => $stage['name'],
+                        'color' => $stage['color'],
+                        'pipeline_id' => $stage['pipeline_id']
+                    ]);
+                } else {
+                    Stage::query()->firstOrCreate(['id' => $stage['id']], $stage);
+                }
+            }
+        }
+
+        $pipeline->load(['stages']);
+
+        return response()->json([
+            'errors' => $this->errors,
+            'data' => $pipeline
         ]);
-
-        return $pipeline;
     }
 
     public function create(PipelineRequest $request)
@@ -67,8 +74,7 @@ class PipelineController extends Controller
         $pipeline->load('stages');
 
         return response()->json([
-            'success' => true,
-            'message' => 'ok',
+            'errors' => $this->errors,
             'data' => $pipeline
         ]);
     }
@@ -77,16 +83,15 @@ class PipelineController extends Controller
     {
         $deal_exist = $pipeline->stages()->whereHas('deals')->exists();
         if ($deal_exist) {
+            $this->errors[] = 'У воронки имеется сделка';
             return response()->json([
-                'success' => false,
-                'message' => 'У воронки имеется сделка',
+                'errors' => $this->errors,
             ]);
         }
 
         $pipeline->delete();
         return response()->json([
-            'success' => true,
-            'message' => 'ok'
+            'errors' => $this->errors,
         ]);
     }
 
