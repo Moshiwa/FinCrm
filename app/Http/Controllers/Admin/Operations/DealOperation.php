@@ -4,10 +4,7 @@ namespace App\Http\Controllers\Admin\Operations;
 
 use App\Models\Deal;
 use App\Models\Field;
-use App\Models\FieldClientSetting;
-use App\Models\FieldSetting;
 use App\Models\Pipeline;
-use App\Models\Setting;
 use App\Models\Stage;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Support\Facades\Route;
@@ -41,22 +38,11 @@ trait DealOperation
 
         $entry->load([
             'stage',
-            'stage.settings',
             'pipeline',
             'responsible',
             'client',
-            'fields' => function ($query) {
-                $query->whereHas('settings', function ($query_settings) {
-                    $setting = Setting::displayInDeal()->pluck('id')->toArray();
-                    $query_settings->whereIn('setting_id', $setting)->where('is_enable', true);
-                });
-            },
-            'client.fields' => function ($query) {
-                $query->whereHas('settings', function ($query_settings) {
-                    $setting = Setting::displayInClient()->pluck('id')->toArray();
-                    $query_settings->whereIn('setting_id', $setting)->where('is_enable', true);
-                });
-            },
+            'fields',
+            'client.fields',
             'comments' => function ($query) {
                 $query->orderBy('created_at', 'desc');
             },

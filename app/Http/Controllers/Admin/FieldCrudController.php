@@ -50,7 +50,13 @@ class FieldCrudController extends CrudController
             ->function(function($entry) {
                 return __('fields.type.' . $entry->type);
             });
-        //CRUD::column('options')->label('Варианты');
+
+        CRUD::column('entity')
+            ->label('Сущность')
+            ->type('closure')
+            ->function(function($entry) {
+                return __('fields.type.' . $entry->entity);
+            });
     }
 
     /**
@@ -70,6 +76,12 @@ class FieldCrudController extends CrudController
                 SettingService::convertEnumToArray(FieldsEnum::cases())
             );
         CRUD::field('name')->label('Наименование');
+        CRUD::field('entity')
+            ->label('Сущность')
+            ->type('select_from_array')
+            ->options(['client' => 'Кленты', 'deal' => 'Сделка'])
+        ;
+        CRUD::field('is_active')->label('Активирован');
         CRUD::field('options')->label('Варианты');
     }
 

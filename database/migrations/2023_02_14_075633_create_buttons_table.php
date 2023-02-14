@@ -8,18 +8,16 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('fields', function (Blueprint $table) {
+        Schema::create('buttons', function (Blueprint $table) {
             $table->id();
-            $table->string('type')->default('string');
             $table->string('name');
-            $table->enum('entity', ['client', 'deal']);
-            $table->json('options')->nullable();
-            $table->boolean('is_active')->default(false);
+            $table->string('code');
+            $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('fields');
+        Schema::dropIfExists('buttons');
     }
 };

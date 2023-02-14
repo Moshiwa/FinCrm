@@ -102,8 +102,8 @@
                                         <el-option
                                             v-for="(option, index) in field.options"
                                             :key="index"
-                                            :label="option"
-                                            :value="option"
+                                            :label="option.value"
+                                            :value="option.value"
                                         />
                                     </el-select>
                                 </div>
@@ -231,7 +231,11 @@ export default {
             type: Array,
             default: [{}]
         },
-        fields: {
+        dealFields: {
+            type: Array,
+            default: [{}]
+        },
+        clientFields: {
             type: Array,
             default: [{}]
         },
@@ -248,8 +252,8 @@ export default {
             stage: this.deal?.stage ?? {},
             stages: this.stages ?? [],
             comments: this.deal.comments ?? [],
-            clientFields: this.deal.client?.fields ?? [],
-            dealFields: this.deal.fields ?? [],
+            clientFields: this.clientFields ?? [],
+            dealFields: this.dealFields ?? [],
 
             deleteCommentId: 0,
 
@@ -262,7 +266,8 @@ export default {
         }
     },
     mounted() {
-        console.log(this.dealFields);
+        this.deal.fields = this.dealFields;
+        this.deal.client.fields = this.clientFields;
     },
     methods: {
         changePipeline(item) {

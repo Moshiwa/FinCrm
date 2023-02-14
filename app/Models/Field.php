@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,7 +24,7 @@ class Field extends Model
 
     public function clients()
     {
-        return $this->morphedByMany(Client::class, 'fieldable')
+        return $this->belongsToMany(Client::class, 'fieldable')
             ->withPivot('is_enable');
     }
 
@@ -31,6 +32,20 @@ class Field extends Model
     {
         return $this->morphedByMany(Deal::class, 'fieldable')
             ->withPivot('is_enable');
+    }
+
+    public function scopeIncludedClient(Builder $builder)
+    {
+        return $builder
+            ->where('entity', 'client')
+            ->where('is_active', true);
+    }
+
+    public function scopeIncludedDeal(Builder $builder)
+    {
+        return $builder
+            ->where('entity', 'deal')
+            ->where('is_active', true);
     }
 
     protected static function booted()

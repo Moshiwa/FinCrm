@@ -5,6 +5,7 @@ return [
     'settings' => 'Настройки',
     'deals' => 'Сделки',
     'users' => 'Пользователи',
+    'clients' => 'Клиенты',
     'fields' => 'Поля',
     'pipelines' => 'Воронки',
     'spaces' => 'Пространства',

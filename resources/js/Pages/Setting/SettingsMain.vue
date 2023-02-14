@@ -29,13 +29,15 @@ export default {
     },
     props: {
         pipelines: {
-            type: Array
+            type: Array,
+            default: []
         },
         settings: {
-            type: Array
+            type: Array,
+            default: []
         },
         fields: {
-
+            default: []
         },
     },
     data() {

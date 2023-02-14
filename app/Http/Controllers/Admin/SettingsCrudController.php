@@ -18,7 +18,6 @@ class SettingsCrudController extends CrudController
 
     public function setup()
     {
-        CRUD::setModel(\App\Models\Setting::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/settings');
         CRUD::setEntityNameStrings('settings', 'settings');
     }

@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\PipelineRequest;
-use App\Models\Status;
-use App\Services\Space\SpaceService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -54,30 +52,8 @@ class PipelineCrudController extends CrudController
     {
         CRUD::setValidation(PipelineRequest::class);
 
-        $status_process = Status::query()->select('id')->where('name', 'process')->first();
-        $status_done = Status::query()->select('id')->where('name', 'done')->first();
-        $status_cancel = Status::query()->select('id')->where('name', 'cancel')->first();
-        $stages = [
-            [
-                'name' => 'В работе',
-                'status_id' => $status_process->id,
-                'color' => '#0050FF'
-            ],
-            [
-                'name' => 'Выполнено',
-                'status_id' => $status_done->id,
-                'color' => '#28FC2A'
-            ],
-            [
-                'name' => 'Отменено',
-                'status_id' => $status_cancel->id,
-                'color' => '#FE3F6D'
-            ],
-
-        ];
-
         CRUD::field('name')->label('Наименование');
-        CRUD::field('stages')->label('Стадии')->type('relationship')->default($stages)->min_rows(1)->subfields([
+        CRUD::field('stages')->label('Стадии')->type('relationship')->subfields([
             [
                 'name' => 'color',
                 'type' => 'color',
@@ -90,15 +66,6 @@ class PipelineCrudController extends CrudController
                 'type' => 'text',
                 'wrapper' => [
                     'class' => 'form-group col-md-6',
-                ],
-            ],
-            [
-                'name' => 'status_id',
-                'type' => 'select',
-                'entity' => 'status',
-                'model' => 'App\Models\Status',
-                'wrapper' => [
-                    'class' => 'form-group col-md-4',
                 ],
             ],
         ]);

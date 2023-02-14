@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ClientCrudController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SpaceCrudController;
 // --------------------------
@@ -22,8 +23,10 @@ Route::group([
     Route::crud('space', 'SpaceCrudController');
     Route::crud('deal', 'DealCrudController');
 
+    Route::post('/client/save', [ClientCrudController::class, 'save'])->name('save');
 
 //ToDo Завернуть в permission middleware
     Route::get('space-change/{code}', [SpaceCrudController::class, 'spaceChange'])->name('space.change');
     Route::crud('settings', 'SettingsCrudController');
+    Route::crud('client', 'ClientCrudController');
 });

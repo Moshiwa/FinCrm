@@ -1,15 +1,21 @@
 @extends(backpack_view('blank'))
 
 @php
-  $defaultBreadcrumbs = [
+    use App\Services\Field\FieldService;
+
+    $defaultBreadcrumbs = [
     trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
     $crud->entity_name_plural => url($crud->route),
     trans('backpack::crud.add') => false,
-  ];
+    ];
 
-  // if breadcrumbs aren't defined in the CrudController, use the default breadcrumbs
-  $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
-  $comments = json_encode($comments);
+    // if breadcrumbs aren't defined in the CrudController, use the default breadcrumbs
+    $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
+
+    $service = new FieldService();
+
+    $deal_fields = $service->getDealFields($entry);
+    $client_fields = $service->getClientFields($entry->client);
 @endphp
 
 
@@ -34,8 +40,9 @@
             :deal="{{ $entry }}"
             :pipelines="{{ $pipelines }}"
             :stages="{{ $stages }}"
-            :fields="{{ $fields }}"
-            :comments="{{ $comments }}"
+            :deal-fields="{{ json_encode($deal_fields) }}"
+            :client-fields="{{ json_encode($client_fields) }}"
+            :comments="{{ json_encode($comments) }}"
         />
     </div>
 </div>

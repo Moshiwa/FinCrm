@@ -56,18 +56,7 @@ trait SettingsOperation
 
         $entry = Pipeline::query()->orderBy('created_at', 'ASC')->get();
 
-        $entry->load([
-            'stages' => function ($query) {
-                $query->orderBy('created_at', 'ASC');
-            },
-            'stages.settings',
-        ]);
-
-        // prepare the fields you need to show
-        $this->data['crud'] = $this->crud;
-        $this->data['entry'] = $entry;
-        $this->data['settings'] = Setting::query()->get();
-        $this->data['fields'] = Field::query()->with(['settings'])->get();
+        $this->data['fields'] = Field::query()->get();
         $this->data['title'] = CRUD::getTitle() ?? 'Settings '.$this->crud->entity_name;
 
         // load the view

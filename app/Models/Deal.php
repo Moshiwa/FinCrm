@@ -16,9 +16,15 @@ class Deal extends Model
 {
     use CrudTrait;
     use HasFactory;
-    use FieldableTrait;
 
     protected $guarded = ['id'];
+
+    public function fields()
+    {
+        return $this->belongsToMany(Field::class, 'deal_fields')
+            ->where('entity', 'deal')
+            ->withPivot('value');
+    }
 
     public function pipeline(): BelongsTo
     {
