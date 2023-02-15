@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Events\ChangePipeline;
+use App\Events\ChangeResponsible;
 use App\Events\ChangeStage;
+use App\Events\CreateDeal;
 use App\Listeners\ChangePipelineNotification;
 use App\Traits\FieldableTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
@@ -53,6 +55,9 @@ class Deal extends Model
 
     protected static function booted()
     {
+        static::created(function (self $deal) {
+            event(new CreateDeal($deal));
+        });
         static::updating(function (self $deal) {
             if ($deal->isDirty('pipeline_id')) {
                 $old_data = [
@@ -62,12 +67,21 @@ class Deal extends Model
 
                 event(new ChangePipeline($deal, $old_data));
             }
+
             if ($deal->isDirty('stage_id')) {
                 $old_data = [
                     'stage_id' => $deal->getOriginal('stage_id')
                 ];
 
                 event(new ChangeStage($deal, $old_data));
+            }
+
+            if ($deal->isDirty('responsible_id')) {
+                $old_data = [
+                    'responsible_id' => $deal->getOriginal('responsible_id')
+                ];
+
+                event(new ChangeResponsible($deal, $old_data));
             }
         });
     }

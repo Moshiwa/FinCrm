@@ -3,9 +3,13 @@
 namespace App\Providers;
 
 use App\Events\ChangePipeline;
+use App\Events\ChangeResponsible;
 use App\Events\ChangeStage;
+use App\Events\CreateDeal;
 use App\Listeners\ChangePipelineNotification;
+use App\Listeners\ChangeResponsibleNotification;
 use App\Listeners\ChangeStageNotification;
+use App\Listeners\CreateDealNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -27,6 +31,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         ChangeStage::class => [
             ChangeStageNotification::class
+        ],
+        ChangeResponsible::class => [
+            ChangeResponsibleNotification::class
+        ],
+        CreateDeal::class => [
+            CreateDealNotification::class
         ]
     ];
 

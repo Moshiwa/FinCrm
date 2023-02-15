@@ -46,7 +46,23 @@
                                 </div>
                             </el-descriptions-item>
                             <el-descriptions-item label="Ответственный">
-                                <a href="">{{ deal.responsible?.name }}</a>
+                                <el-select
+                                    v-model="responsible"
+                                    value-key="id"
+                                    filterable
+                                    remote
+                                    reserve-keyword
+                                    placeholder="Please enter a keyword"
+                                    :remote-method="getUsers"
+                                    @change="send"
+                                >
+                                    <el-option
+                                        v-for="user in responsibles"
+                                        :key="user.id"
+                                        :label="user.name"
+                                        :value="user"
+                                    />
+                                </el-select>
                             </el-descriptions-item>
                             <el-descriptions-item v-for="field in dealFields" :label="field.name">
                                 <div v-if="field.type === 'select'">
@@ -239,6 +255,10 @@ export default {
             type: Array,
             default: [{}]
         },
+        users: {
+            type: Array,
+            default: [{}]
+        }
     },
     data() {
         return {
@@ -254,7 +274,7 @@ export default {
             comments: this.deal.comments ?? [],
             clientFields: this.clientFields ?? [],
             dealFields: this.dealFields ?? [],
-
+            responsibles: this.users ?? [],
             deleteCommentId: 0,
 
             allFiles: this.deal?.comments?.reduce((acc, item) => {
@@ -343,13 +363,21 @@ export default {
 
             this.send();
         },
+        getUsers(query) {
+            if (query.length >= 3) {
+                axios.get('/admin/find-users?user_name=' + query)
+                    .then((response) => {
+                        this.responsibles = response.data.data;
+                    });
+            }
+        },
         send() {
             const formData = new FormData();
             formData.append('id', this.deal.id);
             formData.append('name', this.deal.name);
             formData.append('pipeline_id', this.pipeline.id);
             formData.append('stage_id', this.stage.id);
-            formData.append('responsible_id', this.deal.responsible_id);
+            formData.append('responsible_id', this.responsible.id);
             formData.append('client_id', this.deal.client_id);
 
             formData.append('delete_comment_id', this.deleteCommentId);

@@ -2,6 +2,7 @@
 
 @php
     use App\Services\Field\FieldService;
+    use App\Models\User;
 
     $defaultBreadcrumbs = [
     trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
@@ -16,6 +17,9 @@
 
     $deal_fields = $service->getDealFields($entry);
     $client_fields = $service->getClientFields($entry->client);
+
+
+    $users = User::query()->where('id', $entry->responsible_id)->get();
 @endphp
 
 
@@ -43,6 +47,7 @@
             :deal-fields="{{ json_encode($deal_fields) }}"
             :client-fields="{{ json_encode($client_fields) }}"
             :comments="{{ json_encode($comments) }}"
+            :users="{{$users}}"
         />
     </div>
 </div>
