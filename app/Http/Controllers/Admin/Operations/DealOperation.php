@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Operations;
 
+use App\Models\Client;
 use App\Models\Deal;
 use App\Models\Field;
 use App\Models\Pipeline;
@@ -11,22 +12,39 @@ use Illuminate\Support\Facades\Route;
 
 trait DealOperation
 {
-    /**
-     * Define which routes are needed for this operation.
-     *
-     * @param string $segment    Name of the current entity (singular). Used as first URL segment.
-     * @param string $routeName  Prefix of the route name.
-     * @param string $controller Name of the current CrudController.
-     */
     protected function setupDealRoutes($segment, $routeName, $controller)
     {
-        Route::get($segment.'/{id}/deal', [
+        Route::get($segment.'/{id}', [
             'as'        => $routeName.'.deal',
             'uses'      => $controller.'@getDealForm',
             'operation' => 'deal',
         ]);
     }
 
+
+    public function newDealForm()
+    {
+        $pipelines = Pipeline::query()->select('id', 'name')->get();
+        $first_pipeline = $pipelines->first()->id;
+        $stages = Stage::query()->where('pipeline_id', $first_pipeline)->get();;
+        $first_stage = $stages->first()->id;
+
+        $client_id = $this->crud->getCurrentEntryId();
+        $client = Client::query()->find($client_id);
+        $deal = $client->deals()->create([
+            'name' => 'Новая сделка',
+            'pipeline_id' => $first_pipeline,
+            'stage_id' => $first_stage,
+            'responsible_id' => backpack_user()->id,
+        ]);
+
+        $this->data['deal'] = $deal;
+        $this->data['crud'] = $this->crud;
+        $this->data['pipelines'] = $pipelines;
+        $this->data['stages'] = $stages;
+
+        return view('crud::create_deal', $this->data);
+    }
 
     public function getDealForm()
     {
@@ -64,9 +82,6 @@ trait DealOperation
         return view('crud::deal', $this->data);
     }
 
-    /**
-     * Add the default settings, buttons, etc that this operation needs.
-     */
     protected function setupDealDefaults()
     {
         CRUD::allowAccess(['deal']);

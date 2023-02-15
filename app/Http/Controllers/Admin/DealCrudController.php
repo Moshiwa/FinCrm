@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\DealRequest;
+use App\Models\Client;
 use App\Models\Pipeline;
 use App\Models\Stage;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -46,7 +47,7 @@ class DealCrudController extends CrudController
         CRUD::column('pipeline_id');
         CRUD::column('stage_id');
         CRUD::column('created_at');
-        CRUD::denyAccess(['update', 'delete', 'show']);
+        CRUD::denyAccess(['update', 'delete', 'show', 'create']);
 
         $pipelines = Pipeline::query()->select('id', 'name')->get()->toArray();
         $pipelines = Arr::pluck($pipelines, 'name', 'id');
@@ -66,6 +67,16 @@ class DealCrudController extends CrudController
             'label' => 'Стадия'
         ], $stages, function($value) { // if the filter is active (the GET parameter "draft" exits)
             $this->crud->addClause('where', 'stage_id', $value);
+        });
+
+        $clients = Client::query()->select('id', 'name')->get()->toArray();
+        $clients = Arr::pluck($clients, 'name', 'id');
+        CRUD::addFilter([
+            'type'  => 'dropdown',
+            'name'  => 'client',
+            'label' => 'Клиент'
+        ], $clients, function($value) { // if the filter is active (the GET parameter "draft" exits)
+            $this->crud->addClause('where', 'client_id', $value);
         });
     }
 

@@ -257,7 +257,7 @@ export default {
 
             deleteCommentId: 0,
 
-            allFiles: this.deal.comments.reduce((acc, item) => {
+            allFiles: this.deal?.comments?.reduce((acc, item) => {
                 return [...acc,...item.files];
             }, []),
 
@@ -361,6 +361,7 @@ export default {
 
             this.deal.client = this.deal.client ?? [];
             formData.append('client[name]', this.deal.client?.name);
+            this.deal.client.fields = this.deal.client?.fields ?? [];
             this.deal.client?.fields.forEach((field, fieldIndex) => {
                 formData.append('client[fields][' + field.id + '][value]', field.pivot?.value ?? '');
             });

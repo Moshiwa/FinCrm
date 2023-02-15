@@ -27,7 +27,12 @@ class DealController extends Controller
     {
         $data = $request->validated();
 
-        $deal = Deal::query()->find($data['id']);
+        if ($data['id']) {
+            $deal = Deal::query()->find($data['id']);
+        } else {
+            $deal = new Deal();
+        }
+
         $this->service->saveDeal($deal, $data);
         $this->service->updateClient($deal, $data);
         $this->service->updateComments($deal, $data);
