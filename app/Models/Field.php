@@ -19,6 +19,10 @@ class Field extends Model
 
     protected $guarded = ['id'];
 
+    protected $fillable = [
+        'is_active'
+    ];
+
     protected $casts = [
         'options' => 'array'
     ];

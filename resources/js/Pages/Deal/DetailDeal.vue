@@ -365,7 +365,7 @@ export default {
         },
         getUsers(query) {
             if (query.length >= 3) {
-                axios.get('/admin/find-users?user_name=' + query)
+                axios.get('/admin/user/find-users?user_name=' + query)
                     .then((response) => {
                         this.responsibles = response.data.data;
                     });

@@ -10,6 +10,7 @@ use App\Models\Pipeline;
 use App\Services\SettingService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 /**
@@ -42,9 +43,11 @@ class FieldCrudController extends CrudController
             ->function(function($entry) {
                 return __('fields.type.' . $entry->type);
             });
-        CRUD::column('is_active')
-            ->label('Активность')
-            ->type('checkbox');
+        CRUD::column('активность')
+            ->type('custom_html')
+            ->value(function ($entry) {
+                return view('crud::buttons.field_checkbox', ['entry' => $entry]);
+            });
 
         CRUD::addButton('top', 'pipelines', 'view', 'crud::buttons.pipelines');
 
@@ -89,5 +92,11 @@ class FieldCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    public function toggleActivity(Request $request, Field $field)
+    {
+        $is_active = $request->get('is_active');
+        $field->update(['is_active' => $is_active]);
     }
 }

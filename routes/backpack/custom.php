@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ClientCrudController;
+use App\Http\Controllers\Admin\FieldCrudController;
 use App\Http\Controllers\Admin\UserCrudController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SpaceCrudController;
@@ -26,8 +27,14 @@ Route::group([
 
 //ToDo Завернуть в permission middleware
     Route::get('space-change/{code}', [SpaceCrudController::class, 'spaceChange'])->name('space.change');
-    Route::get('find-users', [UserCrudController::class, 'findUsers'])->name('users.find');
 
+    Route::prefix('user')->name('user.')->group(function () {
+        Route::get('find-users', [UserCrudController::class, 'findUsers'])->name('find');
+    });
+
+    Route::prefix('field')->name('field.')->group(function () {
+        Route::get('/{field}/toggle-activity', [FieldCrudController::class, 'toggleActivity'])->name('toggleActivity');
+    });
 
     Route::crud('settings', 'SettingsCrudController');
     Route::crud('client', 'ClientCrudController');
