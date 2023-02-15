@@ -19,11 +19,6 @@ class PipelineCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 
-    /**
-     * Configure the CrudPanel object. Apply settings to all operations.
-     *
-     * @return void
-     */
     public function setup()
     {
         CRUD::setModel(\App\Models\Pipeline::class);
@@ -31,23 +26,11 @@ class PipelineCrudController extends CrudController
         CRUD::setEntityNameStrings('pipeline', 'pipeline');
     }
 
-    /**
-     * Define what happens when the List operation is loaded.
-     *
-     * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
-     * @return void
-     */
     protected function setupListOperation()
     {
         CRUD::column('name')->label('Наименование');
     }
 
-    /**
-     * Define what happens when the Create operation is loaded.
-     *
-     * @see https://backpackforlaravel.com/docs/crud-operation-create
-     * @return void
-     */
     protected function setupCreateOperation()
     {
         CRUD::setValidation(PipelineRequest::class);
@@ -68,15 +51,17 @@ class PipelineCrudController extends CrudController
                     'class' => 'form-group col-md-6',
                 ],
             ],
+            [
+                'name' => 'url_setting',
+                'type' => 'custom_html',
+                'value' => '',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6',
+                ],
+            ],
         ]);
     }
 
-    /**
-     * Define what happens when the Update operation is loaded.
-     *
-     * @see https://backpackforlaravel.com/docs/crud-operation-update
-     * @return void
-     */
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();

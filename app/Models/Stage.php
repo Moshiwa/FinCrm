@@ -26,8 +26,18 @@ class Stage extends Model
         return $this->hasMany(Deal::class);
     }
 
+    public function buttons(): HasMany
+    {
+        return $this->hasMany(Deal::class);
+    }
+
     public function pipeline(): BelongsTo
     {
         return $this->belongsTo(Pipeline::class);
+    }
+
+    public function getUrlSettingAttribute()
+    {
+        return "<a class='btn btn-outline-primary' href='/admin/stage/" . $this->id . "/edit'>Настройки</a>";
     }
 }

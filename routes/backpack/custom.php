@@ -38,4 +38,5 @@ Route::group([
 
     Route::crud('settings', 'SettingsCrudController');
     Route::crud('client', 'ClientCrudController');
+    Route::crud('stage', 'StageCrudController');
 });

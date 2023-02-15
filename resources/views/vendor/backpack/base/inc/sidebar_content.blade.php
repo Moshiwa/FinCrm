@@ -16,6 +16,7 @@
     <ul class="nav-dropdown-items">
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('field') }}"><i class="nav-icon la la-book"></i> {{ __('sidebar.fields') }} </a></li>
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('space') }}"><i class="nav-icon la la-question"></i> {{ __('sidebar.spaces') }} </a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('pipeline') }}"><i class="nav-icon la la-book"></i> {{ __('sidebar.pipelines') }} </a></li>
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('settings') }}"><i class="nav-icon la la-cog"></i> {{ __('sidebar.settings') }}</a></li>
 
     </ul>
@@ -24,3 +25,5 @@
 {{--
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('setting') }}'><i class='nav-icon la la-cog'></i> <span>Settings</span></a></li>
 --}}
+
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('stage') }}"><i class="nav-icon la la-question"></i> Stages</a></li>
