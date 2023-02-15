@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('admin');
 });
 
 Route::prefix('deal')->name('deal.')->group(function () {
@@ -38,24 +38,4 @@ Route::prefix('pipeline')->name('pipeline.')->group(function () {
 
 Route::prefix('field')->name('field.')->group(function () {
     Route::post('/save', [FieldController::class, 'save'])->name('.save');
-});
-
-
-//ToDo удалить
-Route::prefix('settings')->name('settings.')->group(function () {
-    Route::prefix('pipeline')->name('pipeline.')->group(function () {
-        Route::post('/', [PipelineController::class, 'create'])->name('create');
-        Route::get('/{pipeline}', [PipelineController::class, 'get'])->name('get');
-        Route::delete('/{pipeline}', [PipelineController::class, 'delete'])->name('delete');
-    });
-
-    Route::post('/save', function (Request $request) {
-        $pivot = $request->get('pivot');
-        $stage_id = $pivot['settingable_id'];
-        $setting_id = $pivot['setting_id'];
-        $is_enable = $pivot['is_enable'];
-
-        $stage = Stage::query()->find($stage_id);
-        $stage->settings()->attach([$setting_id => ['is_enable' => $is_enable]]);
-    });
 });
