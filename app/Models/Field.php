@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\FieldsEntitiesEnum;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -37,14 +38,14 @@ class Field extends Model
     public function scopeIncludedClient(Builder $builder)
     {
         return $builder
-            ->where('entity', 'client')
+            ->where('entity', FieldsEntitiesEnum::client->value)
             ->where('is_active', true);
     }
 
     public function scopeIncludedDeal(Builder $builder)
     {
         return $builder
-            ->where('entity', 'deal')
+            ->where('entity', FieldsEntitiesEnum::deal->value)
             ->where('is_active', true);
     }
 

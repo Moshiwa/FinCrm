@@ -35,8 +35,11 @@ class ClientCrudController extends CrudController
     protected function setupListOperation()
     {
         CRUD::column('name');
-        CRUD::column('created_at');
-        CRUD::column('updated_at');
+        CRUD::column('Количество сделок')
+            ->type('custom_html')
+            ->value(function ($entry) {
+                return '<a href="/admin/deal?client='.$entry->id.'">' . $entry->deals->count() . '</a>';
+            });
     }
 
     protected function setupCreateOperation()
