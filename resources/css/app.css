@@ -28,3 +28,31 @@
     height: 100%;
     border-left: 2px solid #ecf5ff;
 }
+/*Из за отступов ломается подгрузка */
+.deal-comment-item .el-timeline-item__timestamp.is-top {
+    padding: 0!important;
+    margin: 0!important;
+}
+
+/*SCROLL STYLE*/
+/* width */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background-color: #0003;
+    border-radius: 10px;
+    transition: all .2s ease-in-out;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #b6b6b6;
+}

@@ -37,6 +37,8 @@ class DealController extends Controller
         $this->service->updateClient($deal, $data);
         $this->service->updateComments($deal, $data);
 
+        $comment_count = $data['comment_count'] ?? 5;
+
         $deal->load([
             'stage',
             'stage.settings',
@@ -45,8 +47,8 @@ class DealController extends Controller
             'client',
             'fields',
             'client.fields',
-            'comments' => function ($query) {
-                $query->orderBy('created_at', 'desc');
+            'comments' => function ($query) use ($comment_count) {
+                $query->orderBy('created_at', 'desc')->offset(0)->limit($comment_count);
             },
             'comments.files',
             'comments.author' => function ($query) {
@@ -63,22 +65,19 @@ class DealController extends Controller
         return $pipeline->stages()->select('id', 'name')->get();
     }
 
-    public function saveFiles(Request $request, Deal $deal)
+    public function loadComments(Deal $deal, Request $request)
     {
-        /*if ($request->hasFile('file')) {
-            $files = $request->file;
-            foreach ($files as $file) {
-                $type = $this->service->definitionCommentType($file);
-                $space = SpaceService::getCurrentSpaceCode();
-                $name = "/deal_$space/$deal->id/$type";
-                $path = Storage::disk('public')->put($name, $file);
-                DealComment::query()->create([
-                    'type' => $type,
-                    'content' => $path,
-                    'deal_id' => $deal->id,
-                    'author_id' => backpack_user()->id,
-                ]);
+        $offset = $request->get('offset');
+        $deal->load([
+            'comments' => function ($query) use ($offset) {
+                $query->offset($offset)->limit(5)->orderBy('created_at', 'desc');
+            },
+            'comments.files',
+            'comments.author' => function ($query) {
+                $query->select('id', 'name');
             }
-        }*/
+        ]);
+
+        return $deal;
     }
 }

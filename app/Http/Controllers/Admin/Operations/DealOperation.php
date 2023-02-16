@@ -63,7 +63,7 @@ trait DealOperation
             'fields',
             'client.fields',
             'comments' => function ($query) {
-                $query->orderBy('created_at', 'desc');
+                $query->offset(0)->limit(10)->orderBy('created_at', 'desc');
             },
             'comments.files',
             'comments.author' => function ($query) {

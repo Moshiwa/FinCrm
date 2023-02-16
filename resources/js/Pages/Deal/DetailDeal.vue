@@ -143,12 +143,10 @@
 
             <div class="card-right">
                 <div class="card-body row">
-                    <el-timeline>
-                        <div
-                            class="comment-container"
-                            v-for="comment in comments"
-                        >
+
+                    <el-timeline @scroll="loadMore" class="infinite-list" style="overflow: auto" ref="scroll_container">
                             <el-timeline-item
+                                v-for="comment in comments"
                                 class="deal-comment-item"
                                 :timestamp="comment.created_at"
                                 :icon="definitionCommentIcon(comment)"
@@ -202,7 +200,6 @@
                                     </div>
                                 </el-card>
                             </el-timeline-item>
-                        </div>
                     </el-timeline>
                 </div>
             </div>
@@ -225,6 +222,7 @@ import FileUpload from "./Components/FileUpload.vue";
 import { ElNotification } from 'element-plus'
 import SettingsButton from "./Components/SettingsButtons.vue";
 import {ChatDotSquare, Document, Paperclip, Bell, Edit, Share} from "@element-plus/icons-vue";
+import {ref} from "vue";
 
 export default {
     name: 'DetailDeal',
@@ -262,6 +260,7 @@ export default {
     },
     data() {
         return {
+            loading: false,
             active: ['1', '2'],
             visibleCommentForm: false,
             visibleFileUploadForm: false,
@@ -298,39 +297,39 @@ export default {
                     this.stages = response.data;
                 });
         },
+        loadMore (e) {
+            if (this.loading) {
+                return;
+            }
+
+            let scrollPosition = this.$refs.scroll_container.$el.scrollHeight - this.$refs.scroll_container.$el.scrollTop;
+            let elementHeigth = this.$refs.scroll_container.$el.offsetHeight;
+
+            let can = false;
+
+            scrollPosition = Math.floor(scrollPosition);
+
+            if (scrollPosition === elementHeigth) {
+                can = true;
+            }
+
+            if (scrollPosition === (elementHeigth - 1)) {
+                can = true;
+            }
+
+            if (scrollPosition === (elementHeigth + 1)) {
+                can = true;
+            }
+
+            if (can) {
+                this.loading = true;
+                axios.get('/deal/' + this.deal.id + '/load_comments?offset=' + this.comments.length).then((response) => {
+                    this.comments = this.comments.concat(response.data.comments)
+                    this.loading = false;
+                })
+            }
+        },
         changeStage() {
-            this.send();
-        },
-        addNewClientField(event) {
-            let newField = {
-                id: event.field.id,
-                options: event.field.options,
-                type: event.field.type,
-                name: event.field.name,
-                pivot: {
-                    client_id: this.client.id,
-                    field_id: event.field.id,
-                    value: event.value
-                }
-            }
-
-            this.clientFields.push(newField);
-            this.send();
-        },
-        addNewDealField(event) {
-            let newField = {
-                id: event.field.id,
-                options: event.field.options,
-                type: event.field.type,
-                name: event.field.name,
-                pivot: {
-                    client_id: this.client.id,
-                    field_id: event.field.id,
-                    value: event.value
-                }
-            }
-
-            this.dealFields.push(newField);
             this.send();
         },
         sendComment(e) {
@@ -380,6 +379,7 @@ export default {
             formData.append('responsible_id', this.responsible.id);
             formData.append('client_id', this.deal.client_id);
 
+            formData.append('comment_count', this.comments.length ?? 0);
             formData.append('delete_comment_id', this.deleteCommentId);
 
             this.deal.fields = this.deal.fields ?? [];
@@ -511,5 +511,15 @@ export default {
     flex-direction: row;
     gap: 10px;
     justify-content: space-between;
+}
+
+
+.infinite-list {
+    min-height: 550px;
+    max-height: 550px;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style: none;
 }
 </style>
