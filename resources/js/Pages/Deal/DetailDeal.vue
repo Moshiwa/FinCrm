@@ -143,7 +143,13 @@
 
             <div class="card-right">
                 <div class="card-body row">
+                    <el-select
+                        class="m-3"
+                    >
+                        <el-option
 
+                        />
+                    </el-select>
                     <el-timeline @scroll="loadMore" class="infinite-list" style="overflow: auto" ref="scroll_container">
                             <el-timeline-item
                                 v-for="comment in comments"
@@ -346,7 +352,7 @@ export default {
             this.newComment.files = event;
             this.newComment.type = 'document';
             if (this.newComment.files.length > 0) {
-                this.deal.comments.unshift(this.newComment);
+                this.comments.unshift(this.newComment);
             }
 
             this.newComment = { id: '', type: 'comment', content: '', author_id: null, files: [] };
@@ -472,6 +478,9 @@ export default {
     min-width: 55%;
     padding: 8px;
 }
+.card-body {
+    justify-content: flex-end;
+}
 .card-right {
     width: inherit;
 }
@@ -515,8 +524,8 @@ export default {
 
 
 .infinite-list {
-    min-height: 550px;
-    max-height: 550px;
+    min-height: 700px;
+    max-height: 700px;
     width: 100%;
     padding: 0;
     margin: 0;

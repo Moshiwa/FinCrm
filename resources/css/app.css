@@ -28,12 +28,6 @@
     height: 100%;
     border-left: 2px solid #ecf5ff;
 }
-/*Из за отступов ломается подгрузка */
-.deal-comment-item .el-timeline-item__timestamp.is-top {
-    padding: 0!important;
-    margin: 0!important;
-}
-
 /*SCROLL STYLE*/
 /* width */
 ::-webkit-scrollbar {
