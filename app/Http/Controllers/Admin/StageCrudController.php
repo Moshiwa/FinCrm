@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\StageRequest;
+use App\Models\Stage;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -32,16 +33,28 @@ class StageCrudController extends CrudController
     protected function setupCreateOperation()
     {
         CRUD::setValidation(StageRequest::class);
+        CRUD::setEntityNameStrings('stage', 'stage');
 
-        CRUD::field('name');
-        CRUD::field('color')->type('color');
-        CRUD::field('pipeline_id');
-
+        CRUD::field('settings')->type('stage_settings');
         //Обавить настрйоки
     }
 
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    public function update(StageRequest $request)
+    {
+        $data = $request->validated();
+        $settings = $data['settings'] ?? [];
+        $stage = Stage::query()->with('settings')->find($data['id']);
+
+        $save_settings = [];
+        foreach ($settings as $id => $setting) {
+            $save_settings[] = $id;
+        }
+        $stage->settings()->sync($save_settings);
+        return $this->crud->performSaveAction($data['id']);
     }
 }

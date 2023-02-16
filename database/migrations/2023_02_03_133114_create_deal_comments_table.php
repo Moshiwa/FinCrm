@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        SpaceService::addBaseModelForeignIdMigration('deal_comments', 'author_id', 'users', 'cascade', false);
+        SpaceService::addBaseModelForeignIdMigration('deal_comments', 'author_id', 'users', 'cascade', true);
 
     }
 

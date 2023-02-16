@@ -52,11 +52,4 @@ class Field extends Model
             ->where('entity', FieldsEntitiesEnum::deal->value)
             ->where('is_active', true);
     }
-
-    protected static function booted()
-    {
-        static::created(function (self $field) {
-
-        });
-    }
 }

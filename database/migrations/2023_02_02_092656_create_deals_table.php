@@ -17,11 +17,17 @@ return new class extends Migration
             $table->foreignId('client_id')
                 ->constrained();
             $table->foreignId('stage_id')->constrained();
-
+            $table->boolean('from_api')->default(false);
             $table->timestamps();
         });
 
-        SpaceService::addBaseModelForeignIdMigration('deals', 'responsible_id', 'users', 'cascade', false);
+        SpaceService::addBaseModelForeignIdMigration(
+            'deals',
+            'responsible_id',
+            'users',
+            'cascade',
+            true
+        );
 
     }
 

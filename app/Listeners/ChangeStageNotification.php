@@ -22,7 +22,7 @@ class ChangeStageNotification
         $event->deal->comments()->create([
             'type' => CommentTypeEnum::action->name,
             'content' => $message,
-            'author_id' => backpack_user()->id
+            'author_id' => backpack_user()?->id ?? null
         ]);
     }
 }

@@ -8,9 +8,9 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('buttons_stages', function (Blueprint $table) {
+        Schema::create('settings_stages', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('button_id')
+            $table->foreignId('setting_id')
                 ->constrained()
                 ->cascadeOnDelete();
             $table->foreignId('stage_id')
@@ -21,6 +21,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('buttons_stages');
+        Schema::dropIfExists('settings_stages');
     }
 };
