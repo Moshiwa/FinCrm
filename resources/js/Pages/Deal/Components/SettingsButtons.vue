@@ -2,11 +2,10 @@
     <div class="card-body flex-column">
         <div v-for="setting in settings">
             <el-button
-                v-if="setting.pivot.is_enable"
                 class="w-100"
                 @click="buttonClick(setting)"
             >
-                {{ setting.description }}
+                {{ setting.name }}
             </el-button>
         </div>
     </div>
@@ -63,11 +62,11 @@ export default {
     },
     methods: {
         buttonClick(setting) {
-            if (setting.name === 'comment' && setting.type === 'button') {
+            if (setting.key === 'comment' && setting.field === 'button') {
                 this.commentClick();
             }
 
-            if (setting.name === 'file-upload' && setting.type === 'button') {
+            if (setting.key === 'document' && setting.field === 'button') {
                 this.fileUploadClick();
             }
         },

@@ -39,6 +39,7 @@ class DealController extends Controller
 
         $deal->load([
             'stage',
+            'stage.settings',
             'pipeline',
             'responsible',
             'client',

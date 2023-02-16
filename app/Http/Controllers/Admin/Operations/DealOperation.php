@@ -56,6 +56,7 @@ trait DealOperation
 
         $entry->load([
             'stage',
+            'stage.settings',
             'pipeline',
             'responsible',
             'client',

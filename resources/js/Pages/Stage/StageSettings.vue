@@ -10,7 +10,7 @@
                         v-if="setting.field === 'button'"
                         v-model="setting.pivot.is_active"
                         :checked="setting.pivot.is_active"
-                        :label="setting.name"
+                        :label="setting.description"
                         :name="'settings['+ setting.id +']'"
                     />
                 </el-form-item>
@@ -25,7 +25,7 @@
                         v-if="setting.field === 'other'"
                         v-model="setting.pivot.is_active"
                         :checked="setting.pivot.is_active"
-                        :label="setting.name"
+                        :label="setting.description"
                         :name="'settings['+ setting.id +']'"
                     />
                 </el-form-item>

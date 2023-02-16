@@ -56,7 +56,7 @@ class ClientCrudController extends CrudController
     public function update(ClientRequest $request)
     {
         $data = $request->validated();
-        $fields = $data['fields'];
+        $fields = $data['fields'] ?? [];
         $client = Client::query()->with('fields')->find($data['id']);
         $client->update([
             'name' => $data['name']
@@ -77,7 +77,7 @@ class ClientCrudController extends CrudController
     public function store(ClientRequest $request)
     {
         $data = $request->validated();
-        $fields = $data['fields'];
+        $fields = $data['fields'] ?? [];
 
         $client = new Client();
         $client = $client->create([

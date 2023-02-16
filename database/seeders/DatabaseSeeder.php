@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
         (new PermissionSeeder())->run();
         (new PipelineSeeder())->run();
         (new StagesSeeder())->run();
-
+        (new SettingsSeeder())->run();
 
         (new TestSeeder())->run();
         (new FieldsSeeder())->run();

@@ -20,6 +20,7 @@ class Field extends Model
     protected $guarded = ['id'];
 
     protected $fillable = [
+        'options',
         'is_active'
     ];
 

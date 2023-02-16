@@ -18,7 +18,6 @@
     $deal_fields = $service->getDealFields($entry);
     $client_fields = $service->getClientFields($entry->client);
 
-
     $users = User::query()->where('id', $entry->responsible_id)->get();
 @endphp
 

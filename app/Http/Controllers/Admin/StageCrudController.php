@@ -54,6 +54,7 @@ class StageCrudController extends CrudController
         foreach ($settings as $id => $setting) {
             $save_settings[] = $id;
         }
+
         $stage->settings()->sync($save_settings);
         return $this->crud->performSaveAction($data['id']);
     }
