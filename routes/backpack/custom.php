@@ -25,6 +25,9 @@ Route::group([
     Route::crud('pipeline', 'PipelineCrudController');
     Route::crud('space', 'SpaceCrudController');
     Route::crud('deal', 'DealCrudController');
+    Route::crud('settings', 'SettingsCrudController');
+    Route::crud('client', 'ClientCrudController');
+    Route::crud('stage', 'StageCrudController');
 
 //ToDo Завернуть в permission middleware
     Route::get('space-change/{code}', [SpaceCrudController::class, 'spaceChange'])->name('space.change');
@@ -40,8 +43,4 @@ Route::group([
     Route::prefix('field')->name('field.')->group(function () {
         Route::get('/{field}/toggle-activity', [FieldCrudController::class, 'toggleActivity'])->name('toggleActivity');
     });
-
-    Route::crud('settings', 'SettingsCrudController');
-    Route::crud('client', 'ClientCrudController');
-    Route::crud('stage', 'StageCrudController');
 });

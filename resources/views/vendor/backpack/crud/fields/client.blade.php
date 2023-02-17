@@ -1,10 +1,11 @@
 @php
     use App\Services\Field\FieldService;
     use App\Models\Field;
+    use App\Models\Client;
 
     $service = new FieldService();
     if (empty($entry)) {
-        $entry = new \App\Models\Client();
+        $entry = new Client();
     }
 
     $fields = $service->getClientFields($entry);
