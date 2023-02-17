@@ -17,7 +17,6 @@ class PipelineRequest extends FormRequest
             'id' => 'nullable',
             'name' => 'required|min:3|max:255',
             'stages' => 'nullable|array',
-            'deleted_stages' => 'nullable|array'
         ];
     }
 
@@ -29,12 +28,5 @@ class PipelineRequest extends FormRequest
             'name.min' => 'Наименование должно быть длинее :min',
             'fields.*.value.max' => 'Значение поля не должно превышать :max',
         ];
-    }
-
-    protected function prepareForValidation()
-    {
-        $this->merge([
-            'deleted_stages' => $this->deletedStages ?? [],
-        ]);
     }
 }
