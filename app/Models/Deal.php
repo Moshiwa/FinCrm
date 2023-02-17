@@ -6,8 +6,6 @@ use App\Events\ChangePipeline;
 use App\Events\ChangeResponsible;
 use App\Events\ChangeStage;
 use App\Events\CreateDeal;
-use App\Listeners\ChangePipelineNotification;
-use App\Traits\FieldableTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

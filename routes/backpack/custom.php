@@ -29,7 +29,6 @@ Route::group([
     Route::crud('client', 'ClientCrudController');
     Route::crud('stage', 'StageCrudController');
 
-//ToDo Завернуть в permission middleware
     Route::get('space-change/{code}', [SpaceCrudController::class, 'spaceChange'])->name('space.change');
 
     Route::prefix('user')->name('user.')->group(function () {

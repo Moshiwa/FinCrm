@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\FieldsEntitiesEnum;
+use App\Enums\FieldsEnum;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -26,20 +27,10 @@ class Field extends Model
     ];
 
     protected $casts = [
-        'options' => 'array'
+        'options' => 'array',
+        'type' => FieldsEnum::class,
+        'entity' => FieldsEntitiesEnum::class
     ];
-
-    public function clients()
-    {
-        return $this->belongsToMany(Client::class, 'fieldable')
-            ->withPivot('is_enable');
-    }
-
-    public function deals()
-    {
-        return $this->morphedByMany(Deal::class, 'fieldable')
-            ->withPivot('is_enable');
-    }
 
     public function scopeIncludedClient(Builder $builder)
     {

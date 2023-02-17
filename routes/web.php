@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\DealController;
-use App\Http\Controllers\FieldController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,10 +24,4 @@ Route::prefix('deal')->name('deal.')->group(function () {
     Route::post('/{deal}/save_files', [DealController::class, 'saveFiles'])->name('saveFiles');
     Route::post('/{deal}/change_pipeline', [DealController::class, 'changePipeline'])->name('changePipeline');
     Route::get('/{deal}/load_comments', [DealController::class, 'loadComments'])->name('loadComments');
-});
-
-
-
-Route::prefix('field')->name('field.')->group(function () {
-    Route::post('/save', [FieldController::class, 'save'])->name('.save');
 });

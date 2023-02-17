@@ -2,54 +2,37 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\FieldsEntitiesEnum;
+use App\Enums\FieldsEnum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class FieldRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
-        // only allow updates if the user is logged in
         return backpack_auth()->check();
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'name' => 'required|min:3|max:255',
+            'type' => [new Enum(FieldsEnum::class)],
+            'entity' => [new Enum(FieldsEntitiesEnum::class)],
+            'options' => 'nullable|array',
+            'is_active' => 'nullable|boolean'
         ];
     }
 
-    /**
-     * Get the validation attributes that apply to the request.
-     *
-     * @return array
-     */
-    public function attributes()
-    {
-        return [
-            //
-        ];
-    }
-
-    /**
-     * Get the validation messages that apply to the request.
-     *
-     * @return array
-     */
     public function messages()
     {
         return [
-            //
+            'name.required' => 'Поле Имя обязательное',
+            'name.max' => 'Наименование не должно превышать :max',
+            'name.min' => 'Наименование должно быть длинее :min',
+            'type' => 'Данного типа поля не существует',
+            'entity' => 'Сущность указана неверно',
         ];
     }
 }

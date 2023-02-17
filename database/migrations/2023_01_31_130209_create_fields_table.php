@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\FieldsEntitiesEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,7 +13,7 @@ return new class extends Migration
             $table->id();
             $table->string('type')->default('string');
             $table->string('name');
-            $table->enum('entity', ['client', 'deal']);
+            $table->string('entity');
             $table->json('options')->nullable();
             $table->boolean('is_active')->default(false);
         });

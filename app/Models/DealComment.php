@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\CommentTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,6 +14,10 @@ class DealComment extends Model
         'type',
         'content',
         'author_id'
+    ];
+
+    protected $casts = [
+        'type' => CommentTypeEnum::class,
     ];
 
     public function files(): BelongsToMany

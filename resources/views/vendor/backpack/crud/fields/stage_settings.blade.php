@@ -1,14 +1,14 @@
 @php
     use App\Services\Stage\StageService;
-    use App\Models\Field;
+    use App\Models\Stage;
 
     $service = new StageService();
 
     $settings = $service->getAllSettings($entry);
-    $stages = \App\Models\Stage::query()
-    ->where('pipeline_id', $entry->pipeline_id)
-    ->whereNot('id', $entry->id)
-    ->get();
+    $stages = Stage::query()
+        ->where('pipeline_id', $entry->pipeline_id)
+        ->whereNot('id', $entry->id)
+        ->get();
 
 @endphp
 
