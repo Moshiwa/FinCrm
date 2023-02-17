@@ -7,8 +7,6 @@ use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Field extends Model
 {
@@ -20,6 +18,9 @@ class Field extends Model
     protected $guarded = ['id'];
 
     protected $fillable = [
+        'type',
+        'name',
+        'entity',
         'options',
         'is_active'
     ];

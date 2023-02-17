@@ -24,7 +24,7 @@ class PipelineCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\Pipeline::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/pipeline');
-        CRUD::setEntityNameStrings('pipeline', 'pipeline');
+        CRUD::setEntityNameStrings(__('entity.add_pipeline'), __('entity.pipelines'));
         CRUD::denyAccess(['show']);
     }
 
@@ -35,6 +35,7 @@ class PipelineCrudController extends CrudController
 
     protected function setupCreateOperation()
     {
+        CRUD::setEntityNameStrings(__('entity.add_pipeline'), __('entity.pipeline'));
         CRUD::setValidation(PipelineRequest::class);
 
         CRUD::field('name')->label('Наименование');

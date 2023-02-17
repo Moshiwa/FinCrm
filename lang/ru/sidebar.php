@@ -8,6 +8,6 @@ return [
     'clients' => 'Клиенты',
     'fields' => 'Поля',
     'pipelines' => 'Воронки',
-    'spaces' => 'Пространства',
+    'spaces' => 'Организации',
     'directories' => 'Справочники'
 ];

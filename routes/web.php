@@ -2,9 +2,6 @@
 
 use App\Http\Controllers\DealController;
 use App\Http\Controllers\FieldController;
-use App\Http\Controllers\PipelineController;
-use App\Models\Stage;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
