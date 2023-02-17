@@ -57,4 +57,23 @@ class StageService
 
         return $result;
     }
+
+    public static function getDefultStages()
+    {
+        return [
+            [
+                'name' => 'В работе',
+                'color' => '#0050FF'
+            ],
+            [
+                'name' => 'Выполнено',
+                'color' => '#28FC2A'
+            ],
+            [
+                'name' => 'Отменено',
+                'color' => '#FE3F6D'
+            ],
+
+        ];
+    }
 }

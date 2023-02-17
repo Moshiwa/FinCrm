@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\PipelineRequest;
+use App\Services\Stage\StageService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -37,30 +38,36 @@ class PipelineCrudController extends CrudController
         CRUD::setValidation(PipelineRequest::class);
 
         CRUD::field('name')->label('Наименование');
-        CRUD::field('stages')->label('Стадии')->type('relationship')->subfields([
-            [
-                'name' => 'color',
-                'type' => 'color',
-                'wrapper' => [
-                    'class' => 'form-group col-md-1',
+        CRUD::field('stages')
+            ->label('Стадии')
+            ->type('relationship')
+            ->default(StageService::getDefultStages())
+            ->min_rows(1)
+            ->subfields([
+                [
+                    'name' => 'color',
+                    'type' => 'color',
+                    'wrapper' => [
+                        'class' => 'form-group col-md-1',
+                    ],
                 ],
-            ],
-            [
-                'name' => 'name',
-                'type' => 'text',
-                'wrapper' => [
-                    'class' => 'form-group col-md-6',
+                [
+                    'name' => 'name',
+                    'type' => 'text',
+                    'wrapper' => [
+                        'class' => 'form-group col-md-6',
+                    ],
                 ],
-            ],
-            [
-                'name' => 'url_setting',
-                'type' => 'custom_html',
-                'value' => '',
-                'wrapper' => [
-                    'class' => 'form-group col-md-6',
+                [
+                    'name' => 'url_setting',
+                    'type' => 'custom_html',
+                    'value' => '',
+                    'wrapper' => [
+                        'class' => 'form-group col-md-6',
+                    ],
                 ],
-            ],
-        ]);
+            ]
+        );
     }
 
     protected function setupUpdateOperation()

@@ -30,12 +30,7 @@ Route::prefix('deal')->name('deal.')->group(function () {
     Route::get('/{deal}/load_comments', [DealController::class, 'loadComments'])->name('loadComments');
 });
 
-Route::prefix('pipeline')->name('pipeline.')->group(function () {
-    Route::post('/', [PipelineController::class, 'create'])->name('create');
-    Route::get('/{pipeline}', [PipelineController::class, 'get'])->name('get');
-    Route::delete('/{pipeline}', [PipelineController::class, 'delete'])->name('delete');
-    Route::post('/update', [PipelineController::class, 'update'])->name('update');
-});
+
 
 Route::prefix('field')->name('field.')->group(function () {
     Route::post('/save', [FieldController::class, 'save'])->name('.save');

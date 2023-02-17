@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Stage\StageService;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,23 +23,7 @@ class Pipeline extends Model
     protected static function booted()
     {
         static::created(function (self $pipeline) {
-            $stages = [
-                [
-                    'name' => 'В работе',
-                    'color' => '#0050FF'
-                ],
-                [
-                    'name' => 'Выполнено',
-                    'color' => '#28FC2A'
-                ],
-                [
-                    'name' => 'Отменено',
-                    'color' => '#FE3F6D'
-                ],
-
-            ];
-
-            $pipeline->stages()->createMany($stages);
+            $pipeline->stages()->createMany(StageService::getDefultStages());
         });
     }
 
