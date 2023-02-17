@@ -5,6 +5,10 @@
     $service = new StageService();
 
     $settings = $service->getAllSettings($entry);
+    $stages = \App\Models\Stage::query()
+    ->where('pipeline_id', $entry->pipeline_id)
+    ->whereNot('id', $entry->id)
+    ->get();
 
 @endphp
 
@@ -15,6 +19,7 @@
     <stage-settings
         :entry="{{ $entry }}"
         :settings="{{ json_encode($settings) }}"
+        :stages="{{ json_encode($stages) }}"
     />
 </div>
 @include('crud::fields.inc.wrapper_end')

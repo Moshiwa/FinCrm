@@ -9,6 +9,7 @@ use App\Models\Deal;
 use App\Models\DealComment;
 use App\Models\Pipeline;
 use App\Services\Deal\DealService;
+use App\Services\SettingService;
 use App\Services\Space\SpaceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -56,7 +57,10 @@ class DealController extends Controller
             }
         ]);
 
-        return $deal;
+        return response()->json([
+            'deal' => $deal,
+            'stages' => SettingService::getAllowedStages($deal->stage)
+        ]);
 
     }
 

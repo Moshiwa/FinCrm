@@ -30,7 +30,8 @@ class Stage extends Model
 
     public function settings(): belongsToMany
     {
-        return $this->belongsToMany(Setting::class, 'settings_stages');
+        return $this->belongsToMany(Setting::class, 'settings_stages')
+            ->withPivot('value');
     }
 
     public function pipeline(): BelongsTo

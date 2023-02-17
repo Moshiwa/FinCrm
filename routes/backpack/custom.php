@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ClientCrudController;
 use App\Http\Controllers\Admin\FieldCrudController;
+use App\Http\Controllers\Admin\StageCrudController;
 use App\Http\Controllers\Admin\UserCrudController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SpaceCrudController;
@@ -30,6 +31,10 @@ Route::group([
 
     Route::prefix('user')->name('user.')->group(function () {
         Route::get('find-users', [UserCrudController::class, 'findUsers'])->name('find');
+    });
+
+    Route::prefix('stage')->name('stage.')->group(function () {
+        Route::post('/update', [StageCrudController::class, 'update'])->name('update');
     });
 
     Route::prefix('field')->name('field.')->group(function () {

@@ -13,5 +13,9 @@ class Setting extends Model
 
     public $timestamps = false;
 
+    protected $casts = [
+        'field' => 'array'
+    ];
+
     protected $guarded = ['id'];
 }

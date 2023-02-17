@@ -51,11 +51,14 @@ class StageCrudController extends CrudController
         $stage = Stage::query()->with('settings')->find($data['id']);
 
         $save_settings = [];
-        foreach ($settings as $id => $setting) {
-            $save_settings[] = $id;
-        }
 
-        $stage->settings()->sync($save_settings);
-        return $this->crud->performSaveAction($data['id']);
+        $stage->settings()->detach();
+        foreach ($settings as $setting) {
+            $value = $setting['field']['value'] ?? [];
+            $values = is_array($value) ? $value : [$value];
+            foreach ($values as $item_value) {
+                $stage->settings()->attach($setting['id'], ['value' => $item_value]);
+            }
+        }
     }
 }

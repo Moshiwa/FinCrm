@@ -7,7 +7,9 @@ use App\Models\Deal;
 use App\Models\Field;
 use App\Models\Pipeline;
 use App\Models\Stage;
+use App\Services\SettingService;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 
 trait DealOperation
@@ -71,13 +73,11 @@ trait DealOperation
             }
         ]);
 
-
-
         $this->data['crud'] = $this->crud;
         $this->data['entry'] = $entry;
         $this->data['comments'] = $comments;
         $this->data['pipelines'] = Pipeline::query()->select('id', 'name')->get();
-        $this->data['stages'] = Stage::query()->where('pipeline_id', $entry->pipeline->id)->get();
+        $this->data['stages'] = SettingService::getAllowedStages($entry->stage);
         $this->data['fields'] = Field::query()->get();
 
         return view('crud::deal', $this->data);

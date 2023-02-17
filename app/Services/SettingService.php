@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Enums\SettingKeysEnum;
+use App\Models\Stage;
+
 class SettingService
 {
     public static function convertEnumToArray(array $enum):array
@@ -12,6 +15,17 @@ class SettingService
         }
 
         return $result;
+    }
+
+    public static function getAllowedStages($stage)
+    {
+        $settings = $stage->settings->where('key', SettingKeysEnum::change_stage->value);
+        $stages = [];
+        foreach ($settings as $setting) {
+            $stages[] = $setting->pivot->value;
+        }
+
+        return Stage::query()->whereNotIn('id', $stages)->get();
     }
 
 

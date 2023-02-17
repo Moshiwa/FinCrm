@@ -2,6 +2,7 @@
     <div class="card-body flex-column">
         <div v-for="setting in settings">
             <el-button
+                v-if="setting.field.type === 'button'"
                 class="w-100"
                 @click="buttonClick(setting)"
             >
@@ -62,11 +63,11 @@ export default {
     },
     methods: {
         buttonClick(setting) {
-            if (setting.key === 'comment' && setting.field === 'button') {
+            if (setting.key === 'leave_comment') {
                 this.commentClick();
             }
 
-            if (setting.key === 'document' && setting.field === 'button') {
+            if (setting.key === 'upload_document') {
                 this.fileUploadClick();
             }
         },

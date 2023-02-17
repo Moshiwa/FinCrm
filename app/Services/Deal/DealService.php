@@ -33,7 +33,7 @@ class DealService
     public function saveDeal($deal, array $data): void
     {
         $deal->update([
-            'name' => $data['name'] ?? '',
+            'name' => html_entity_decode($data['name'] ?? ''),
             'pipeline_id' => $data['pipeline_id'],
             'client_id' => $data['client_id'],
             'stage_id' => $data['stage_id'],
@@ -46,7 +46,7 @@ class DealService
     public function updateClient($deal, array $data): void
     {
         $deal->client()->update([
-            'name' => $data['client']['name'] ?? ''
+            'name' => html_entity_decode($data['client']['name'] ?? '')
         ]);
 
         $deal->client->fields()->sync($data['client']['fields'] ?? []);
@@ -61,7 +61,7 @@ class DealService
             if (empty($comment['id'])) {
                 $model_comment = DealComment::query()->create([
                     'type' => $comment['type'] ?? CommentTypeEnum::comment,
-                    'content' => $comment['content'],
+                    'content' => html_entity_decode($comment['content']),
                     'deal_id' => $comment['deal_id'] ?? $deal_id,
                     'author_id' => backpack_user()->id,
                 ]);
@@ -98,7 +98,7 @@ class DealService
                 $model_comment = DealComment::query()->find($comment['id']);
                 $model_comment->update([
                     'type' => $comment['type'] ?? CommentTypeEnum::comment,
-                    'content' => $comment['content'],
+                    'content' => html_entity_decode($comment['content']),
                     'deal_id' => $comment['deal_id'] ?? $deal_id,
                     'author_id' => backpack_user()->id,
                 ]);

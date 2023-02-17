@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('stage_id')
                 ->constrained()
                 ->cascadeOnDelete();
+            $table->string('value')->nullable();
         });
     }
 

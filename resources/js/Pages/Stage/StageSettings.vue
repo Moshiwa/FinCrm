@@ -5,28 +5,36 @@
         <div class="settings-group">
             <div>Кнопки</div>
             <div v-for="(setting, settingIndex) in stage.settings">
-                <el-form-item prop="stage.settings">
-                    <el-checkbox
-                        v-if="setting.field === 'button'"
-                        v-model="setting.pivot.is_active"
-                        :checked="setting.pivot.is_active"
-                        :label="setting.description"
-                        :name="'settings['+ setting.id +']'"
-                    />
-                </el-form-item>
-            </div>
-        </div>
 
-        <div class="settings-group">
-            <div>Другие</div>
-            <div v-for="setting in stage.settings">
-                <el-form-item prop="stage.settings">
+                <el-form-item
+                    v-if="setting.field.type === 'select'"
+                    :label="setting.name"
+                    prop="stage.settings"
+                >
+                   <el-select
+                       v-model="setting.field.value"
+                       :multiple="setting.field.multiple"
+                       :name="'settings['+ setting.id +']'"
+                       @change="save"
+                   >
+                       <el-option
+                            v-for="(item, index) in setting.field.options"
+                            :key="index"
+                            :label="item"
+                            :value="index"
+                       />
+                   </el-select>
+                </el-form-item>
+
+                <el-form-item
+                    v-else
+                    prop="stage.settings"
+                >
                     <el-checkbox
-                        v-if="setting.field === 'other'"
-                        v-model="setting.pivot.is_active"
-                        :checked="setting.pivot.is_active"
+                        v-model="setting.field.value"
                         :label="setting.description"
                         :name="'settings['+ setting.id +']'"
+                        @change="save"
                     />
                 </el-form-item>
             </div>
@@ -46,15 +54,23 @@ export default {
         settings: {
             type: Array,
             default: []
-        }
+        },
     },
     data() {
         return {
             stage: this.entry ?? {},
+            stages: this.stages ?? [],
         }
     },
     mounted() {
+        console.log(this.settings);
         this.stage.settings = this.settings;
+    },
+    methods: {
+        save() {
+
+            axios.post('/admin/stage/update', this.stage)
+        }
     }
 }
 </script>

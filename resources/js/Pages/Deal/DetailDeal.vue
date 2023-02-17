@@ -416,8 +416,9 @@ export default {
             axios
                 .post('/deal/update',  formData)
                 .then((response) => {
-                    this.comments = response.data.comments;
-                    this.stage = response.data.stage;
+                    this.comments = response.data.deal.comments;
+                    this.stage = response.data.deal.stage;
+                    this.stages = response.data.stages;
                     ElNotification({
                         title: 'Сохранено',
                         type: 'success',
