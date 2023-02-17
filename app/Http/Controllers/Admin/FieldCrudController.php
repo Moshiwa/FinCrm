@@ -36,7 +36,7 @@ class FieldCrudController extends CrudController
             ->label('Тип')
             ->type('closure')
             ->function(function($entry) {
-                return __('fields.type.' . $entry->type);
+                return __('fields.type.' . $entry->type->value);
             });
         CRUD::column('активность')
             ->type('custom_html')

@@ -222,8 +222,7 @@
 
 <script>
 import { ElInput } from 'element-plus';
-import SelectedField from "./Components/SelectedField.vue"
-import Contenteditable from "./Components/Contenteditable.vue";
+import Contenteditable from "../../Components/Contenteditable.vue";
 import FileUpload from "./Components/FileUpload.vue";
 import { ElNotification } from 'element-plus'
 import SettingsButton from "./Components/SettingsButtons.vue";
@@ -233,7 +232,6 @@ import {ref} from "vue";
 export default {
     name: 'DetailDeal',
     components: {
-        SelectedField,
         Contenteditable,
         FileUpload,
         SettingsButton
