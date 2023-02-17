@@ -29,9 +29,7 @@ class FieldsSeeder extends Seeder
                 'name' => 'Активность',
                 'type' => FieldsEnum::select,
                 'entity' => 'client',
-                'options' => [
-                    'Да', 'Нет'
-                ]
+                'options' => '[{"value":"Да"},{"value":"Нет"}]'
             ]);
     }
 }

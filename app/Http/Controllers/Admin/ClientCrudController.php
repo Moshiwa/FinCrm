@@ -28,6 +28,7 @@ class ClientCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/client');
         CRUD::setEntityNameStrings('client', 'clients');
         CRUD::denyAccess(['show']);
+
         $this->service = new ClientService();
     }
 
@@ -71,7 +72,7 @@ class ClientCrudController extends CrudController
         $data = $request->validated();
 
         $fields = $data['fields'] ?? [];
-
+dd($data);
         $client = new Client();
         $client = $this->service->updateOrCreateClient($client, $data);
         $client = $this->service->updateFields($client, $fields);
