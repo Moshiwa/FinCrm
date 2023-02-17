@@ -6,6 +6,7 @@ return [
         'email' => 'Email',
         'number' => 'Числа',
         'select' => 'Выборка',
+        'checkbox' => 'Чекбокс',
         'radio' => 'Радио выборка',
         'date' => 'Дата'
     ]

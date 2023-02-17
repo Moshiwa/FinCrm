@@ -8,6 +8,6 @@ enum FieldsEnum: string
     case email = 'email';
     case number = 'number';
     case select = 'select';
-    case radio = 'radio';
+    case checkbox = 'checkbox';
     case date = 'date';
 }

@@ -85,6 +85,13 @@
                                         @change="send"
                                     />
                                 </div>
+                                <div v-else-if="field.type === 'checkbox'">
+                                    <el-checkbox
+                                        v-model="field.pivot.value"
+                                        :label="field.name"
+                                        @change="send"
+                                    />
+                                </div>
                                 <contenteditable
                                     v-else
                                     v-model="field.pivot.value"
@@ -127,6 +134,13 @@
                                     <el-input
                                         v-model="field.pivot.value"
                                         type="date"
+                                        @change="send"
+                                    />
+                                </div>
+                                <div v-else-if="field.type === 'checkbox'">
+                                    <el-checkbox
+                                        v-model="field.pivot.value"
+                                        :label="field.name"
                                         @change="send"
                                     />
                                 </div>
@@ -223,9 +237,9 @@
 <script>
 import { ElInput } from 'element-plus';
 import Contenteditable from "../../Components/Contenteditable.vue";
-import FileUpload from "./Components/FileUpload.vue";
+import FileUpload from "../../Components/FileUpload.vue";
 import { ElNotification } from 'element-plus'
-import SettingsButton from "./Components/SettingsButtons.vue";
+import SettingsButton from "../../Components/SettingsButtons.vue";
 import {ChatDotSquare, Document, Paperclip, Bell, Edit, Share} from "@element-plus/icons-vue";
 import {ref} from "vue";
 

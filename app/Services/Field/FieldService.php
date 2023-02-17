@@ -2,6 +2,7 @@
 
 namespace App\Services\Field;
 
+use App\Enums\FieldsEnum;
 use App\Models\Client;
 use App\Models\Field;
 
@@ -39,11 +40,23 @@ class FieldService
             $fields[$index] = $deal_field;
             foreach ($filled_deal_fields as $filled_deal_field) {
                 if ($deal_field['id'] === $filled_deal_field['id']) {
+                    $filled_deal_field['pivot']['value'] = $this->castFieldValue($filled_deal_field);
                     $fields[$index] = $filled_deal_field;
                 }
             }
         }
 
         return $fields;
+    }
+
+    private function castFieldValue($field)
+    {
+        $result = $field['pivot']['value'];
+
+        return match ($field['type']) {
+            FieldsEnum::checkbox->value => !($result === 'false'),
+            FieldsEnum::number->value => (int) $result,
+            default => $result,
+        };
     }
 }
