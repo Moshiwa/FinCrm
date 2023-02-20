@@ -65,36 +65,8 @@
                                 </el-select>
                             </el-descriptions-item>
                             <el-descriptions-item v-for="field in dealFields" :label="field.name">
-                                <div v-if="field.type === 'select'">
-                                    <el-select
-                                        v-model="field.pivot.value"
-                                        @change="send"
-                                    >
-                                        <el-option
-                                            v-for="(option, index) in field.options"
-                                            :key="index"
-                                            :label="option.value"
-                                            :value="option.value"
-                                        />
-                                    </el-select>
-                                </div>
-                                <div v-else-if="field.type === 'date'">
-                                    <el-input
-                                        v-model="field.pivot.value"
-                                        type="date"
-                                        @change="send"
-                                    />
-                                </div>
-                                <div v-else-if="field.type === 'checkbox'">
-                                    <el-checkbox
-                                        v-model="field.pivot.value"
-                                        :label="field.name"
-                                        @change="send"
-                                    />
-                                </div>
-                                <contenteditable
-                                    v-else
-                                    v-model="field.pivot.value"
+                                <field
+                                    :field="field"
                                     @send="send"
                                 />
                             </el-descriptions-item>
@@ -117,36 +89,8 @@
                                 />
                             </el-descriptions-item>
                             <el-descriptions-item v-for="field in clientFields" :label="field.name">
-                                <div v-if="field.type === 'select'">
-                                    <el-select
-                                        v-model="field.pivot.value"
-                                        @change="send"
-                                    >
-                                        <el-option
-                                            v-for="(option, index) in field.options"
-                                            :key="index"
-                                            :label="option.value"
-                                            :value="option.value"
-                                        />
-                                    </el-select>
-                                </div>
-                                <div v-else-if="field.type === 'date'">
-                                    <el-input
-                                        v-model="field.pivot.value"
-                                        type="date"
-                                        @change="send"
-                                    />
-                                </div>
-                                <div v-else-if="field.type === 'checkbox'">
-                                    <el-checkbox
-                                        v-model="field.pivot.value"
-                                        :label="field.name"
-                                        @change="send"
-                                    />
-                                </div>
-                                <contenteditable
-                                    v-else
-                                    v-model="field.pivot.value"
+                                <field
+                                    :field="field"
                                     @send="send"
                                 />
                             </el-descriptions-item>
@@ -240,6 +184,7 @@ import Contenteditable from "../../Components/Contenteditable.vue";
 import FileUpload from "../../Components/FileUpload.vue";
 import { ElNotification } from 'element-plus'
 import SettingsButton from "../../Components/SettingsButtons.vue";
+import Field from "../../Components/Field.vue";
 import {ChatDotSquare, Document, Paperclip, Bell, Edit, Share} from "@element-plus/icons-vue";
 import {ref} from "vue";
 
@@ -248,7 +193,8 @@ export default {
     components: {
         Contenteditable,
         FileUpload,
-        SettingsButton
+        SettingsButton,
+        Field
     },
     props: {
         deal: {
