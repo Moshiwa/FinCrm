@@ -35,4 +35,11 @@ class FieldRequest extends FormRequest
             'entity' => 'Сущность указана неверно',
         ];
     }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'options' => json_decode($this->options, true),
+        ]);
+    }
 }
