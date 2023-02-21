@@ -9,5 +9,6 @@ return [
     'fields' => 'Поля',
     'pipelines' => 'Воронки',
     'spaces' => 'Организации',
-    'directories' => 'Справочники'
+    'directories' => 'Справочники',
+    'buttons' => 'Кнопки'
 ];

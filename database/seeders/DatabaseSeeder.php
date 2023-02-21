@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         (new PipelineSeeder())->run();
         (new StagesSeeder())->run();
         (new SettingsSeeder())->run();
+        (new ButtonsSeeder())->run();
 
         (new TestSeeder())->run();
         (new FieldsSeeder())->run();

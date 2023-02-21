@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Operations;
 
+use App\Models\Button;
 use App\Models\Client;
 use App\Models\Deal;
 use App\Models\Field;
@@ -77,7 +78,8 @@ trait DealOperation
         $this->data['entry'] = $entry;
         $this->data['comments'] = $comments;
         $this->data['pipelines'] = Pipeline::query()->select('id', 'name')->get();
-        $this->data['stages'] = SettingService::getAllowedStages($entry->stage);
+        $this->data['stages'] = $entry->pipeline->stages;
+        $this->data['buttons'] = Button::query()->where('pipeline_id', $entry->pipeline->id)->get();
         $this->data['fields'] = Field::query()->get();
 
         return view('crud::deal', $this->data);

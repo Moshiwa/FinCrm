@@ -1,12 +1,12 @@
 <template>
     <div class="card-body flex-column">
-        <div v-for="setting in settings">
+        <div v-for="button in stageButtons">
             <el-button
-                v-if="setting.field.type === 'button'"
+                v-if="button.options.display.stages.some(item => item === stage.id)"
                 class="w-100"
-                @click="buttonClick(setting)"
+                @click="buttonClick(button)"
             >
-                {{ setting.name }}
+                {{ button.name }}
             </el-button>
         </div>
     </div>
@@ -45,13 +45,21 @@ export default {
     name: 'SettingsButton',
     components: { FileUpload },
     props: {
-        settings: {
-
+        buttons: {
+            type: Array,
+            default: []
+        },
+        stage: {
+            type: Object,
+            default: {}
         }
     },
     computed: {
-        settings() {
-            return this.settings;
+        stageButtons() {
+            return this.buttons ?? [];
+        },
+        stage() {
+            return this.stage ?? {};
         }
     },
     data() {
@@ -62,13 +70,13 @@ export default {
         }
     },
     methods: {
-        buttonClick(setting) {
-            if (setting.key === 'leave_comment') {
+        buttonClick(button) {
+            if (button.key === 'leave_comment') {
                 this.commentClick();
-            }
-
-            if (setting.key === 'upload_document') {
+            } else if (button.key === 'upload_document') {
                 this.fileUploadClick();
+            } else {
+                this.change(button.options)
             }
         },
 
@@ -87,6 +95,10 @@ export default {
             this.$emit('fileUploadSend', e);
             this.visibleFileUploadForm = false;
         },
+
+        change(button) {
+            this.$emit('changeData', button);
+        }
     }
 }
 </script>

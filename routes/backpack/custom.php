@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ButtonCrudController;
 use App\Http\Controllers\Admin\ClientCrudController;
 use App\Http\Controllers\Admin\FieldCrudController;
 use App\Http\Controllers\Admin\StageCrudController;
@@ -42,4 +43,11 @@ Route::group([
     Route::prefix('field')->name('field.')->group(function () {
         Route::get('/{field}/toggle-activity', [FieldCrudController::class, 'toggleActivity'])->name('toggleActivity');
     });
+
+    Route::prefix('button')->name('button.')->group(function () {
+        Route::post('/save', [ButtonCrudController::class, 'save'])->name('save');
+    });
+
+
+    Route::crud('button', 'ButtonCrudController');
 });

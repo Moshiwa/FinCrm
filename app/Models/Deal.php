@@ -19,6 +19,14 @@ class Deal extends Model
 
     protected $guarded = ['id'];
 
+    protected $fillable = [
+        'name',
+        'pipeline_id',
+        'stage_id',
+        'from_api',
+        'responsible_id',
+    ];
+
     public function fields()
     {
         return $this->belongsToMany(Field::class, 'deal_fields')

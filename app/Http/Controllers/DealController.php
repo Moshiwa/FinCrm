@@ -44,6 +44,7 @@ class DealController extends Controller
             'stage',
             'stage.settings',
             'pipeline',
+            'pipeline.buttons',
             'responsible',
             'client',
             'fields',
@@ -59,7 +60,8 @@ class DealController extends Controller
 
         return response()->json([
             'deal' => $deal,
-            'stages' => SettingService::getAllowedStages($deal->stage)
+            'stages' => $deal->pipeline->stages,
+            'pipelines' => Pipeline::query()->get(),
         ]);
 
     }

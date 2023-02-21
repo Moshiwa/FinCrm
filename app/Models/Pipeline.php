@@ -20,6 +20,11 @@ class Pipeline extends Model
         return $this->hasMany(Stage::class);
     }
 
+    public function buttons(): HasMany
+    {
+        return $this->hasMany(Button::class);
+    }
+
     protected static function booted()
     {
         static::created(function (self $pipeline) {

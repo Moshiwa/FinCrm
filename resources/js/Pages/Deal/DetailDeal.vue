@@ -25,7 +25,7 @@
                                         @change="changePipeline"
                                     >
                                         <el-option
-                                            v-for="pipeline in pipelines"
+                                            v-for="pipeline in allPipelines"
                                             :key="pipeline.id"
                                             :label="pipeline.name"
                                             :value="pipeline"
@@ -37,7 +37,7 @@
                                         @change="changeStage"
                                     >
                                         <el-option
-                                            v-for="stage in stages"
+                                            v-for="stage in allStages"
                                             :key="stage.id"
                                             :label="stage.name"
                                             :value="stage"
@@ -170,10 +170,12 @@
         </div>
 
         <settings-button
-            :settings="stage.settings"
+            :buttons="stageButtons"
+            :stage="stage"
 
             @commentSend="sendComment($event)"
             @fileUploadSend="sendFiles($event)"
+            @changeData="changeData($event)"
         />
     </div>
 </template>
@@ -220,6 +222,10 @@ export default {
         users: {
             type: Array,
             default: [{}]
+        },
+        buttons: {
+            type: Array,
+            default: []
         }
     },
     data() {
@@ -233,8 +239,8 @@ export default {
             pipeline: this.deal?.pipeline ?? {},
             responsible: this.deal?.responsible ?? {},
             stage: this.deal?.stage ?? {},
-            stages: this.stages ?? [],
             comments: this.deal.comments ?? [],
+            stageButtons: this.buttons ?? [],
             clientFields: this.clientFields ?? [],
             dealFields: this.dealFields ?? [],
             responsibles: this.users ?? [],
@@ -243,6 +249,8 @@ export default {
             allFiles: this.deal?.comments?.reduce((acc, item) => {
                 return [...acc,...item.files];
             }, []),
+            allPipelines: this.pipelines ?? [],
+            allStages: this.stages ?? [],
 
             files: [],
             newComment: { id: '', type: 'comment', content: '', author_id: null, files: [] },
@@ -258,7 +266,7 @@ export default {
             axios
                 .get('/deal/get_stages/' + item.id,)
                 .then((response) => {
-                    this.stages = response.data;
+                    this.allStages = response.data;
                 });
         },
         loadMore (e) {
@@ -334,6 +342,13 @@ export default {
                     });
             }
         },
+        changeData(options) {
+            this.pipeline.id = !!options.pipeline_id ? options.pipeline_id : this.pipeline.id;
+            this.stage.id = !!options.stage_id ? options.stage_id : this.stage.id;
+            this.responsible.id = !!options.responsible_id ? options.responsible_id : this.responsible.id;
+
+            this.send();
+        },
         send() {
             const formData = new FormData();
             formData.append('id', this.deal.id);
@@ -374,9 +389,13 @@ export default {
             axios
                 .post('/deal/update',  formData)
                 .then((response) => {
+                    console.log(response.data.deal);
                     this.comments = response.data.deal.comments;
                     this.stage = response.data.deal.stage;
-                    this.stages = response.data.stages;
+                    this.allStages = response.data.stages;
+                    this.allPipelines = response.data.pipelines;
+                    this.stageButtons = response.data.deal.pipeline.buttons;
+                    console.log(this.stageButtons);
                     ElNotification({
                         title: 'Сохранено',
                         type: 'success',

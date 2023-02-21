@@ -8,6 +8,7 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import DetailDeal from "./Pages/Deal/DetailDeal.vue";
 import ClientEdit from "./Pages/Client/Edit.vue";
 import StageSettings from "./Pages/Stage/StageSettings.vue";
+import ButtonSettings from "./Pages/Button/ButtonSettings.vue";
 
 
 if (document.getElementById("vue-app")) {
@@ -16,7 +17,7 @@ if (document.getElementById("vue-app")) {
         .use(ElementPlus)
         .mixin({
             components: {
-                DetailDeal, ClientEdit, StageSettings
+                DetailDeal, ClientEdit, StageSettings, ButtonSettings
             }
         });
 

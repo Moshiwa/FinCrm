@@ -8,5 +8,6 @@
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('field') }}"><i class="nav-icon la la-edit"></i> {{ __('sidebar.fields') }} </a></li>
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('space') }}"><i class="nav-icon la la-city"></i> {{ __('sidebar.spaces') }} </a></li>
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('pipeline') }}"><i class="nav-icon la la-book"></i> {{ __('sidebar.pipelines') }} </a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('button') }}"><i class="nav-icon la la-icons"></i> {{  __('sidebar.buttons') }}</a></li>
     </ul>
 </li>

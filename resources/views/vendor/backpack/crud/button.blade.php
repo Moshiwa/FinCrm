@@ -9,6 +9,11 @@
     // if breadcrumbs aren't defined in the CrudController, use the default breadcrumbs
     $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
     $crud = [];
+
+    $service = new \App\Services\Button\ButtonService();
+    $pipelines = \App\Models\Pipeline::query()->with(['stages', 'buttons'])->get();
+    $pipelines = $service->mergeButtonsSettings($pipelines);
+
 @endphp
 
 
@@ -23,8 +28,8 @@
                     <small>Поднасрйки</small>
                 </h2>
             </section>
-            <settings-main
-
+            <button-settings
+                :pipelines="{{ json_encode($pipelines) }}"
             />
         </div>
     </div>
