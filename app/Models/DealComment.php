@@ -12,6 +12,7 @@ class DealComment extends Model
     protected $fillable = [
         'deal_id',
         'type',
+        'title',
         'content',
         'author_id'
     ];

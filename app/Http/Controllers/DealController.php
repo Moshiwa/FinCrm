@@ -14,6 +14,7 @@ use App\Services\Space\SpaceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use PhpParser\Comment;
 
 class DealController extends Controller
 {
@@ -28,17 +29,21 @@ class DealController extends Controller
     {
         $data = $request->validated();
 
-        if ($data['id']) {
-            $deal = Deal::query()->find($data['id']);
-        } else {
-            $deal = new Deal();
-        }
+        $deal = Deal::query()->with(['pipeline', 'stage', 'responsible'])->find($data['id']);
 
-        $this->service->saveDeal($deal, $data);
+        $deal->name = html_entity_decode($data['name'] ?? '');
+        $deal->pipeline_id = $data['pipeline_id'];
+        $deal->client_id = $data['client_id'];
+        $deal->stage_id = $data['stage_id'];
+        $deal->responsible_id = $data['responsible_id'];
+        $this->service->createNewMessage($deal, $data);
+        $deal->save();
+
+        $deal->fields()->sync($data['fields'] ?? []);
         $this->service->updateClient($deal, $data);
         $this->service->updateComments($deal, $data);
 
-        $comment_count = $data['comment_count'] ?? 5;
+        $comment_count = $data['comment_count'] ?? 10;
 
         $deal->load([
             'stage',

@@ -125,7 +125,7 @@
                                 <el-card>
                                     <div class="row-right">
                                         <div class="row-right__upper">
-                                            <!--                    Здесь было удаление-->
+                                            <span v-html="comment.title"></span>
                                         </div>
                                         <div class="row-right__lower">
                                             <div class="row-right__content">
@@ -321,6 +321,7 @@ export default {
             }
             this.prepareDataByButtonOptions(e.button.options);
 
+            this.newComment = { id: '', type: 'comment', content: '', author_id: null, files: [] };
             this.send();
         },
         sendFiles(event) {
@@ -387,14 +388,25 @@ export default {
 
             this.deal.comments = this.comments ?? [];
             this.deal?.comments.forEach((comment, commentIndex) => {
-                formData.append('comments[' + commentIndex + '][id]', comment.id ?? '');
-                formData.append('comments[' + commentIndex + '][deal_id]', this.deal.id);
-                formData.append('comments[' + commentIndex + '][type]', comment.type);
-                formData.append('comments[' + commentIndex + '][content]', comment.content);
-                comment.files = comment.files ?? [];
-                comment.files.forEach((file, fileIndex) => {
-                    formData.append('comments[' + commentIndex + '][files][' + fileIndex + ']', file);
-                })
+                if (!comment.id) {
+                    formData.append('new_comment[id]', comment.id ?? '');
+                    formData.append('new_comment[deal_id]', this.deal.id);
+                    formData.append('new_comment[type]', comment.type);
+                    formData.append('new_comment[content]', comment.content);
+                    comment.files = comment.files ?? [];
+                    comment.files.forEach((file, fileIndex) => {
+                        formData.append('new_comment[files][' + fileIndex + ']', file);
+                    })
+                } else {
+                    formData.append('comments[' + commentIndex + '][id]', comment.id ?? '');
+                    formData.append('comments[' + commentIndex + '][deal_id]', this.deal.id);
+                    formData.append('comments[' + commentIndex + '][type]', comment.type);
+                    formData.append('comments[' + commentIndex + '][content]', comment.content);
+                    comment.files = comment.files ?? [];
+                    comment.files.forEach((file, fileIndex) => {
+                        formData.append('comments[' + commentIndex + '][files][' + fileIndex + ']', file);
+                    })
+                }
             });
 
             console.log( this.deal)

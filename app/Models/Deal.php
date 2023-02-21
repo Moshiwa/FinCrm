@@ -65,7 +65,7 @@ class Deal extends Model
             event(new CreateDeal($deal));
         });
         static::updating(function (self $deal) {
-            if ($deal->isDirty('pipeline_id')) {
+           /* if ($deal->isDirty('pipeline_id')) {
                 $old_data = [
                     'pipeline_id' => $deal->getOriginal('pipeline_id'),
                     'stage_id' => $deal->getOriginal('stage_id')
@@ -88,7 +88,7 @@ class Deal extends Model
                 ];
 
                 event(new ChangeResponsible($deal, $old_data));
-            }
+            }*/
         });
     }
 }

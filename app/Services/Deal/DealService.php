@@ -6,42 +6,15 @@ use App\Enums\CommentTypeEnum;
 use App\Enums\FilesTypeEnum;
 use App\Models\DealComment;
 use App\Models\File;
+use App\Models\Pipeline;
+use App\Models\Stage;
+use App\Models\User;
 use App\Services\Space\SpaceService;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Storage;
 
 class DealService
 {
-    public function definitionCommentType($data): string
-    {
-        if (is_uploaded_file($data)) {
-            $ext = $data->getClientOriginalExtension();
-            switch ($ext) {
-                case 'png':
-                case 'jpg':
-                case 'jpeg':
-                case 'doc':
-                case 'pdf':
-                case 'txt':
-                    return CommentTypeEnum::document->value;
-            }
-        }
-
-        return CommentTypeEnum::comment->value;
-    }
-
-    public function saveDeal($deal, array $data): void
-    {
-        $deal->update([
-            'name' => html_entity_decode($data['name'] ?? ''),
-            'pipeline_id' => $data['pipeline_id'],
-            'client_id' => $data['client_id'],
-            'stage_id' => $data['stage_id'],
-            'responsible_id' => $data['responsible_id'],
-        ]);
-
-        $deal->fields()->sync($data['fields'] ?? []);
-    }
 
     public function updateClient($deal, array $data): void
     {
@@ -58,53 +31,20 @@ class DealService
         $comments = $data['comments'] ?? [];
 
         foreach ($comments as $comment) {
-            if (empty($comment['id'])) {
-                $model_comment = DealComment::query()->create([
-                    'type' => $comment['type'] ?? CommentTypeEnum::comment,
-                    'content' => html_entity_decode($comment['content']),
-                    'deal_id' => $comment['deal_id'] ?? $deal_id,
-                    'author_id' => backpack_user()->id,
-                ]);
-
-                if (empty($comment['files'])) {
-                    continue;
-                }
-
-                $files = is_array($comment['files'])
-                    ? $comment['files']
-                    : [$comment['files']];
-
-                foreach ($files as $file) {
-                    if (! is_uploaded_file($file)) {
-                        continue;
-                    }
-
-                    $space = SpaceService::getCurrentSpaceCode();
-                    $name = "/deal_$space/$deal->id";
-                    $path = Storage::disk('public')->put($name, $file);
-
-                    $file = File::query()->create([
-                        'size' => $file->getSize(),
-                        'meme' => $file->getClientOriginalExtension(),
-                        'original_name' => $file->getClientOriginalName(),
-                        'path' => $path
-                    ]);
-
-                    $model_comment->files()->attach($file->id);
-
-                }
-
-            } else {
-                $model_comment = DealComment::query()->find($comment['id']);
-                $model_comment->update([
-                    'type' => $comment['type'] ?? CommentTypeEnum::comment,
-                    'content' => html_entity_decode($comment['content']),
-                    'deal_id' => $comment['deal_id'] ?? $deal_id,
-                    'author_id' => backpack_user()->id,
-                ]);
-            }
+            $model_comment = DealComment::query()->find($comment['id']);
+            $model_comment->update([
+                'type' => $comment['type'] ?? CommentTypeEnum::comment,
+                'content' => html_entity_decode($comment['content']),
+                'deal_id' => $comment['deal_id'] ?? $deal_id,
+                'author_id' => backpack_user()->id,
+            ]);
         }
 
+        $this->deleteComments($deal, $data);
+    }
+
+    private function deleteComments($deal, array $data)
+    {
         if (! empty($data['delete_comment_id'])) {
             $model_comment = DealComment::query()->find($data['delete_comment_id']);
             foreach ($model_comment->files as $file) {
@@ -114,5 +54,84 @@ class DealService
             $model_comment->files()->sync([]);
             $model_comment->delete();
         }
+    }
+
+    public function createNewMessage($deal, $data): void
+    {
+        $title = $this->definitionTitleComment($deal);
+        $comment = $data['new_comment'] ?? [];
+        if (empty($title)) {
+            if (!empty($comment)) {
+                $title = 'Комментарий';
+                $files = $this->saveFiles($comment['files'] ?? [], $deal);
+                $comment_model = $deal->comments()->create([
+                    'title' => $title,
+                    'content' => $comment['content'],
+                    'type' => empty($files) ? CommentTypeEnum::comment->value : CommentTypeEnum::document->value,
+                    'author_id' => backpack_user()->id,
+                ]);
+
+                $comment_model->files()->attach($files);
+            }
+        } else {
+            $deal->comments()->create([
+                'content' => $data['new_comment']['content'] ?? '',
+                'title' => $title,
+                'type' => CommentTypeEnum::action->value,
+                'author_id' => backpack_user()->id,
+            ]);
+        }
+
+    }
+
+    private function saveFiles($files, $deal)
+    {
+        $files = is_array($files) ? $files : [$files];
+        $result = [];
+        foreach ($files as $file) {
+            if (! is_uploaded_file($file)) {
+                continue;
+            }
+
+            $space = SpaceService::getCurrentSpaceCode();
+            $name = "/deal_$space/$deal->id";
+            $path = Storage::disk('public')->put($name, $file);
+
+            $file = File::query()->create([
+                'size' => $file->getSize(),
+                'meme' => $file->getClientOriginalExtension(),
+                'original_name' => $file->getClientOriginalName(),
+                'path' => $path
+            ]);
+
+            $result[] = $file->id;
+        }
+
+        return $result;
+    }
+
+    private function definitionTitleComment($deal): string
+    {
+        $actions = [];
+
+        $new_deal = $deal->getAttributes();
+
+        if ($deal->isDirty('pipeline_id')) {
+            $new_deal['pipeline'] = Pipeline::query()->find($new_deal['pipeline_id'])->toArray();
+            $actions[] = 'Смена воронки с ' . $deal->pipeline->name . ' на ' . $new_deal['pipeline']['name'];
+        }
+
+        if ($deal->isDirty('stage_id')) {
+            $new_deal['stage'] = Stage::query()->find($new_deal['stage_id'])->toArray();
+            $actions[] = 'Смена стадии с ' . $deal->stage->name . ' на ' . $new_deal['stage']['name'];
+        }
+
+        if ($deal->isDirty('responsible_id')) {
+            $new_deal['responsible'] = User::query()->find($new_deal['responsible_id'])->toArray();
+            $actions[] = 'Смена ответственного с ' . $deal->stage->name . ' на ' . $new_deal['responsible']['name'];
+        }
+
+
+        return implode(' ', $actions);
     }
 }
