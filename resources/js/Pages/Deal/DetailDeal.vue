@@ -101,13 +101,16 @@
 
             <div class="card-right">
                 <div class="card-body row">
-                    <el-select
-                        class="m-3"
-                    >
-                        <el-option
+                    <div>
+                        <el-select
+                            class="m-3"
+                        >
+                            <el-option
 
-                        />
-                    </el-select>
+                            />
+                        </el-select>
+                        <el-button @click="visibleFileUploadForm = true">Прикрепить документ</el-button>
+                    </div>
                     <el-timeline @scroll="loadMore" class="infinite-list" style="overflow: auto" ref="scroll_container">
                             <el-timeline-item
                                 v-for="comment in comments"
@@ -174,10 +177,16 @@
             :stage="stage"
 
             @commentSend="sendComment($event)"
-            @fileUploadSend="sendFiles($event)"
             @changeData="changeData($event)"
         />
     </div>
+
+    <el-drawer v-model="visibleFileUploadForm" :show-close="false">
+        <template #header="{ close, titleId, titleClass }">
+            <h4 :id="titleId" :class="titleClass">Выберите файлы</h4>
+        </template>
+        <file-upload @send="sendFiles($event)"/>
+    </el-drawer>
 </template>
 
 <script>
@@ -306,10 +315,11 @@ export default {
         },
         sendComment(e) {
             this.visibleCommentForm = false;
-            this.newComment.content = e;
+            this.newComment.content = e.comment;
             if (this.newComment.content.length > 0) {
                 this.comments.unshift(this.newComment);
             }
+            this.prepareDataByButtonOptions(e.button.options);
 
             this.send();
         },
@@ -343,11 +353,13 @@ export default {
             }
         },
         changeData(options) {
+            this.prepareDataByButtonOptions(options);
+            this.send();
+        },
+        prepareDataByButtonOptions(options) {
             this.pipeline.id = !!options.pipeline_id ? options.pipeline_id : this.pipeline.id;
             this.stage.id = !!options.stage_id ? options.stage_id : this.stage.id;
             this.responsible.id = !!options.responsible_id ? options.responsible_id : this.responsible.id;
-
-            this.send();
         },
         send() {
             const formData = new FormData();
@@ -395,6 +407,8 @@ export default {
                     this.allStages = response.data.stages;
                     this.allPipelines = response.data.pipelines;
                     this.stageButtons = response.data.deal.pipeline.buttons;
+                    this.responsible = response.data.deal.responsible;
+                    this.responsibles = [this.responsible];
                     console.log(this.stageButtons);
                     ElNotification({
                         title: 'Сохранено',

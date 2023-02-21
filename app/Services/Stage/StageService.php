@@ -58,7 +58,7 @@ class StageService
         return $result;
     }
 
-    public static function getDefultStages()
+    public static function getDefaultStages(): array
     {
         return [
             [

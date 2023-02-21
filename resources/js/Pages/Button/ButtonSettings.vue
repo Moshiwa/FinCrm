@@ -10,7 +10,7 @@
         <el-button plain @click="openEditButton(button)">{{ button.name }}</el-button>
     </div>
 
-    <el-button @click="openEditButton()">Добавить</el-button>
+    <el-button type="primary"  @click="openEditButton()">Добавить</el-button>
 
 
     <el-drawer
@@ -42,34 +42,71 @@
         Действия
 
 
+        <el-checkbox
+            v-model="actionChangeStage"
+            label="Смена стадии"
+        />
+        <div v-if="actionChangeStage">
+            Смена этапа на
 
-        Смена этапа на
+            <el-select
+                v-model="currentButton.options.pipeline_id"
+                @change="selectActionPipeline"
+                value-key="id"
+                clearable
+            >
+                <el-option
+                    v-for="pipeline in allPipelines"
+                    :key="pipeline.id"
+                    :label="pipeline.name"
+                    :value="pipeline.id"
+                />
+            </el-select>
+            >
+            <el-select
+                v-model="currentButton.options.stage_id"
+                value-key="id"
+                clearable
+            >
+                <el-option
+                    v-for="stage in currentActionPipeline.stages"
+                    :key="stage.id"
+                    :label="stage.name"
+                    :value="stage.id"
+                />
+            </el-select>
+        </div>
+
+
+        <el-checkbox
+            v-model="actionChangeResponsible"
+            label="Смена ответственного"
+        />
         <el-select
-            v-model="currentButton.options.pipeline_id"
-            @change="selectActionPipeline"
+            v-model="currentResponsible"
+            v-if="actionChangeResponsible"
             value-key="id"
+            filterable
+            remote
+            reserve-keyword
+            placeholder="Please enter a keyword"
+            :remote-method="getUsers"
         >
             <el-option
-                v-for="pipeline in allPipelines"
-                :key="pipeline.id"
-                :label="pipeline.name"
-                :value="pipeline.id"
-            />
-        </el-select>
-        >
-        <el-select
-            v-model="currentButton.options.stage_id"
-            value-key="id"
-        >
-            <el-option
-                v-for="stage in currentActionPipeline.stages"
-                :key="stage.id"
-                :label="stage.name"
-                :value="stage.id"
+                v-for="user in responsibles"
+                :key="user.id"
+                :label="user.name"
+                :value="user"
             />
         </el-select>
 
-        <el-button @click="save">Сохранить</el-button>
+        <el-checkbox
+            v-model="actionLeaveComment"
+            label="Оставить комментарий"
+        />
+
+        <el-button type="success" @click="save">Сохранить</el-button>
+        <el-button type="danger" @click="remove">Удалить</el-button>
     </el-drawer>
 
 
@@ -79,6 +116,8 @@
 import { ElMessageBox, ElSwitch } from 'element-plus'
 export default {
     name: 'ButtonSettings',
+    components: {
+    },
     props: {
         buttons: {
             type: Array,
@@ -94,11 +133,16 @@ export default {
             visibleDrawer: false,
 
             allPipelines: this.pipelines ?? [],
+            responsibles: [],
 
+            currentResponsible: {},
             currentPipeline: this.pipelines[0],
             currentButton: {},
-
             currentActionPipeline: {},
+
+            actionChangeStage: false,
+            actionChangeResponsible: false,
+            actionLeaveComment: false,
         }
     },
     mounted() {
@@ -118,10 +162,17 @@ export default {
 
         },
         openEditButton(button = null) {
+            this.changeStage = false;
+            this.actionChangeResponsible = false;
+            this.actionLeaveComment = false;
             if (!!button) {
                 this.allPipelines.forEach((pipeline) => {
-                    if (pipeline.id === button.options.pipeline_id) {
+                    if (pipeline.id === button.pipeline_id) {
                         this.currentActionPipeline = pipeline;
+
+                        this.actionChangeStage = !!button.options.stage_id;
+                        this.actionChangeResponsible = !!button.options.responsible_id;
+                        this.actionLeaveComment = !!button.options.comment;
                     }
                 })
             } else {
@@ -136,11 +187,12 @@ export default {
                     pipeline_id: this.currentPipeline.id
                 }
             }
-
+            console.log(button);
            this.currentButton = button;
            this.visibleDrawer = true;
         },
         save() {
+            this.prepareData();
             let data = {};
             data.id = this.currentButton.id ?? null;
             data.name = this.currentButton.name ?? null;
@@ -152,9 +204,33 @@ export default {
             axios.post('/admin/button/save', data)
                 .then((response) => {
                     console.log(response)
+                    this.visibleDrawer = false;
                 });
-
-
+        },
+        remove() {
+            axios.delete('/admin/button/' + this.currentButton.id)
+                .then((response) => {
+                    this.currentPipeline.buttons.forEach((button, index) => {
+                        if(button.id === this.currentButton.id) {
+                            this.visibleDrawer = false;
+                            this.currentPipeline.buttons.splice(index, 1);
+                        }
+                    })
+                });
+        },
+        getUsers(query) {
+            if (query.length >= 3) {
+                axios.get('/admin/user/find-users?user_name=' + query)
+                    .then((response) => {
+                        this.responsibles = response.data.data;
+                    });
+            }
+        },
+        prepareData() {
+            this.currentButton.options.stage_id = this.actionChangeStage ? this.currentButton.options.stage_id : '';
+            this.currentButton.options.pipeline_id = this.actionChangeStage ? this.currentButton.options.pipeline_id : '';
+            this.currentButton.options.responsible_id = this.actionChangeResponsible ? this.currentResponsible.id : '';
+            this.currentButton.options.comment = !!this.actionLeaveComment;
         }
 
     }

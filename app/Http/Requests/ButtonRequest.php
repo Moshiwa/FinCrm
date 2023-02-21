@@ -24,6 +24,7 @@ class ButtonRequest extends FormRequest
             'options.stage_id' => 'nullable',
             'options.pipeline_id' => 'nullable',
             'options.responsible_id' => 'nullable',
+            'options.comment' => 'nullable|boolean',
         ];
     }
 

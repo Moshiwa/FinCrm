@@ -29,12 +29,6 @@
             Отправить
         </el-button>
     </el-drawer>
-    <el-drawer v-model="visibleFileUploadForm" :show-close="false">
-        <template #header="{ close, titleId, titleClass }">
-            <h4 :id="titleId" :class="titleClass">Выберите файлы</h4>
-        </template>
-        <file-upload @send="fileUploadSend($event)"/>
-    </el-drawer>
 </template>
 
 <script>
@@ -65,16 +59,16 @@ export default {
     data() {
         return {
             visibleCommentForm: false,
-            visibleFileUploadForm: false,
             comment: '',
+
+            currentButton: {}
         }
     },
     methods: {
         buttonClick(button) {
-            if (button.key === 'leave_comment') {
+            this.currentButton = button;
+            if (button.options.comment === true) {
                 this.commentClick();
-            } else if (button.key === 'upload_document') {
-                this.fileUploadClick();
             } else {
                 this.change(button.options)
             }
@@ -84,16 +78,12 @@ export default {
             this.visibleCommentForm = true
         },
         commentSend() {
-            this.$emit('commentSend', this.comment);
+            let data = {
+                comment: this.comment,
+                button: this.currentButton,
+            }
+            this.$emit('commentSend', data);
             this.visibleCommentForm = false;
-        },
-
-        fileUploadClick() {
-            this.visibleFileUploadForm = true
-        },
-        fileUploadSend(e) {
-            this.$emit('fileUploadSend', e);
-            this.visibleFileUploadForm = false;
         },
 
         change(button) {

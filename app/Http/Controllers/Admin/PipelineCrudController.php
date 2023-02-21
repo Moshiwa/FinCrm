@@ -42,7 +42,7 @@ class PipelineCrudController extends CrudController
         CRUD::field('stages')
             ->label('Стадии')
             ->type('relationship')
-            ->default(StageService::getDefultStages())
+            ->default(StageService::getDefaultStages())
             ->min_rows(1)
             ->subfields([
                 [

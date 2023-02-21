@@ -46,6 +46,7 @@ Route::group([
 
     Route::prefix('button')->name('button.')->group(function () {
         Route::post('/save', [ButtonCrudController::class, 'save'])->name('save');
+        Route::delete('/{button}', [ButtonCrudController::class, 'delete'])->name('delete');
     });
 
 

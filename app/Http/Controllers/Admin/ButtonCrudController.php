@@ -32,6 +32,7 @@ class ButtonCrudController extends CrudController
             'stage_id' => $data['options']['stage_id'] ?? '',
             'pipeline_id' => $data['options']['pipeline_id'] ?? '',
             'responsible_id' => $data['options']['responsible_id'] ?? '',
+            'comment' => $data['options']['comment'] ?? false,
         ];
 
         if (empty($data['id'])) {
@@ -48,6 +49,11 @@ class ButtonCrudController extends CrudController
                 'options' => $options
             ]);
         }
+    }
+
+    public function delete(Button $button)
+    {
+        $button->delete();
     }
 
 }
