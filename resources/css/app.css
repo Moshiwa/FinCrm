@@ -44,3 +44,33 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #b6b6b6;
 }
+
+
+.btn-custom__default {
+    background: #ffffff;
+    color: #495057;
+}
+.btn-custom__grey {
+    background: #d2d5d5;
+    color: #495057;
+}
+.btn-custom__black {
+    background: #000000;
+    color: #ffffff;
+}
+.btn-custom__green {
+    background: #04AA6D;
+    color: #ffffff;
+}
+.btn-custom__yellow {
+    background: #ebbf00;
+    color: #ffffff;
+}
+.btn-custom__pink {
+    background: #d7556c;
+    color: #ffffff;
+}
+.btn-custom__blue {
+    background: #0c84e4;
+    color: #ffffff;
+}

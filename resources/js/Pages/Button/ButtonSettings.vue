@@ -1,16 +1,41 @@
 <template>
-    <div>
-        Выберите воронку:
-        <div v-for="pipeline in allPipelines" @click="selectPipeline(pipeline)">
-            <a style="cursor: pointer; text-decoration: underline">{{ pipeline.name }}</a>
+    <div class="b-settings__container">
+        <div class="b-settings__header">
+            <div class="b-settings__pipelines">
+                <div class="pipeline__buttons">
+                    <div
+                        v-for="pipeline in allPipelines" @click="selectPipeline(pipeline)"
+                        :class="{
+                            active: pipeline.id === this.currentPipeline.id,
+                            'pipeline__item': true
+                        }"
+                    >
+                        <a>{{ pipeline.name }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="b-settings__body">
+            <div class="b-settings__buttons">
+                <div
+                    class="button__item"
+                    v-for="button in currentPipeline.buttons"
+                >
+                    <custom-button
+                        :button="button"
+                        @click="openEditButton(button)"
+                    />
+                </div>
+            </div>
+
+            <div class="b-settings__actions">
+                <a :href="'/admin/pipeline/' + this.currentPipeline.id + '/edit'">Настройки воронки</a>
+                <el-button type="primary"  @click="openEditButton()">Добавить</el-button>
+            </div>
         </div>
     </div>
 
-    <div v-for="button in currentPipeline.buttons">
-        <el-button plain @click="openEditButton(button)">{{ button.name }}</el-button>
-    </div>
 
-    <el-button type="primary"  @click="openEditButton()">Добавить</el-button>
 
 
     <el-drawer
@@ -114,9 +139,11 @@
 
 <script>
 import { ElMessageBox, ElSwitch } from 'element-plus'
+import CustomButton from "../../Components/CustomButton.vue";
 export default {
     name: 'ButtonSettings',
     components: {
+        CustomButton
     },
     props: {
         buttons: {
@@ -143,6 +170,8 @@ export default {
             actionChangeStage: false,
             actionChangeResponsible: false,
             actionLeaveComment: false,
+
+            activePipelineClass: false
         }
     },
     mounted() {
@@ -197,11 +226,9 @@ export default {
             data.action = this.currentButton.action ?? null;
             data.visible = this.currentButton.visible ?? null;
 
-            console.log(data);
-
             axios.post('/admin/button/save', data)
                 .then((response) => {
-                    console.log(response)
+                    this.currentPipeline = response.data.data.pipeline ?? [];
                     this.visibleDrawer = false;
                 });
         },
@@ -236,5 +263,64 @@ export default {
 </script>
 
 <style scoped>
+.b-settings__container {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 4px;
+    padding: 15px;
+}
+.b-settings__header {
+    padding: 10px 0 10px 0;
+}
+.b-settings__pipelines {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background: #f1f4f8;
+    border-radius: 2px;
+}
+.pipeline__item {
+    cursor: pointer;
+    padding: 10px;
+    background: #f1f4f8;
+    color: #495057;
+}
+.pipeline__item:hover {
+    color: var(--indigo);
+    border-radius: 2px;
+    filter: brightness(97%);
+}
+.pipeline__item.active {
+    color: var(--indigo);
+    border-radius: 2px;
+    filter: brightness(97%);
+}
+.pipeline__buttons {
+    display: flex;
+    flex-direction: row;
+}
+
+.b-settings__body {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0 10px 0;
+}
+.b-settings__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.b-settings__actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: baseline;
+    gap: 10px;
+}
+
+
+
 
 </style>

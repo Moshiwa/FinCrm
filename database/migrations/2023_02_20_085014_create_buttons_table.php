@@ -10,11 +10,13 @@ return new class extends Migration
     {
         Schema::create('buttons', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->json('options')->nullable();
             $table->foreignId('pipeline_id')
                 ->constrained()
                 ->cascadeOnDelete();
+            $table->string('name');
+            $table->string('color')->default('default');
+            $table->string('icon')->default('default');
+            $table->boolean('is_default')->default(false);
         });
     }
 

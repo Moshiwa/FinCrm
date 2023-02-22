@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\Operations\ButtonOperation;
 use App\Http\Requests\ButtonRequest;
 use App\Models\Button;
+use App\Models\Pipeline;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Support\Arr;
@@ -49,6 +50,17 @@ class ButtonCrudController extends CrudController
             'stage_id' => $data['action']['stage_id'] ?? null,
             'responsible_id' => $data['action']['responsible_id'] ?? null,
             'comment' => $data['action']['comment'] ?? false,
+        ]);
+
+        $pipeline = Pipeline::query()->with([
+            'buttons' => ['visible', 'action'],
+        ])->find($data['pipeline_id']);
+
+        return response()->json([
+            'data' => [
+                'pipeline' => $pipeline
+            ],
+            'errors' => [],
         ]);
     }
 

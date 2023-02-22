@@ -49,12 +49,10 @@ class Stage extends Model
         static::created(function (self $stage) {
             $stage->with(['pipeline.buttons' => ['visible', 'action']]);
             foreach ($stage->pipeline->buttons as $button) {
-                if (empty($button->options['default'])) {
+                if (empty($button->is_default)) {
                     continue;
                 }
-                $button->action()->update([
-                    'comment' => true
-                ]);
+
                 $button->visible()->attach($stage->id);
             }
         });

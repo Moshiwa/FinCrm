@@ -28,12 +28,15 @@ class Pipeline extends Model
     protected static function booted()
     {
         static::created(function (self $pipeline) {
-            $pipeline->buttons()->create([
+            $button = $pipeline->buttons()->create([
                 'name' => 'Комментировать',
-                'options' => [
-                    'color' => '#FFFFFF',
-                    'default' => true
-                ]
+                'color' => 'green',
+                'icon' => 'comment',
+                'is_default' => true,
+            ]);
+
+            $button->action()->update([
+                'comment' => true
             ]);
         });
     }

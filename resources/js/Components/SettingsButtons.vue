@@ -1,13 +1,11 @@
 <template>
     <div class="card-body flex-column">
         <div v-for="button in stageButtons">
-            <el-button
+            <custom-button
                 v-if="button.visible.some(item => item.id === stage.id)"
-                class="w-100"
+                :button="button"
                 @click="buttonClick(button)"
-            >
-                {{ button.name }}
-            </el-button>
+            />
         </div>
     </div>
 
@@ -33,11 +31,12 @@
 
 <script>
 
-import FileUpload from "./FileUpload.vue";
-
+import CustomButton from "./CustomButton.vue";
 export default {
     name: 'SettingsButton',
-    components: { FileUpload },
+    components: {
+        CustomButton
+    },
     props: {
         buttons: {
             type: Array,
