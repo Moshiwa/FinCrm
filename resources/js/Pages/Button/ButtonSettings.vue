@@ -31,7 +31,7 @@
         <el-form-item
             label="Показывать в"
         >
-            <div v-for="stage in currentButton.options.display.stages">
+            <div v-for="stage in currentButton.visible">
                 <el-checkbox
                     v-model="stage.is_active"
                     :label="stage.name"
@@ -50,7 +50,7 @@
             Смена этапа на
 
             <el-select
-                v-model="currentButton.options.pipeline_id"
+                v-model="currentButton.action.pipeline_id"
                 @change="selectActionPipeline"
                 value-key="id"
                 clearable
@@ -64,7 +64,7 @@
             </el-select>
             >
             <el-select
-                v-model="currentButton.options.stage_id"
+                v-model="currentButton.action.stage_id"
                 value-key="id"
                 clearable
             >
@@ -156,7 +156,7 @@ export default {
             this.allPipelines.forEach((pipeline) => {
                 if (pipeline.id === pipeline_id) {
                     this.currentActionPipeline = pipeline;
-                    this.currentButton.options.stage_id = pipeline.stages[0].id;
+                    this.currentButton.action.stage_id = pipeline.stages[0].id;
                 }
             })
 
@@ -170,20 +170,17 @@ export default {
                     if (pipeline.id === button.pipeline_id) {
                         this.currentActionPipeline = pipeline;
 
-                        this.actionChangeStage = !!button.options.stage_id;
-                        this.actionChangeResponsible = !!button.options.responsible_id;
-                        this.actionLeaveComment = !!button.options.comment;
+                        this.actionChangeStage = !!button.action.stage_id;
+                        this.actionChangeResponsible = !!button.action.responsible_id;
+                        this.actionLeaveComment = !!button.action.comment;
                     }
                 })
             } else {
                 let stages = this.currentPipeline.stages;
                 button = {
                     name: '',
-                    options: {
-                        display: {
-                            stages: stages
-                        }
-                    },
+                    visible: stages,
+                    action: {},
                     pipeline_id: this.currentPipeline.id
                 }
             }
@@ -197,7 +194,8 @@ export default {
             data.id = this.currentButton.id ?? null;
             data.name = this.currentButton.name ?? null;
             data.pipeline_id = this.currentButton.pipeline_id ?? null;
-            data.options = this.currentButton.options ?? null;
+            data.action = this.currentButton.action ?? null;
+            data.visible = this.currentButton.visible ?? null;
 
             console.log(data);
 
@@ -227,10 +225,10 @@ export default {
             }
         },
         prepareData() {
-            this.currentButton.options.stage_id = this.actionChangeStage ? this.currentButton.options.stage_id : '';
-            this.currentButton.options.pipeline_id = this.actionChangeStage ? this.currentButton.options.pipeline_id : '';
-            this.currentButton.options.responsible_id = this.actionChangeResponsible ? this.currentResponsible.id : '';
-            this.currentButton.options.comment = !!this.actionLeaveComment;
+            this.currentButton.action.stage_id = this.actionChangeStage ? this.currentButton.action.stage_id : '';
+            this.currentButton.action.pipeline_id = this.actionChangeStage ? this.currentButton.action.pipeline_id : '';
+            this.currentButton.action.responsible_id = this.actionChangeResponsible ? this.currentResponsible.id : '';
+            this.currentButton.action.comment = !!this.actionLeaveComment;
         }
 
     }

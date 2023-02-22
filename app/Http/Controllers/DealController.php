@@ -50,6 +50,8 @@ class DealController extends Controller
             'stage.settings',
             'pipeline',
             'pipeline.buttons',
+            'pipeline.buttons.visible',
+            'pipeline.buttons.action',
             'responsible',
             'client',
             'fields',

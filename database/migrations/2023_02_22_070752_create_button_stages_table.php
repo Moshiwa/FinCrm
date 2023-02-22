@@ -8,18 +8,19 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('buttons', function (Blueprint $table) {
+        Schema::create('button_stages', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->json('options')->nullable();
-            $table->foreignId('pipeline_id')
+            $table->foreignId('button_id')
                 ->constrained()
                 ->cascadeOnDelete();
+            $table->foreignId('stage_id')
+                ->constrained()
+                ->nullOnDelete();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('buttons');
+        Schema::dropIfExists('button_stages');
     }
 };

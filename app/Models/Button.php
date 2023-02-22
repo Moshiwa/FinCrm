@@ -22,4 +22,21 @@ class Button extends Model
     public $casts = [
         'options' => 'array'
     ];
+
+    public function visible()
+    {
+        return $this->belongsToMany(Stage::class, 'button_stages');
+    }
+
+    public function action()
+    {
+        return $this->HasOne(ButtonAction::class);
+    }
+
+    protected static function booted()
+    {
+        static::created(function (self $button) {
+            $button->action()->create();
+        });
+    }
 }

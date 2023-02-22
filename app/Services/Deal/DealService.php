@@ -3,14 +3,12 @@
 namespace App\Services\Deal;
 
 use App\Enums\CommentTypeEnum;
-use App\Enums\FilesTypeEnum;
 use App\Models\DealComment;
 use App\Models\File;
 use App\Models\Pipeline;
 use App\Models\Stage;
 use App\Models\User;
 use App\Services\Space\SpaceService;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Storage;
 
 class DealService

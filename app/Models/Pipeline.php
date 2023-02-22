@@ -28,19 +28,6 @@ class Pipeline extends Model
     protected static function booted()
     {
         static::created(function (self $pipeline) {
-            $pipeline->stages()->createMany(StageService::getDefaultStages());
-            $pipeline->buttons()->create([
-                'name' => 'Комментировать',
-                'options' => [
-                    'display' => [
-                        'stages' => $pipeline->stages->pluck('id')
-                    ],
-                    'stage_id' => '',
-                    'pipeline_id' => '',
-                    'responsible_id' => '',
-                    'comment' => true,
-                ]
-            ]);
         });
     }
 

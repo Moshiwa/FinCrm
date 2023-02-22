@@ -2,7 +2,7 @@
     <div class="card-body flex-column">
         <div v-for="button in stageButtons">
             <el-button
-                v-if="button.options.display.stages.some(item => item === stage.id)"
+                v-if="button.visible.some(item => item.id === stage.id)"
                 class="w-100"
                 @click="buttonClick(button)"
             >
@@ -67,10 +67,10 @@ export default {
     methods: {
         buttonClick(button) {
             this.currentButton = button;
-            if (button.options.comment === true) {
+            if (button.action.comment === true) {
                 this.commentClick();
             } else {
-                this.change(button.options)
+                this.change(button.action)
             }
         },
 

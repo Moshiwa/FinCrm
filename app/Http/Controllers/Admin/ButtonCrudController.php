@@ -23,20 +23,12 @@ class ButtonCrudController extends CrudController
     public function save(ButtonRequest $request)
     {
         $data = $request->validated();
-        $button = Button::query();
 
-        $options = [
-            'display' => [
-                'stages' => Arr::flatten($data['options']['display']['stages']) ?? []
-            ],
-            'stage_id' => $data['options']['stage_id'] ?? '',
-            'pipeline_id' => $data['options']['pipeline_id'] ?? '',
-            'responsible_id' => $data['options']['responsible_id'] ?? '',
-            'comment' => $data['options']['comment'] ?? false,
-        ];
+        $button = Button::query();
+        $options = [];
 
         if (empty($data['id'])) {
-            $button->create([
+            $button = $button->create([
                 'name' => $data['name'],
                 'pipeline_id' => $data['pipeline_id'],
                 'options' => $options
@@ -49,6 +41,15 @@ class ButtonCrudController extends CrudController
                 'options' => $options
             ]);
         }
+
+        $stages = Arr::flatten($data['visible']);
+        $button->visible()->sync($stages);
+        $button->action()->update([
+            'pipeline_id' => $data['action']['pipeline_id'] ?? null,
+            'stage_id' => $data['action']['stage_id'] ?? null,
+            'responsible_id' => $data['action']['responsible_id'] ?? null,
+            'comment' => $data['action']['comment'] ?? false,
+        ]);
     }
 
     public function delete(Button $button)

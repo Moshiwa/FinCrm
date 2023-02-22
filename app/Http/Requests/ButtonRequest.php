@@ -17,14 +17,13 @@ class ButtonRequest extends FormRequest
             'id' => 'nullable',
             'name' => 'required|min:3|max:255',
             'pipeline_id' => 'required',
-            'options' => 'required|array',
-            'options.display' => 'array',
-            'options.display.stages' => 'array',
-            'options.display.stages.*.id' => 'exclude_if:options.display.stages.*.is_active,false',
-            'options.stage_id' => 'nullable',
-            'options.pipeline_id' => 'nullable',
-            'options.responsible_id' => 'nullable',
-            'options.comment' => 'nullable|boolean',
+            'visible' => 'array',
+            'visible.*.id' => 'exclude_unless:visible.*.is_active,true',
+            'action' => 'required|array',
+            'action.stage_id' => 'nullable',
+            'action.pipeline_id' => 'nullable',
+            'action.responsible_id' => 'nullable',
+            'action.comment' => 'nullable|boolean',
         ];
     }
 

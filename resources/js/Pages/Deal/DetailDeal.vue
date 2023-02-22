@@ -319,7 +319,7 @@ export default {
             if (this.newComment.content.length > 0) {
                 this.comments.unshift(this.newComment);
             }
-            this.prepareDataByButtonOptions(e.button.options);
+            this.prepareDataByButtonOptions(e.button.action);
 
             this.newComment = { id: '', type: 'comment', content: '', author_id: null, files: [] };
             this.send();
@@ -357,10 +357,10 @@ export default {
             this.prepareDataByButtonOptions(options);
             this.send();
         },
-        prepareDataByButtonOptions(options) {
-            this.pipeline.id = !!options.pipeline_id ? options.pipeline_id : this.pipeline.id;
-            this.stage.id = !!options.stage_id ? options.stage_id : this.stage.id;
-            this.responsible.id = !!options.responsible_id ? options.responsible_id : this.responsible.id;
+        prepareDataByButtonOptions(action) {
+            this.pipeline.id = !!action.pipeline_id ? action.pipeline_id : this.pipeline.id;
+            this.stage.id = !!action.stage_id ? action.stage_id : this.stage.id;
+            this.responsible.id = !!action.responsible_id ? action.responsible_id : this.responsible.id;
         },
         send() {
             const formData = new FormData();

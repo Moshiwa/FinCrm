@@ -79,7 +79,7 @@ trait DealOperation
         $this->data['comments'] = $comments;
         $this->data['pipelines'] = Pipeline::query()->select('id', 'name')->get();
         $this->data['stages'] = $entry->pipeline->stages;
-        $this->data['buttons'] = Button::query()->where('pipeline_id', $entry->pipeline->id)->get();
+        $this->data['buttons'] = Button::query()->with(['visible', 'action'])->where('pipeline_id', $entry->pipeline->id)->get();
         $this->data['fields'] = Field::query()->get();
 
         return view('crud::deal', $this->data);

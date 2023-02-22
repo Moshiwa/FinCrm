@@ -11,7 +11,13 @@
     $crud = [];
 
     $service = new \App\Services\Button\ButtonService();
-    $pipelines = \App\Models\Pipeline::query()->with(['stages', 'buttons'])->get();
+    $pipelines = \App\Models\Pipeline::query()->with([
+        'stages',
+        'buttons',
+        'buttons.visible',
+        'buttons.action',
+    ])->get();
+
     $pipelines = $service->mergeButtonsSettings($pipelines);
 
 @endphp

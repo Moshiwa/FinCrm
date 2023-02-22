@@ -28,17 +28,14 @@ class ButtonService
 
     private function mergeVisibleStages($button, $stages)
     {
-        $visible_stage_ids = $button['options']['display']['stages'] ?? [];
+        $visible_stages= $button['visible'] ?? [];
 
         foreach ($stages as $index => $stage) {
-            $button['options']['display']['stages'][$index] = [
-                'id' => $stage['id'],
-                'name' => $stage['name'],
-                'is_active' => false,
-            ];
-            foreach ($visible_stage_ids as $visible_stage_id) {
-                if ($stage['id'] == $visible_stage_id) {
-                    $button['options']['display']['stages'][$index]['is_active'] = true;
+            $stage['is_active'] = false;
+            $button['visible'][$index] = $stage;
+            foreach ($visible_stages as $visible_stage) {
+                if ($stage['id'] == $visible_stage['id']) {
+                    $button['visible'][$index]['is_active'] = true;
                 }
             }
         }
