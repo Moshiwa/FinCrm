@@ -8,24 +8,18 @@ use App\Models\User;
 
 class ButtonService
 {
-    public function mergeButtonsSettings($pipelines): array
+    public function mergeButtonsSettings($pipeline): array
     {
-        $result = [];
-
-
-
-        foreach ($pipelines as $index => $pipeline) {
-            $pipeline = $pipeline->toArray();
-            $result[$index] = $pipeline;
-            if (! empty($pipeline['buttons'])) {
-                foreach ($pipeline['buttons'] as $buttonIndex => $button) {
-                    $result[$index]['buttons'][$buttonIndex] = $this->mergeVisibleStages($result[$index]['buttons'][$buttonIndex], $pipeline['stages']);
-                    //$result[$index]['buttons'][$buttonIndex] = $this->mergeActions($result[$index]['buttons'][$buttonIndex], $actions);
-                }
+        $pipeline->load(['stages', 'buttons' => ['visible', 'action']]);
+        $pipeline = $pipeline->toArray();
+        if (! empty($pipeline['buttons'])) {
+            foreach ($pipeline['buttons'] as $buttonIndex => $button) {
+                $pipeline['buttons'][$buttonIndex] = $this->mergeVisibleStages($pipeline['buttons'][$buttonIndex], $pipeline['stages']);
+                //$result[$index]['buttons'][$buttonIndex] = $this->mergeActions($result[$index]['buttons'][$buttonIndex], $actions);
             }
         }
 
-        return $result;
+        return $pipeline;
     }
 
     private function mergeVisibleStages($button, $stages)

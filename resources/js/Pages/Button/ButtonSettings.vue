@@ -60,8 +60,8 @@
                             <div
                                 v-for="color in colors"
                                 class="color-item"
-                                @click="currentColor = color.key"
-                                :class="color.style + ' ' + (currentColor === color.key ? 'active' : '')"
+                                @click="currentColor = color"
+                                :class="'btn-custom__' + color + ' ' + (currentColor === color ? 'active' : '')"
                             >
                             </div>
                         </div>
@@ -199,27 +199,14 @@ export default {
             currentPipeline: this.pipelines[0],
             currentButton: {},
             currentActionPipeline: {},
-            currentColor: {},
-            currentIcon: {},
+            currentColor: '',
+            currentIcon: '',
 
             actionChangeStage: false,
             actionChangeResponsible: false,
             actionLeaveComment: false,
 
-            colors: [
-                {
-                    key: 'default',
-                    style: 'btn-custom__default'
-                },
-                {
-                    key: 'green',
-                    style: 'btn-custom__green'
-                },
-                {
-                    key: 'red',
-                    style: 'btn-custom__red'
-                }
-            ],
+            colors: ['default', 'red', 'green', 'blue'],
             icons: [
                 {
                     key: 'default',

@@ -61,7 +61,7 @@ class ButtonCrudController extends CrudController
             'buttons' => ['visible', 'action'],
         ])->find($data['pipeline_id']);
 
-        //$pipeline = ButtonService::mergeButtonsSettings($pipeline);
+        $pipeline = (new ButtonService)->mergeButtonsSettings($pipeline);
 
         return response()->json([
             'data' => [

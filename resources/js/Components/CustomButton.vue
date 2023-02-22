@@ -23,7 +23,7 @@ export default {
 <style scoped>
 .button-setting {
     cursor: pointer;
-    width: 250px;
+    width: 200px;
     border-radius: 2px;
     font-size: 1rem;
     font-weight: 400;

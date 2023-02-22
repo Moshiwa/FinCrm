@@ -476,7 +476,7 @@ export default {
     display: flex;
     flex-direction: row;
     gap: 10px;
-    width: calc(100% - 250px);
+    width: calc(100% - 200px);
 }
 .card-left {
     min-width: 55%;

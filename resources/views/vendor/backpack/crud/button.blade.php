@@ -18,7 +18,10 @@
         'buttons.action',
     ])->get();
 
-    $pipelines = $service->mergeButtonsSettings($pipelines);
+    $reade_pipelines = [];
+    foreach ($pipelines as $pipeline) {
+        $reade_pipelines = $service->mergeButtonsSettings($pipelines);
+    }
 
 @endphp
 
@@ -35,7 +38,7 @@
                 </h2>
             </section>
             <button-settings
-                :pipelines="{{ json_encode($pipelines) }}"
+                :pipelines="{{ json_encode($reade_pipelines) }}"
             />
         </div>
     </div>
