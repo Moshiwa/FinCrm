@@ -54,9 +54,10 @@
                             v-model="currentButton.name"
                         />
                     </div>
-                    <div class="popup__item">
-                        <div class="item__title">Цвет</div>
-                        <div class="color__container">
+                    <div class="popup__item inline-flex">
+                        <div class="flex-column mr-2">
+                            <div class="item__title">Цвет</div>
+                            <div class="color__container">
                             <div
                                 v-for="color in colors"
                                 class="color-item"
@@ -65,11 +66,19 @@
                             >
                             </div>
                         </div>
-                        <!--Палитра цветов-->
-                    </div>
-                    <div class="popup__item">
-                        <div class="item__title">Иконка</div>
-                        <!--Иконка-->
+                        </div>
+                        <div class="flex-column">
+                            <div class="item__title">Иконка</div>
+                            <div class="icon__container">
+                            <div
+                                v-for="icon in icons"
+                                class="icon-item"
+                                @click="currentIcon = icon"
+                                :class="'las la-' + icon + ' ' + (currentIcon === icon ? 'active' : '')"
+                            >
+                            </div>
+                        </div>
+                        </div>
                     </div>
                     <hr>
                 </div>
@@ -212,10 +221,9 @@ export default {
                 'blue', 'red', 'purple', 'orange'
             ],
             icons: [
-                {
-                    key: 'default',
-                    style: 'las la-angle-double-right'
-                },
+                'angle-double-right', 'comment', 'home',
+                'bell', 'eye', 'pen', 'edit', 'undo', 'redo',
+                'phone', 'user', 'trash', 'burn'
             ],
 
         }
@@ -402,6 +410,29 @@ export default {
     outline: 3px solid #dddddd;
 }
 
+.icon__container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 175px;
+    gap: 5px;
+}
+.icon-item {
+    width: 30px;
+    height: 30px;
+    outline: 1px solid #dddddd;
+    cursor: pointer;
+    border-radius: 2px;
+    padding: 7px;
+    background: white;
+}
+.icon-item:hover {
+    filter: brightness(95%);
+}
+.icon-item.active {
+    outline: 3px solid #dddddd;
+}
+
 .popup__block {
     display: flex;
     flex-direction: column;
@@ -412,4 +443,7 @@ export default {
     justify-content: end;
 }
 
+.inline-flex {
+    display: inline-flex;
+}
 </style>
