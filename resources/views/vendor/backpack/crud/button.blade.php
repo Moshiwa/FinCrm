@@ -20,7 +20,7 @@
 
     $reade_pipelines = [];
     foreach ($pipelines as $pipeline) {
-        $reade_pipelines = $service->mergeButtonsSettings($pipelines);
+        $reade_pipelines[] = $service->mergeButtonsSettings($pipeline);
     }
 
 @endphp

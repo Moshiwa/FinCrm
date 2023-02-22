@@ -206,7 +206,11 @@ export default {
             actionChangeResponsible: false,
             actionLeaveComment: false,
 
-            colors: ['default', 'red', 'green', 'blue'],
+            colors: [
+                'default', 'grey', 'black',
+                'green', 'yellow', 'pink',
+                'blue', 'red', 'purple', 'orange'
+            ],
             icons: [
                 {
                     key: 'default',
@@ -381,7 +385,7 @@ export default {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    width: 300px;
+    width: 175px;
     gap: 5px;
 }
 .color-item {
@@ -391,9 +395,13 @@ export default {
     cursor: pointer;
     border-radius: 2px;
 }
+.color-item:hover {
+    filter: brightness(95%);
+}
 .color-item.active {
     outline: 3px solid #dddddd;
 }
+
 .popup__block {
     display: flex;
     flex-direction: column;

@@ -126,7 +126,7 @@ class DealService
 
         if ($deal->isDirty('responsible_id')) {
             $new_deal['responsible'] = User::query()->find($new_deal['responsible_id'])->toArray();
-            $actions[] = 'Смена ответственного с ' . $deal->stage->name . ' на ' . $new_deal['responsible']['name'];
+            $actions[] = 'Смена ответственного с ' . $deal->responsible->name . ' на ' . $new_deal['responsible']['name'];
         }
 
 
