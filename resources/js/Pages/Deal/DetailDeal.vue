@@ -285,20 +285,9 @@ export default {
 
             let scrollPosition = this.$refs.scroll_container.$el.scrollHeight - this.$refs.scroll_container.$el.scrollTop;
             let elementHeigth = this.$refs.scroll_container.$el.offsetHeight;
-
             let can = false;
 
-            scrollPosition = Math.floor(scrollPosition);
-
-            if (scrollPosition === elementHeigth) {
-                can = true;
-            }
-
-            if (scrollPosition === (elementHeigth - 1)) {
-                can = true;
-            }
-
-            if (scrollPosition === (elementHeigth + 1)) {
+            if (scrollPosition <= (elementHeigth + 5)) {
                 can = true;
             }
 
