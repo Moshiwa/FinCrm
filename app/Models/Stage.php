@@ -47,7 +47,16 @@ class Stage extends Model
     protected static function booted()
     {
         static::created(function (self $stage) {
-
+            $stage->with(['pipeline.buttons' => ['visible', 'action']]);
+            foreach ($stage->pipeline->buttons as $button) {
+                if (empty($button->options['default'])) {
+                    continue;
+                }
+                $button->action()->update([
+                    'comment' => true
+                ]);
+                $button->visible()->attach($stage->id);
+            }
         });
     }
 }
