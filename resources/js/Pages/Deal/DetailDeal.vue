@@ -111,7 +111,9 @@
                         </el-select>
                         <el-button @click="visibleFileUploadForm = true">Прикрепить документ</el-button>
                     </div>
-                    <el-timeline @scroll="loadMore" class="infinite-list" style="overflow: auto" ref="scroll_container">
+                    <el-timeline
+                        class="infinite-list"
+                    >
                             <el-timeline-item
                                 v-for="comment in comments"
                                 class="deal-comment-item"
@@ -266,6 +268,7 @@ export default {
         }
     },
     mounted() {
+        $(document).on('scroll', this.loadMore);
         this.deal.fields = this.dealFields;
         this.deal.client.fields = this.clientFields;
     },
@@ -282,14 +285,20 @@ export default {
             if (this.loading) {
                 return;
             }
+            let can = false;
+            let currentPos = window.pageYOffset;
+            let pos = document.body.offsetHeight - window.innerHeight;
+            if (pos <= (currentPos + 3)) {
+                can = true;
+            }
 
-            let scrollPosition = this.$refs.scroll_container.$el.scrollHeight - this.$refs.scroll_container.$el.scrollTop;
+            /*let scrollPosition = this.$refs.scroll_container.$el.scrollHeight - this.$refs.scroll_container.$el.scrollTop;
             let elementHeigth = this.$refs.scroll_container.$el.offsetHeight;
             let can = false;
 
             if (scrollPosition <= (elementHeigth + 5)) {
                 can = true;
-            }
+            }*/
 
             if (can) {
                 this.loading = true;
@@ -518,7 +527,6 @@ export default {
 
 .infinite-list {
     min-height: 700px;
-    max-height: 700px;
     width: 100%;
     padding: 0;
     margin: 0;
