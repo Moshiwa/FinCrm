@@ -15,7 +15,7 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->string('name');
             $table->string('color')->default('default');
-            $table->string('icon')->default('default');
+            $table->string('icon')->default('angle-double-right');
             $table->boolean('is_default')->default(false);
         });
     }

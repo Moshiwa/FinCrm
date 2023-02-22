@@ -12,6 +12,8 @@ class ButtonService
     {
         $result = [];
 
+
+
         foreach ($pipelines as $index => $pipeline) {
             $pipeline = $pipeline->toArray();
             $result[$index] = $pipeline;

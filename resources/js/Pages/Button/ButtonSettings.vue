@@ -41,97 +41,130 @@
     <el-drawer
         v-model="visibleDrawer"
         :show-close="false"
-        title="I have a nested table inside!"
+        title="Настройка кнопки"
         direction="rtl"
         size="50%"
     >
-        <el-form-item
-            label="Наименование"
-        >
-            <el-input
-                v-model="currentButton.name"
-            />
-        </el-form-item>
+        <div class="popup__container">
+            <div class="popup__content">
+                <div class="popup__block">
+                    <div class="popup__item">
+                        <div class="item__title">Наименование</div>
+                        <el-input
+                            v-model="currentButton.name"
+                        />
+                    </div>
+                    <div class="popup__item">
+                        <div class="item__title">Цвет</div>
+                        <div class="color__container">
+                            <div
+                                v-for="color in colors"
+                                class="color-item"
+                                @click="currentColor = color.key"
+                                :class="color.style + ' ' + (currentColor === color.key ? 'active' : '')"
+                            >
+                            </div>
+                        </div>
+                        <!--Палитра цветов-->
+                    </div>
+                    <div class="popup__item">
+                        <div class="item__title">Иконка</div>
+                        <!--Иконка-->
+                    </div>
+                    <hr>
+                </div>
+                <div class="popup__block">
+                    <div class="popup__item">
+                        <div class="item__title">Показать в</div>
+                        <div v-for="stage in currentButton.visible">
+                            <el-checkbox
+                                v-model="stage.is_active"
+                                :label="stage.name"
+                            />
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+                <div class="popup__block">
+                    <div class="block__title">Действия</div>
+                    <div class="popup__item">
+                        <div class="item__title">Смена стадии</div>
+                        <el-checkbox
+                            v-model="actionChangeStage"
+                            label="Менять"
+                        />
+                        <div v-if="actionChangeStage">
+                            Смена этапа на
 
-        <el-form-item
-            label="Показывать в"
-        >
-            <div v-for="stage in currentButton.visible">
-                <el-checkbox
-                    v-model="stage.is_active"
-                    :label="stage.name"
-                />
+                            <el-select
+                                v-model="currentButton.action.pipeline_id"
+                                @change="selectActionPipeline"
+                                value-key="id"
+                                clearable
+                            >
+                                <el-option
+                                    v-for="pipeline in allPipelines"
+                                    :key="pipeline.id"
+                                    :label="pipeline.name"
+                                    :value="pipeline.id"
+                                />
+                            </el-select>
+                            >
+                            <el-select
+                                v-model="currentButton.action.stage_id"
+                                value-key="id"
+                                clearable
+                            >
+                                <el-option
+                                    v-for="stage in currentActionPipeline.stages"
+                                    :key="stage.id"
+                                    :label="stage.name"
+                                    :value="stage.id"
+                                />
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="popup__item">
+                        <div class="item__title">Смена ответственного</div>
+                        <el-checkbox
+                            v-model="actionChangeResponsible"
+                            label="Менять"
+                        />
+                        <el-select
+                            v-model="currentResponsible"
+                            v-if="actionChangeResponsible"
+                            value-key="id"
+                            filterable
+                            remote
+                            reserve-keyword
+                            placeholder="Please enter a keyword"
+                            :remote-method="getUsers"
+                        >
+                            <el-option
+                                v-for="user in responsibles"
+                                :key="user.id"
+                                :label="user.name"
+                                :value="user"
+                            />
+                        </el-select>
+                    </div>
+                    <div class="popup__item">
+                        <div class="item__title">Комментарий</div>
+                        <el-checkbox
+                            v-model="actionLeaveComment"
+                            label="Оставить комментарий"
+                        />
+                    </div>
+                    <hr>
+                </div>
             </div>
-        </el-form-item>
+            <div class="popup__actions">
+                <el-button type="success" @click="save">Сохранить</el-button>
+                <el-button type="danger" @click="remove">Удалить</el-button>
+            </div>
 
-        Действия
 
-
-        <el-checkbox
-            v-model="actionChangeStage"
-            label="Смена стадии"
-        />
-        <div v-if="actionChangeStage">
-            Смена этапа на
-
-            <el-select
-                v-model="currentButton.action.pipeline_id"
-                @change="selectActionPipeline"
-                value-key="id"
-                clearable
-            >
-                <el-option
-                    v-for="pipeline in allPipelines"
-                    :key="pipeline.id"
-                    :label="pipeline.name"
-                    :value="pipeline.id"
-                />
-            </el-select>
-            >
-            <el-select
-                v-model="currentButton.action.stage_id"
-                value-key="id"
-                clearable
-            >
-                <el-option
-                    v-for="stage in currentActionPipeline.stages"
-                    :key="stage.id"
-                    :label="stage.name"
-                    :value="stage.id"
-                />
-            </el-select>
         </div>
-
-
-        <el-checkbox
-            v-model="actionChangeResponsible"
-            label="Смена ответственного"
-        />
-        <el-select
-            v-model="currentResponsible"
-            v-if="actionChangeResponsible"
-            value-key="id"
-            filterable
-            remote
-            reserve-keyword
-            placeholder="Please enter a keyword"
-            :remote-method="getUsers"
-        >
-            <el-option
-                v-for="user in responsibles"
-                :key="user.id"
-                :label="user.name"
-                :value="user"
-            />
-        </el-select>
-
-        <el-checkbox
-            v-model="actionLeaveComment"
-            label="Оставить комментарий"
-        />
-
-        <el-button type="success" @click="save">Сохранить</el-button>
-        <el-button type="danger" @click="remove">Удалить</el-button>
     </el-drawer>
 
 
@@ -166,12 +199,34 @@ export default {
             currentPipeline: this.pipelines[0],
             currentButton: {},
             currentActionPipeline: {},
+            currentColor: {},
+            currentIcon: {},
 
             actionChangeStage: false,
             actionChangeResponsible: false,
             actionLeaveComment: false,
 
-            activePipelineClass: false
+            colors: [
+                {
+                    key: 'default',
+                    style: 'btn-custom__default'
+                },
+                {
+                    key: 'green',
+                    style: 'btn-custom__green'
+                },
+                {
+                    key: 'red',
+                    style: 'btn-custom__red'
+                }
+            ],
+            icons: [
+                {
+                    key: 'default',
+                    style: 'las la-angle-double-right'
+                },
+            ],
+
         }
     },
     mounted() {
@@ -209,13 +264,17 @@ export default {
                 button = {
                     name: '',
                     visible: stages,
+                    color: 'default',
+                    icon: 'angle-double-right',
                     action: {},
                     pipeline_id: this.currentPipeline.id
                 }
             }
+            this.currentColor = button.color
+            this.currentIcon = button.icon
             console.log(button);
-           this.currentButton = button;
-           this.visibleDrawer = true;
+            this.currentButton = button;
+            this.visibleDrawer = true;
         },
         save() {
             this.prepareData();
@@ -225,6 +284,8 @@ export default {
             data.pipeline_id = this.currentButton.pipeline_id ?? null;
             data.action = this.currentButton.action ?? null;
             data.visible = this.currentButton.visible ?? null;
+            data.color = this.currentColor ?? 'default';
+            data.icon = this.currentIcon ?? 'angle-double-right';
 
             axios.post('/admin/button/save', data)
                 .then((response) => {
@@ -321,6 +382,39 @@ export default {
 }
 
 
-
+.popup__container {
+    display: flex;
+    flex-direction: column;
+}
+.popup__content {
+    display: flex;
+    flex-direction: column;
+}
+.color__container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 300px;
+    gap: 5px;
+}
+.color-item {
+    width: 30px;
+    height: 30px;
+    outline: 1px solid #dddddd;
+    cursor: pointer;
+    border-radius: 2px;
+}
+.color-item.active {
+    outline: 3px solid #dddddd;
+}
+.popup__block {
+    display: flex;
+    flex-direction: column;
+}
+.popup__actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+}
 
 </style>

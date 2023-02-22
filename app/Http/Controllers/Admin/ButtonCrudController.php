@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Operations\ButtonOperation;
 use App\Http\Requests\ButtonRequest;
 use App\Models\Button;
 use App\Models\Pipeline;
+use App\Services\Button\ButtonService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Support\Arr;
@@ -32,6 +33,8 @@ class ButtonCrudController extends CrudController
             $button = $button->create([
                 'name' => $data['name'],
                 'pipeline_id' => $data['pipeline_id'],
+                'color' => $data['color'] ?? null,
+                'icon' => $data['icon'] ?? null,
                 'options' => $options
             ]);
         } else {
@@ -39,6 +42,8 @@ class ButtonCrudController extends CrudController
             $button->update([
                 'name' => $data['name'],
                 'pipeline_id' => $data['pipeline_id'],
+                'color' => $data['color'] ?? null,
+                'icon' => $data['icon'] ?? null,
                 'options' => $options
             ]);
         }
@@ -55,6 +60,8 @@ class ButtonCrudController extends CrudController
         $pipeline = Pipeline::query()->with([
             'buttons' => ['visible', 'action'],
         ])->find($data['pipeline_id']);
+
+        //$pipeline = ButtonService::mergeButtonsSettings($pipeline);
 
         return response()->json([
             'data' => [

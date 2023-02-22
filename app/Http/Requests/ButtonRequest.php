@@ -17,6 +17,8 @@ class ButtonRequest extends FormRequest
             'id' => 'nullable',
             'name' => 'required|min:3|max:255',
             'pipeline_id' => 'required',
+            'color' => 'nullable|string',
+            'icon' => 'nullable|string',
             'visible' => 'array',
             'visible.*.id' => 'exclude_unless:visible.*.is_active,true',
             'action' => 'required|array',

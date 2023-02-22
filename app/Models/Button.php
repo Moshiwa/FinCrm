@@ -23,11 +23,6 @@ class Button extends Model
         'is_default'
     ];
 
-    protected $appends = [
-        'color_style',
-        'icon_style'
-    ];
-
     public function visible()
     {
         return $this->belongsToMany(Stage::class, 'button_stages');
@@ -36,19 +31,6 @@ class Button extends Model
     public function action()
     {
         return $this->HasOne(ButtonAction::class);
-    }
-
-    public function getColorStyleAttribute()
-    {
-        return "btn-custom__$this->color";
-    }
-
-    public function getIconStyleAttribute()
-    {
-        return match ($this->icon) {
-            'comment' => 'las la-comment',
-            default => 'las la-angle-double-right',
-        };
     }
 
     protected static function booted()

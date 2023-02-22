@@ -1,9 +1,9 @@
 <template>
     <div
         class="button-setting"
-        :class="button.color_style"
+        :class="'btn-custom__' + button.color"
     >
-        <i :class="button.icon_style"></i>
+        <i :class="'las la-' + button.icon"></i>
         {{ button.name }}
     </div>
 </template>
