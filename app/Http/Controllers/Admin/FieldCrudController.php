@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\FieldsEntitiesEnum;
-use App\Enums\FieldsEnum;
 use App\Http\Requests\FieldRequest;
 use App\Models\Field;
-use App\Models\Pipeline;
-use App\Services\SettingService;
+use App\Models\FieldType;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\CRUD\app\Library\Widget;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -32,12 +31,12 @@ class FieldCrudController extends CrudController
     protected function setupListOperation()
     {
         CRUD::column('name')->label('Название');
-        CRUD::column('type')
-            ->label('Тип')
-            ->type('closure')
-            ->function(function($entry) {
-                return __('fields.type.' . $entry->type->value);
-            });
+        CRUD::column('type_id')
+            ->type('relationship')
+            ->entity('type')
+            ->model(FieldType::class)
+            ->attribute('tr_name')
+            ->label('Тип');
         CRUD::column('активность')
             ->type('custom_html')
             ->value(function ($entry) {
@@ -62,6 +61,7 @@ class FieldCrudController extends CrudController
     protected function setupCreateOperation()
     {
         CRUD::setValidation(FieldRequest::class);
+        Widget::add()->type('script')->content(asset('assets/js/admin/fields/toggle_options_block.js'));
 
         $referer = $this->crud->getRequest()->headers->get('referer');
         $referer = parse_url($referer);
@@ -72,12 +72,13 @@ class FieldCrudController extends CrudController
             $entity = FieldsEntitiesEnum::client->value;;
         }
 
-        CRUD::field('type')
+
+        CRUD::field('type_id')
             ->label('Тип')
-            ->type('select_from_array')
-            ->options(
-                SettingService::convertEnumToArray(FieldsEnum::cases())
-            );
+            ->entity('type')
+            ->attribute('tr_name')
+            ->model(FieldType::class)
+            ->type('select');
         CRUD::field('name')->label('Наименование');
         CRUD::field('entity')->type('hidden')->default($entity);
         CRUD::field('is_active')->label('Активирован');

@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use App\Enums\FieldsEntitiesEnum;
-use App\Enums\FieldsEnum;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Field extends Model
 {
@@ -19,18 +19,26 @@ class Field extends Model
     protected $guarded = ['id'];
 
     protected $fillable = [
-        'type',
+        'type_id',
         'name',
         'entity',
         'options',
         'is_active'
     ];
 
+    protected $with = [
+        'type'
+    ];
+
     protected $casts = [
         'options' => 'array',
-        'type' => FieldsEnum::class,
         'entity' => FieldsEntitiesEnum::class
     ];
+
+    public function type(): BelongsTo
+    {
+        return $this->belongsTo(FieldType::class);
+    }
 
     public function scopeIncludedClient(Builder $builder)
     {

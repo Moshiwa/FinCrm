@@ -1,5 +1,5 @@
 <template>
-    <div v-if="field.type === 'select'">
+    <div v-if="field.type.name === 'select'">
         <el-select
             v-model="field.pivot.value"
             @change="send"
@@ -13,7 +13,7 @@
         </el-select>
     </div>
 
-    <div v-else-if="field.type === 'date'">
+    <div v-else-if="field.type.name === 'date'">
         <el-input
             v-model="field.pivot.value"
             type="date"
@@ -21,7 +21,7 @@
         />
     </div>
 
-    <div v-else-if="field.type === 'checkbox'">
+    <div v-else-if="field.type.name === 'checkbox'">
         <el-checkbox
             v-model="field.pivot.value"
             :label="field.name"
@@ -29,7 +29,7 @@
         />
     </div>
 
-    <div v-else-if="field.type === 'email'">
+    <div v-else-if="field.type.name === 'email'">
         <el-input
             v-model="field.pivot.value"
             type="email"

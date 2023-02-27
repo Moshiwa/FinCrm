@@ -17,17 +17,5 @@ class SettingService
         return $result;
     }
 
-    public static function getAllowedStages($stage)
-    {
-        $stages = [];
-        foreach ($stage->settings as $setting) {
-            if ($setting->key->value === SettingKeysEnum::change_stage->value) {
-                $stages[] = $setting->pivot->value;
-            }
-        }
-
-        return Stage::query()->whereNotIn('id', $stages)->get();
-    }
-
 
 }

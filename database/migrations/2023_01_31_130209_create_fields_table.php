@@ -11,7 +11,8 @@ return new class extends Migration
     {
         Schema::create('fields', function (Blueprint $table) {
             $table->id();
-            $table->string('type')->default('string');
+            $table->foreignId('type_id')
+                ->constrained('field_types');
             $table->string('name');
             $table->string('entity');
             $table->json('options')->nullable();

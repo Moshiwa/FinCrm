@@ -2,8 +2,6 @@
 
 namespace App\Services\Field;
 
-use App\Enums\FieldsEnum;
-use App\Models\Client;
 use App\Models\Field;
 
 class FieldService
@@ -53,9 +51,9 @@ class FieldService
     {
         $result = $field['pivot']['value'];
 
-        return match ($field['type']) {
-            FieldsEnum::checkbox->value => !($result === 'false'),
-            FieldsEnum::number->value => (int) $result,
+        return match ($field['type']['name']) {
+            'checkbox' => !($result === 'false'),
+            'number' => (int) $result,
             default => $result,
         };
     }

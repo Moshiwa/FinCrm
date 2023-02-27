@@ -2,10 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Enums\FieldsEnum;
 use App\Models\Client;
 use App\Models\Deal;
-use App\Models\Field;
 use Illuminate\Database\Seeder;
 
 class TestSeeder extends Seeder
