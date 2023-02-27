@@ -19,6 +19,11 @@ class ButtonAction extends Model
         'comment'
     ];
 
+    public function pipeline(): BelongsTo
+    {
+        return $this->belongsTo(Pipeline::class);
+    }
+
     public function stage(): BelongsTo
     {
         return $this->belongsTo(Stage::class);

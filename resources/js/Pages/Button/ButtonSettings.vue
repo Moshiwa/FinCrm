@@ -28,15 +28,21 @@
                 </div>
             </div>
 
-            <div class="b-settings__actions">
+            <div
+                v-if="this.currentPipeline.id"
+                class="b-settings__actions"
+            >
                 <a :href="'/admin/pipeline/' + this.currentPipeline.id + '/edit'">Настройки воронки</a>
                 <el-button type="primary"  @click="openEditButton()">Добавить</el-button>
             </div>
+            <div
+                v-else
+                class="b-settings__actions"
+            >
+                <a :href="'/admin/pipeline/create'">Создать воронку</a>
+            </div>
         </div>
     </div>
-
-
-
 
     <el-drawer
         v-model="visibleDrawer"
@@ -120,7 +126,7 @@
                             </el-select>
                             >
                             <el-select
-                                v-model="currentButton.action.stage_id"
+                                v-model="currentButton.action.stage"
                                 value-key="id"
                                 clearable
                             >
@@ -128,7 +134,7 @@
                                     v-for="stage in currentActionPipeline.stages"
                                     :key="stage.id"
                                     :label="stage.name"
-                                    :value="stage.id"
+                                    :value="stage"
                                 />
                             </el-select>
                         </div>
@@ -171,8 +177,6 @@
                 <el-button type="success" @click="save">Сохранить</el-button>
                 <el-button type="danger" @click="remove">Удалить</el-button>
             </div>
-
-
         </div>
     </el-drawer>
 
@@ -205,7 +209,7 @@ export default {
             responsibles: [],
 
             currentResponsible: {},
-            currentPipeline: this.pipelines[0],
+            currentPipeline: this.pipelines[0] ?? { buttons: [] },
             currentButton: {},
             currentActionPipeline: {},
             currentColor: '',
@@ -236,6 +240,10 @@ export default {
             this.currentPipeline = pipeline;
         },
         selectActionPipeline(pipeline_id) {
+            if (!pipeline_id) {
+                this.currentActionPipeline = {};
+            }
+
             this.allPipelines.forEach((pipeline) => {
                 if (pipeline.id === pipeline_id) {
                     this.currentActionPipeline = pipeline;
@@ -246,13 +254,15 @@ export default {
         },
         openEditButton(button = null) {
             this.currentResponsible = {};
-            this.changeStage = false;
+            this.currentActionPipeline = {};
+
+            this.actionChangeStage = false;
             this.actionChangeResponsible = false;
             this.actionLeaveComment = false;
             if (!!button) {
                 this.allPipelines.forEach((pipeline) => {
                     if (pipeline.id === button.pipeline_id) {
-                        this.currentActionPipeline = pipeline;
+                        this.currentActionPipeline = this.findStagesForPipeline(button.action.pipeline.id);
                         this.currentResponsible = button.action.responsible ?? {};
 
                         this.responsibles = [this.currentResponsible];
@@ -263,13 +273,14 @@ export default {
                     }
                 })
             } else {
-                let stages = this.currentPipeline.stages;
                 button = {
                     name: '',
-                    visible: stages,
+                    visible: this.currentPipeline.stages,
                     color: 'default',
                     icon: 'angle-double-right',
-                    action: {},
+                    action: {
+                        pipeline: this.currentActionPipeline,
+                    },
                     pipeline_id: this.currentPipeline.id
                 }
             }
@@ -319,6 +330,16 @@ export default {
             this.currentButton.action.pipeline_id = this.actionChangeStage ? this.currentButton.action.pipeline_id : '';
             this.currentButton.action.responsible_id = this.actionChangeResponsible ? this.currentResponsible.id : '';
             this.currentButton.action.comment = !!this.actionLeaveComment;
+        },
+        findStagesForPipeline(pipeline_id) {
+            let result = {};
+            this.allPipelines.forEach((pipeline) => {
+                if (pipeline.id === pipeline_id) {
+                    result = pipeline
+                }
+            });
+
+            return result;
         }
 
     }

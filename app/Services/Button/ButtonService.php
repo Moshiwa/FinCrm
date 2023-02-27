@@ -12,6 +12,7 @@ class ButtonService
                 'visible',
                 'action' => [
                     'responsible',
+                    'pipeline',
                     'stage'
                 ]
             ],
