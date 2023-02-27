@@ -22,6 +22,12 @@
     height: 100%;
     border-left: 2px solid #ecf5ff;
 }
+
+.el-form-item__label {
+    width: 150px;
+    height: fit-content!important;
+    justify-content: flex-start !important;
+}
 /*SCROLL STYLE*/
 /* width */
 ::-webkit-scrollbar {

@@ -42,6 +42,7 @@
         <el-input
             v-model="field.pivot.value"
             :label="field.name"
+            @change="send"
         />
     </div>
 

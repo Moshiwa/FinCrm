@@ -2,99 +2,85 @@
     <div class="wrap">
         <div class="card">
             <div class="card-left">
-                <el-collapse v-model="active">
-                    <el-collapse-item title="Общее" name="1">
+                <el-form-item label="Наименование">
+                    <el-input
+                        v-model="thisDeal.name"
+                        @change="send"
+                    />
+                </el-form-item>
+                <el-form-item label="Воронка">
+                    <el-select
+                        v-model="thisDeal.pipeline"
+                        value-key="id"
+                        @change="changePipeline"
+                    >
+                        <el-option
+                            v-for="pipeline in allPipelines"
+                            :key="pipeline.id"
+                            :label="pipeline.name"
+                            :value="pipeline"
+                        />
+                    </el-select>
+                    <el-select
+                        v-model="thisDeal.stage"
+                        value-key="id"
+                        @change="changeStage"
+                    >
+                        <el-option
+                            v-for="stage in allStages"
+                            :key="stage.id"
+                            :label="stage.name"
+                            :value="stage"
+                        />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="Ответственный">
+                    <el-select
+                        v-model="thisDeal.responsible"
+                        value-key="id"
+                        filterable
+                        remote
+                        reserve-keyword
+                        placeholder="Please enter a keyword"
+                        :remote-method="getUsers"
+                        @change="send"
+                    >
+                        <el-option
+                            v-for="user in responsibles"
+                            :key="user.id"
+                            :label="user.name"
+                            :value="user"
+                        />
+                    </el-select>
+                </el-form-item>
 
-                        <el-descriptions
-                            direction="vertical"
-                            column="1"
-                            size="large"
-                            border
-                        >
-                            <el-descriptions-item label="Наименование">
-                                <contenteditable
-                                    v-model="deal.name"
-                                    @send="send"
-                                />
-                            </el-descriptions-item>
-                            <el-descriptions-item label="Воронка">
-                                <div class="custom-field__container">
-                                    <el-select
-                                        v-model="pipeline"
-                                        value-key="id"
-                                        @change="changePipeline"
-                                    >
-                                        <el-option
-                                            v-for="pipeline in allPipelines"
-                                            :key="pipeline.id"
-                                            :label="pipeline.name"
-                                            :value="pipeline"
-                                        />
-                                    </el-select>
-                                    <el-select
-                                        v-model="stage"
-                                        value-key="id"
-                                        @change="changeStage"
-                                    >
-                                        <el-option
-                                            v-for="stage in allStages"
-                                            :key="stage.id"
-                                            :label="stage.name"
-                                            :value="stage"
-                                        />
-                                    </el-select>
-                                </div>
-                            </el-descriptions-item>
-                            <el-descriptions-item label="Ответственный">
-                                <el-select
-                                    v-model="responsible"
-                                    value-key="id"
-                                    filterable
-                                    remote
-                                    reserve-keyword
-                                    placeholder="Please enter a keyword"
-                                    :remote-method="getUsers"
-                                    @change="send"
-                                >
-                                    <el-option
-                                        v-for="user in responsibles"
-                                        :key="user.id"
-                                        :label="user.name"
-                                        :value="user"
-                                    />
-                                </el-select>
-                            </el-descriptions-item>
-                            <el-descriptions-item v-for="field in dealFields" :label="field.name">
-                                <field
-                                    :field="field"
-                                    @send="send"
-                                />
-                            </el-descriptions-item>
-                        </el-descriptions>
+                <el-collapse v-model="active">
+                    <el-collapse-item v-for="field in dealFields" title="Дополнительные поля" name="1">
+                        <el-form-item :label="field.name">
+                            <field
+                                :field="field"
+                                @send="send"
+                            />
+                        </el-form-item>
                     </el-collapse-item>
                 </el-collapse>
 
+
+
                 <el-collapse v-model="active">
                     <el-collapse-item title="Данные о клиенте" name="2">
-                        <el-descriptions
-                            direction="vertical"
-                            column="1"
-                            size="large"
-                            border
-                        >
-                            <el-descriptions-item label="Имя">
-                                <contenteditable
-                                    v-model="client.name"
-                                    @send="send"
-                                />
-                            </el-descriptions-item>
-                            <el-descriptions-item v-for="field in clientFields" :label="field.name">
-                                <field
-                                    :field="field"
-                                    @send="send"
-                                />
-                            </el-descriptions-item>
-                        </el-descriptions>
+                        <el-form-item label="Наименование">
+                            <el-input
+                                v-model="thisDeal.client.name"
+                                @change="send"
+                            />
+                        </el-form-item>
+                        <el-form-item v-for="field in clientFields" :label="field.name">
+                            <field
+                                :field="field"
+                                @send="send"
+                            />
+                        </el-form-item>
                     </el-collapse-item>
                 </el-collapse>
             </div>
@@ -115,7 +101,7 @@
                         class="infinite-list"
                     >
                             <el-timeline-item
-                                v-for="comment in comments"
+                                v-for="comment in thisDeal.comments"
                                 class="deal-comment-item"
                                 :timestamp="comment.created_at"
                                 :icon="definitionCommentIcon(comment)"
@@ -176,7 +162,7 @@
 
         <settings-button
             :buttons="stageButtons"
-            :stage="stage"
+            :stage="thisDeal.stage"
 
             @commentSend="sendComment($event)"
             @changeData="changeData($event)"
@@ -242,26 +228,23 @@ export default {
     data() {
         return {
             loading: false,
-            active: ['1', '2'],
+            active: ['1'],
             visibleCommentForm: false,
             visibleFileUploadForm: false,
 
-            client: this.deal?.client ?? {},
-            pipeline: this.deal?.pipeline ?? {},
-            responsible: this.deal?.responsible ?? {},
-            stage: this.deal?.stage ?? {},
-            comments: this.deal.comments ?? [],
+            thisDeal: this.deal,
+            allPipelines: this.pipelines ?? [],
+            allStages: this.stages ?? [],
             stageButtons: this.buttons ?? [],
             clientFields: this.clientFields ?? [],
             dealFields: this.dealFields ?? [],
             responsibles: this.users ?? [],
+
             deleteCommentId: 0,
 
             allFiles: this.deal?.comments?.reduce((acc, item) => {
                 return [...acc,...item.files];
             }, []),
-            allPipelines: this.pipelines ?? [],
-            allStages: this.stages ?? [],
 
             files: [],
             newComment: { id: '', type: 'comment', content: '', author_id: null, files: [] },
@@ -269,8 +252,8 @@ export default {
     },
     mounted() {
         $(document).on('scroll', this.loadMore);
-        this.deal.fields = this.dealFields;
-        this.deal.client.fields = this.clientFields;
+        this.thisDeal.fields = this.dealFields;
+        this.thisDeal.client.fields = this.clientFields;
     },
     methods: {
         changePipeline(item) {
@@ -294,8 +277,9 @@ export default {
 
             if (can) {
                 this.loading = true;
-                axios.get('/deal/' + this.deal.id + '/load_comments?offset=' + this.comments.length).then((response) => {
-                    this.comments = this.comments.concat(response.data.comments)
+                axios.get('/deal/' + this.thisDeal.id + '/load_comments?offset=' + this.thisDeal.comments.length).then((response) => {
+                    this.thisDeal.comments = this.thisDeal.comments.concat(response.data.comments)
+                    console.log( this.thisDeal );
                     this.loading = false;
                 })
             }
@@ -307,7 +291,7 @@ export default {
             this.visibleCommentForm = false;
             this.newComment.content = e.comment;
             if (this.newComment.content.length > 0) {
-                this.comments.unshift(this.newComment);
+                this.thisDeal.comments.unshift(this.newComment);
             }
             this.prepareDataByButtonOptions(e.button.action);
 
@@ -319,7 +303,7 @@ export default {
             this.newComment.files = event;
             this.newComment.type = 'document';
             if (this.newComment.files.length > 0) {
-                this.comments.unshift(this.newComment);
+                this.thisDeal.comments.unshift(this.newComment);
             }
 
             this.newComment = { id: '', type: 'comment', content: '', author_id: null, files: [] };
@@ -348,39 +332,39 @@ export default {
             this.send();
         },
         prepareDataByButtonOptions(action) {
-            this.pipeline.id = !!action.pipeline_id ? action.pipeline_id : this.pipeline.id;
-            this.stage.id = !!action.stage_id ? action.stage_id : this.stage.id;
-            this.responsible.id = !!action.responsible_id ? action.responsible_id : this.responsible.id;
+            this.thisDeal.pipeline.id = !!action.pipeline_id ? action.pipeline_id : this.thisDeal.pipeline.id;
+            this.thisDeal.stage.id = !!action.stage_id ? action.stage_id : this.thisDeal.stage.id;
+            this.thisDeal.responsible.id = !!action.responsible_id ? action.responsible_id : this.thisDeal.responsible.id;
         },
         send() {
             const formData = new FormData();
-            formData.append('id', this.deal.id);
-            formData.append('name', this.deal.name);
-            formData.append('pipeline_id', this.pipeline.id);
-            formData.append('stage_id', this.stage.id);
-            formData.append('responsible_id', this.responsible.id);
-            formData.append('client_id', this.deal.client_id);
+            formData.append('id', this.thisDeal.id);
+            formData.append('name', this.thisDeal.name);
+            formData.append('pipeline_id', this.thisDeal.pipeline.id);
+            formData.append('stage_id', this.thisDeal.stage.id);
+            formData.append('responsible_id', this.thisDeal.responsible.id);
+            formData.append('client_id', this.thisDeal.client_id);
 
-            formData.append('comment_count', this.comments.length ?? 0);
+            formData.append('comment_count', this.thisDeal.comments.length ?? 0);
             formData.append('delete_comment_id', this.deleteCommentId);
 
-            this.deal.fields = this.deal.fields ?? [];
-            this.deal?.fields.forEach((field, fieldIndex) => {
+            this.thisDeal.fields = this.thisDeal.fields ?? [];
+            this.thisDeal?.fields.forEach((field, fieldIndex) => {
                 formData.append('fields[' + field.id + '][value]', field.pivot?.value ?? '');
             });
 
-            this.deal.client = this.deal.client ?? [];
-            formData.append('client[name]', this.deal.client?.name);
-            this.deal.client.fields = this.deal.client?.fields ?? [];
-            this.deal.client?.fields.forEach((field, fieldIndex) => {
+            this.thisDeal.client = this.thisDeal.client ?? [];
+            formData.append('client[name]', this.thisDeal.client?.name);
+            this.thisDeal.client.fields = this.thisDeal.client?.fields ?? [];
+            this.thisDeal.client?.fields.forEach((field, fieldIndex) => {
                 formData.append('client[fields][' + field.id + '][value]', field.pivot?.value ?? '');
             });
 
-            this.deal.comments = this.comments ?? [];
-            this.deal?.comments.forEach((comment, commentIndex) => {
+            this.thisDeal.comments = this.thisDeal.comments ?? [];
+            this.thisDeal?.comments.forEach((comment, commentIndex) => {
                 if (!comment.id) {
                     formData.append('new_comment[id]', comment.id ?? '');
-                    formData.append('new_comment[deal_id]', this.deal.id);
+                    formData.append('new_comment[deal_id]', this.thisDeal.id);
                     formData.append('new_comment[type]', comment.type);
                     formData.append('new_comment[content]', comment.content);
                     comment.files = comment.files ?? [];
@@ -389,7 +373,7 @@ export default {
                     })
                 } else {
                     formData.append('comments[' + commentIndex + '][id]', comment.id ?? '');
-                    formData.append('comments[' + commentIndex + '][deal_id]', this.deal.id);
+                    formData.append('comments[' + commentIndex + '][deal_id]', this.thisDeal.id);
                     formData.append('comments[' + commentIndex + '][type]', comment.type);
                     formData.append('comments[' + commentIndex + '][content]', comment.content);
                     comment.files = comment.files ?? [];
@@ -399,18 +383,16 @@ export default {
                 }
             });
 
-            console.log( this.deal)
+            console.log( this.thisDeal)
             axios
                 .post('/deal/update',  formData)
                 .then((response) => {
                     console.log(response.data.deal);
-                    this.comments = response.data.deal.comments;
-                    this.stage = response.data.deal.stage;
+                    this.thisDeal = response.data.deal;
+
                     this.allStages = response.data.stages;
                     this.allPipelines = response.data.pipelines;
-                    this.stageButtons = response.data.deal.pipeline.buttons;
-                    this.responsible = response.data.deal.responsible;
-                    this.responsibles = [this.responsible];
+                    this.responsibles = [this.thisDeal.responsible];
                     console.log(this.stageButtons);
                     ElNotification({
                         title: 'Сохранено',
