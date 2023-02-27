@@ -1,6 +1,9 @@
 @extends(backpack_view('blank'))
 
 @php
+    use \App\Models\Pipeline;
+    use \App\Services\Button\ButtonService;
+
     $defaultBreadcrumbs = [
       trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
       trans('backpack::crud.add') => false,
@@ -10,13 +13,8 @@
     $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
     $crud = [];
 
-    $service = new \App\Services\Button\ButtonService();
-    $pipelines = \App\Models\Pipeline::query()->with([
-        'stages',
-        'buttons',
-        'buttons.visible',
-        'buttons.action',
-    ])->get();
+    $service = new ButtonService();
+    $pipelines = Pipeline::query()->get();
 
     $reade_pipelines = [];
     foreach ($pipelines as $pipeline) {

@@ -292,14 +292,6 @@ export default {
                 can = true;
             }
 
-            /*let scrollPosition = this.$refs.scroll_container.$el.scrollHeight - this.$refs.scroll_container.$el.scrollTop;
-            let elementHeigth = this.$refs.scroll_container.$el.offsetHeight;
-            let can = false;
-
-            if (scrollPosition <= (elementHeigth + 5)) {
-                can = true;
-            }*/
-
             if (can) {
                 this.loading = true;
                 axios.get('/deal/' + this.deal.id + '/load_comments?offset=' + this.comments.length).then((response) => {

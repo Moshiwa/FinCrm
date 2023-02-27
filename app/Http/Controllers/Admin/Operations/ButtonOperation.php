@@ -7,13 +7,6 @@ use Illuminate\Support\Facades\Route;
 
 trait ButtonOperation
 {
-    /**
-     * Define which routes are needed for this operation.
-     *
-     * @param string $segment    Name of the current entity (singular). Used as first URL segment.
-     * @param string $routeName  Prefix of the route name.
-     * @param string $controller Name of the current CrudController.
-     */
     protected function setupButtonRoutes($segment, $routeName, $controller)
     {
         Route::get($segment, [
@@ -23,9 +16,6 @@ trait ButtonOperation
         ]);
     }
 
-    /**
-     * Add the default settings, buttons, etc that this operation needs.
-     */
     protected function setupButtonDefaults()
     {
         CRUD::allowAccess('button');
@@ -36,11 +26,6 @@ trait ButtonOperation
 
     }
 
-    /**
-     * Show the view for performing the operation.
-     *
-     * @return Response
-     */
     public function button()
     {
         CRUD::hasAccessOrFail('button');

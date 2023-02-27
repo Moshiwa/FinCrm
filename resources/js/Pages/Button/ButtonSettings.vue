@@ -245,6 +245,7 @@ export default {
 
         },
         openEditButton(button = null) {
+            this.currentResponsible = {};
             this.changeStage = false;
             this.actionChangeResponsible = false;
             this.actionLeaveComment = false;
@@ -252,6 +253,9 @@ export default {
                 this.allPipelines.forEach((pipeline) => {
                     if (pipeline.id === button.pipeline_id) {
                         this.currentActionPipeline = pipeline;
+                        this.currentResponsible = button.action.responsible ?? {};
+
+                        this.responsibles = [this.currentResponsible];
 
                         this.actionChangeStage = !!button.action.stage_id;
                         this.actionChangeResponsible = !!button.action.responsible_id;
@@ -271,7 +275,6 @@ export default {
             }
             this.currentColor = button.color
             this.currentIcon = button.icon
-            console.log(button);
             this.currentButton = button;
             this.visibleDrawer = true;
         },
