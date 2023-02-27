@@ -116,20 +116,20 @@ class DealService
 
         if ($deal->isDirty('pipeline_id')) {
             $new_deal['pipeline'] = Pipeline::query()->find($new_deal['pipeline_id'])->toArray();
-            $actions[] = 'Смена воронки с ' . $deal->pipeline->name . ' на ' . $new_deal['pipeline']['name'];
+            $actions[] = 'Смена воронки с <i>' . $deal->pipeline->name . '</i> на <i>' . $new_deal['pipeline']['name'] . '</i>';
         }
 
         if ($deal->isDirty('stage_id')) {
             $new_deal['stage'] = Stage::query()->find($new_deal['stage_id'])->toArray();
-            $actions[] = 'Смена стадии с ' . $deal->stage->name . ' на ' . $new_deal['stage']['name'];
+            $actions[] = 'Смена стадии с <i>' . $deal->stage->name . '</i> на <i>' . $new_deal['stage']['name'] . '</i>';
         }
 
         if ($deal->isDirty('responsible_id')) {
             $new_deal['responsible'] = User::query()->find($new_deal['responsible_id'])->toArray();
-            $actions[] = 'Смена ответственного с ' . $deal->responsible->name . ' на ' . $new_deal['responsible']['name'];
+            $actions[] = 'Смена ответственного с <i>' . $deal->responsible->name . '</i> на <i>' . $new_deal['responsible']['name'] . '</i>';
         }
 
 
-        return implode(' ', $actions);
+        return implode('<br>', $actions);
     }
 }

@@ -150,7 +150,9 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row-right__author">{{ comment.author?.name }}</div>
+                                            <div class="row-right__author">
+                                                <a :href="'/admin/user/' + comment.author?.id"> {{ comment.author?.name }} </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </el-card>
@@ -293,6 +295,7 @@ export default {
             if (this.newComment.content.length > 0) {
                 this.thisDeal.comments.unshift(this.newComment);
             }
+
             this.prepareDataByButtonOptions(e.button.action);
 
             this.newComment = { id: '', type: 'comment', content: '', author_id: null, files: [] };
@@ -387,13 +390,13 @@ export default {
             axios
                 .post('/deal/update',  formData)
                 .then((response) => {
-                    console.log(response.data.deal);
                     this.thisDeal = response.data.deal;
 
                     this.allStages = response.data.stages;
                     this.allPipelines = response.data.pipelines;
                     this.responsibles = [this.thisDeal.responsible];
-                    console.log(this.stageButtons);
+                    this.stageButtons = response.data.deal.pipeline.buttons;
+                    console.log( this.stageButtons);
                     ElNotification({
                         title: 'Сохранено',
                         type: 'success',
@@ -460,6 +463,12 @@ export default {
 .card-right {
     width: inherit;
 }
+.row-right__upper > span {
+    font-size: 15px;
+    font-weight: 600;
+    opacity: 0.5;
+}
+
 .flex-column {
     display: flex;
     flex-direction: column;

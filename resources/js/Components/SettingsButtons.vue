@@ -81,6 +81,7 @@ export default {
                 comment: this.comment,
                 button: this.currentButton,
             }
+
             this.$emit('commentSend', data);
             this.visibleCommentForm = false;
         },
