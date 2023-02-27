@@ -126,15 +126,14 @@
                             </el-select>
                             >
                             <el-select
-                                v-model="currentButton.action.stage"
-                                value-key="id"
+                                v-model="currentButton.action.stage_id"
                                 clearable
                             >
                                 <el-option
                                     v-for="stage in currentActionPipeline.stages"
                                     :key="stage.id"
                                     :label="stage.name"
-                                    :value="stage"
+                                    :value="stage.id"
                                 />
                             </el-select>
                         </div>
@@ -292,6 +291,7 @@ export default {
         save() {
             this.prepareData();
             let data = {};
+            console.log(this.currentButton.action)
             data.id = this.currentButton.id ?? null;
             data.name = this.currentButton.name ?? null;
             data.pipeline_id = this.currentButton.pipeline_id ?? null;
