@@ -116,17 +116,17 @@ class DealService
 
         if ($deal->isDirty('pipeline_id')) {
             $new_deal['pipeline'] = Pipeline::query()->find($new_deal['pipeline_id'])->toArray();
-            $actions[] = 'Смена воронки с <i>' . $deal->pipeline->name . '</i> на <i>' . $new_deal['pipeline']['name'] . '</i>';
+            $actions[] = 'Смена воронки с <i style="color: #0B90C4">' . $deal->pipeline->name . '</i> на <i style="color: #0B90C4">' . $new_deal['pipeline']['name'] . '</i>';
         }
 
         if ($deal->isDirty('stage_id')) {
             $new_deal['stage'] = Stage::query()->find($new_deal['stage_id'])->toArray();
-            $actions[] = 'Смена стадии с <i>' . $deal->stage->name . '</i> на <i>' . $new_deal['stage']['name'] . '</i>';
+            $actions[] = 'Смена стадии с <i style="color: #0B90C4">' . $deal->stage->name . '</i> на <i style="color: #0B90C4">' . $new_deal['stage']['name'] . '</i>';
         }
 
         if ($deal->isDirty('responsible_id')) {
             $new_deal['responsible'] = User::query()->find($new_deal['responsible_id'])->toArray();
-            $actions[] = 'Смена ответственного с <i>' . $deal->responsible->name . '</i> на <i>' . $new_deal['responsible']['name'] . '</i>';
+            $actions[] = 'Смена ответственного с <i style="color: #0B90C4">' . $deal->responsible->name . '</i> на <i style="color: #0B90C4">' . $new_deal['responsible']['name'] . '</i>';
         }
 
 

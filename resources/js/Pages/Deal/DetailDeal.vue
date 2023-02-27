@@ -469,43 +469,13 @@ export default {
     opacity: 0.5;
 }
 
-.flex-column {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
 .flex-inline {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 10px;
 }
-.comment-row {
-    display: flex;
-    width: 100%;
-    gap: 10px;
-    min-height: 100px;
-    padding: 16px;
-}
 
-.document_container {
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-.document_item {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 10px;
-}
-.custom-field__container {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    justify-content: space-between;
-}
 
 
 .infinite-list {
