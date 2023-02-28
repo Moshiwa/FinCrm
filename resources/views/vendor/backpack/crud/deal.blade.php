@@ -45,7 +45,6 @@
             :stages="{{ $stages }}"
             :deal-fields="{{ json_encode($deal_fields) }}"
             :client-fields="{{ json_encode($client_fields) }}"
-            :comments="{{ json_encode($comments) }}"
             :users="{{$users}}"
             :buttons="{{$buttons}}"
         />

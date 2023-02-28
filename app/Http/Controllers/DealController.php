@@ -29,9 +29,9 @@ class DealController extends Controller
     {
         $data = $request->validated();
 
-        $deal = Deal::query()->with(['pipeline', 'stage', 'responsible'])->find($data['id']);
+        $deal = Deal::query()->find($data['id']);
 
-        $deal->name = html_entity_decode($data['name'] ?? '');
+        $deal->name = $data['name'];
         $deal->pipeline_id = $data['pipeline_id'];
         $deal->client_id = $data['client_id'];
         $deal->stage_id = $data['stage_id'];
@@ -51,7 +51,9 @@ class DealController extends Controller
             'pipeline.buttons',
             'pipeline.buttons.visible',
             'pipeline.buttons.action',
-            'responsible',
+            'responsible'=> function ($query) {
+                $query->select('id', 'name');
+            },
             'client',
             'fields',
             'client.fields',
@@ -67,7 +69,7 @@ class DealController extends Controller
         return response()->json([
             'deal' => $deal,
             'stages' => $deal->pipeline->stages,
-            'pipelines' => Pipeline::query()->get(),
+            'pipelines' => Pipeline::query()->select(['id', 'name'])->get(),
         ]);
 
     }

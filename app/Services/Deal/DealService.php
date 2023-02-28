@@ -9,6 +9,8 @@ use App\Models\Pipeline;
 use App\Models\Stage;
 use App\Models\User;
 use App\Services\Space\SpaceService;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use Barryvdh\Debugbar\Twig\Extension\Debug;
 use Illuminate\Support\Facades\Storage;
 
 class DealService
@@ -17,8 +19,21 @@ class DealService
     public function updateClient($deal, array $data): void
     {
         $deal->client()->update([
-            'name' => html_entity_decode($data['client']['name'] ?? '')
+            'name' => $data['client']['name']
         ]);
+
+        /*$fields = $data['client']['fields'] ?? [];
+        $old_fields = $deal->client->fields;
+        foreach ($fields as $id => $field) {
+            $value = $field['value'] ?? '';
+
+            $field = $old_fields->find($id);
+            $old_value = $field->pivot->value;
+
+            if ($old_value !== $value) {
+                //это событие, кто то поменял
+            }
+        }*/
 
         $deal->client->fields()->sync($data['client']['fields'] ?? []);
     }
@@ -36,7 +51,7 @@ class DealService
 
             $model_comment->update([
                 'type' => $comment['type'] ?? CommentTypeEnum::comment,
-                'content' => html_entity_decode($comment['content']),
+                'content' => $comment['content'],
                 'deal_id' => $comment['deal_id'] ?? $deal_id,
                 'author_id' => backpack_user()->id,
             ]);
@@ -124,17 +139,17 @@ class DealService
         $new_deal = $deal->getAttributes();
 
         if ($deal->isDirty('pipeline_id')) {
-            $new_deal['pipeline'] = Pipeline::query()->find($new_deal['pipeline_id'])->toArray();
+            $new_deal['pipeline'] = Pipeline::query()->select('id', 'name')->find($new_deal['pipeline_id'])->toArray();
             $actions[] = 'Смена воронки с <i style="color: #0B90C4">' . $deal->pipeline->name . '</i> на <i style="color: #0B90C4">' . $new_deal['pipeline']['name'] . '</i>';
         }
 
         if ($deal->isDirty('stage_id')) {
-            $new_deal['stage'] = Stage::query()->find($new_deal['stage_id'])->toArray();
+            $new_deal['stage'] = Stage::query()->select('id', 'name')->find($new_deal['stage_id'])->toArray();
             $actions[] = 'Смена стадии с <i style="color: #0B90C4">' . $deal->stage->name . '</i> на <i style="color: #0B90C4">' . $new_deal['stage']['name'] . '</i>';
         }
 
         if ($deal->isDirty('responsible_id')) {
-            $new_deal['responsible'] = User::query()->find($new_deal['responsible_id'])->toArray();
+            $new_deal['responsible'] = User::query()->select('id', 'name')->find($new_deal['responsible_id'])->toArray();
             $actions[] = 'Смена ответственного с <i style="color: #0B90C4">' . $deal->responsible->name . '</i> на <i style="color: #0B90C4">' . $new_deal['responsible']['name'] . '</i>';
         }
 

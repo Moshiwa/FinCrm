@@ -55,8 +55,6 @@ trait DealOperation
         $this->crud->hasAccessOrFail('deal');
         $this->crud->setHeading('Сделка');
 
-        $comments = $entry->comments()->orderBy('created_at', 'desc')->with(['author', 'files'])->paginate(5);
-
         $entry->load([
             'stage',
             'pipeline',
@@ -75,11 +73,9 @@ trait DealOperation
 
         $this->data['crud'] = $this->crud;
         $this->data['entry'] = $entry;
-        $this->data['comments'] = $comments;
         $this->data['pipelines'] = Pipeline::query()->select('id', 'name')->get();
         $this->data['stages'] = $entry->pipeline->stages;
         $this->data['buttons'] = Button::query()->with(['visible', 'action'])->where('pipeline_id', $entry->pipeline->id)->get();
-        $this->data['fields'] = Field::query()->get();
 
         return view('crud::deal', $this->data);
     }
