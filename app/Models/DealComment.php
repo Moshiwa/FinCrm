@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use App\Enums\CommentTypeEnum;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Carbon;
 
 class DealComment extends Model
 {
@@ -15,6 +17,10 @@ class DealComment extends Model
         'title',
         'content',
         'author_id'
+    ];
+
+    protected $appends = [
+        'date_create'
     ];
 
     protected $casts = [
@@ -34,5 +40,10 @@ class DealComment extends Model
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+
+    public function getDateCreateAttribute() {
+        return Carbon::make($this->created_at)->translatedFormat('j F Y H:i');
     }
 }

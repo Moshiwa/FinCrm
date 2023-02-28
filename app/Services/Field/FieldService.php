@@ -18,6 +18,7 @@ class FieldService
             $fields[$index] = $client_field;
             foreach ($filled_client_fields as $filled_client_field) {
                 if ($client_field['id'] === $filled_client_field['id']) {
+                    $filled_client_field['pivot']['value'] = $this->castFieldValue($filled_client_field);
                     $fields[$index] = $filled_client_field;
                 }
             }

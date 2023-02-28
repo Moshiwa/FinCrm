@@ -21,7 +21,6 @@
     $users = User::query()->where('id', $entry->responsible_id)->get();
 @endphp
 
-
 @section('content')
 @vite('resources/js/app.js')
 
@@ -40,6 +39,7 @@
         </section>
 
         <detail-deal
+            :auth="{{ backpack_user() }}"
             :deal="{{ $entry }}"
             :pipelines="{{ $pipelines }}"
             :stages="{{ $stages }}"

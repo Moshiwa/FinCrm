@@ -23,6 +23,16 @@
     border-left: 2px solid #ecf5ff;
 }
 
+.comment>.el-input__wrapper {
+    box-shadow: none;
+}
+.editable>.el-input__wrapper:hover {
+    box-shadow: none;
+}
+.editable>.el-input__wrapper:focus {
+    box-shadow: none;
+}
+
 .el-form-item__label {
     width: 150px;
     height: fit-content!important;

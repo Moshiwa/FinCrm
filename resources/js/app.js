@@ -10,7 +10,6 @@ import ClientEdit from "./Pages/Client/Edit.vue";
 import StageSettings from "./Pages/Stage/StageSettings.vue";
 import ButtonSettings from "./Pages/Button/ButtonSettings.vue";
 
-
 if (document.getElementById("vue-app")) {
 
     const app = createApp({})

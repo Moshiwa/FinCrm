@@ -30,6 +30,10 @@ class DealService
 
         foreach ($comments as $comment) {
             $model_comment = DealComment::query()->find($comment['id']);
+            if ($model_comment->author->id !== backpack_user()->id) {
+                continue;
+            }
+
             $model_comment->update([
                 'type' => $comment['type'] ?? CommentTypeEnum::comment,
                 'content' => html_entity_decode($comment['content']),
@@ -45,12 +49,17 @@ class DealService
     {
         if (! empty($data['delete_comment_id'])) {
             $model_comment = DealComment::query()->find($data['delete_comment_id']);
-            foreach ($model_comment->files as $file) {
-                $file->delete();
-            }
+            //Action нельзя удалять
+            if ($model_comment->type === CommentTypeEnum::action) {
+                $model_comment->update(['content' => '']);
+            } else {
+                foreach ($model_comment->files as $file) {
+                    $file->delete();
+                }
 
-            $model_comment->files()->sync([]);
-            $model_comment->delete();
+                $model_comment->files()->sync([]);
+                $model_comment->delete();
+            }
         }
     }
 

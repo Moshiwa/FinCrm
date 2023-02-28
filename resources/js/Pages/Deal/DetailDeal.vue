@@ -65,8 +65,6 @@
                     </el-collapse-item>
                 </el-collapse>
 
-
-
                 <el-collapse v-model="active">
                     <el-collapse-item title="Данные о клиенте" name="2">
                         <el-form-item label="Наименование">
@@ -100,63 +98,11 @@
                     <el-timeline
                         class="infinite-list"
                     >
-                            <el-timeline-item
-                                v-for="comment in thisDeal.comments"
-                                class="deal-comment-item"
-                                :timestamp="comment.created_at"
-                                :icon="definitionCommentIcon(comment)"
-                                size="large"
-                                :hollow="true"
-                                :color="definitionCommentColor(comment)"
-                                placement="top"
-                            >
-                                <el-card>
-                                    <div class="row-right">
-                                        <div class="row-right__upper">
-                                            <span v-html="comment.title"></span>
-                                        </div>
-                                        <div class="row-right__lower">
-                                            <div class="row-right__content">
-                                                <contenteditable
-                                                    v-if="comment.type === 'comment'"
-                                                    v-model="comment.content"
-                                                    @send="send"
-                                                />
-                                                <div
-                                                    v-else-if="comment.type === 'action'"
-                                                >
-                                                    <span v-html="comment.content"></span>
-                                                </div>
-                                                <div
-                                                    v-else-if="comment.type === 'document'"
-                                                    class="flex-inline"
-                                                >
-                                                    <div
-                                                        v-for="file in comment.files"
-                                                        class="row-right__item-files"
-                                                    >
-                                                        <el-image
-                                                            v-if="definitionFileType(file.meme) === 'image'"
-                                                            style="width: 100px; height: 100px"
-                                                            :src="file.full_path"
-                                                            :zoom-rate="1.2"
-                                                            :preview-src-list="[file.full_path]"
-                                                            :initial-index="4"
-                                                            fit="cover"
-                                                        />
-                                                        <div v-else>
-                                                            <a :href="file.full_path" target="_blank">Doc</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row-right__author">
-                                                <a :href="'/admin/user/' + comment.author?.id"> {{ comment.author?.name }} </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </el-card>
-                            </el-timeline-item>
+                        <comment-item
+                            :comments="thisDeal.comments"
+                            :auth="auth"
+                            @commentSend="prepareCommentDataSend($event)"
+                        />
                     </el-timeline>
                 </div>
             </div>
@@ -185,9 +131,8 @@ import Contenteditable from "../../Components/Contenteditable.vue";
 import FileUpload from "../../Components/FileUpload.vue";
 import { ElNotification } from 'element-plus'
 import SettingsButton from "../../Components/SettingsButtons.vue";
+import CommentItem from "../../Components/CommentItem.vue";
 import Field from "../../Components/Field.vue";
-import {ChatDotSquare, Document, Paperclip, Bell, Edit, Share} from "@element-plus/icons-vue";
-import {ref} from "vue";
 
 export default {
     name: 'DetailDeal',
@@ -195,9 +140,14 @@ export default {
         Contenteditable,
         FileUpload,
         SettingsButton,
-        Field
+        Field,
+        CommentItem
     },
     props: {
+        auth: {
+            type: Object,
+            required: true
+        },
         deal: {
             type: Object,
             required: true
@@ -312,14 +262,10 @@ export default {
             this.newComment = { id: '', type: 'comment', content: '', author_id: null, files: [] };
             this.send();
         },
-        removeComment(comment) {
-            this.comments.forEach((item, index) => {
-                if (item.id === comment.id) {
-                    this.comments.splice(index, 1);
-                    this.deleteCommentId = item.id;
-                }
-            });
-
+        prepareCommentDataSend(event) {
+            if (event) {
+                this.deleteCommentId = event;
+            }
             this.send();
         },
         getUsers(query) {
@@ -386,7 +332,6 @@ export default {
                 }
             });
 
-            console.log( this.thisDeal)
             axios
                 .post('/deal/update',  formData)
                 .then((response) => {
@@ -396,7 +341,6 @@ export default {
                     this.allPipelines = response.data.pipelines;
                     this.responsibles = [this.thisDeal.responsible];
                     this.stageButtons = response.data.deal.pipeline.buttons;
-                    console.log( this.stageButtons);
                     ElNotification({
                         title: 'Сохранено',
                         type: 'success',
@@ -405,44 +349,10 @@ export default {
                 }
             )
         },
-        definitionFileType(meme) {
-            switch (meme) {
-                case 'jpg':
-                case 'jpeg':
-                case 'png':
-                case 'svg':
-                    return 'image'
-                default:
-                    return 'document'
-            }
-        },
-        definitionCommentIcon(comment) {
-            switch (comment.type) {
-                case 'document':
-                    return Paperclip;
-                case 'action':
-                    return Bell;
-                default:
-                    return ChatDotSquare;
-            }
-        },
-        definitionCommentColor(comment) {
-            switch (comment.type) {
-                case 'document':
-                    return 'grey';
-                case 'action':
-                    return 'pink';
-                default:
-                    return 'green';
-            }
-        }
     }
 }
 </script>
 <style scoped>
-.test{
-    width: 1000px;
-}
 .wrap {
     display:flex;
     flex-direction: row;
@@ -463,21 +373,6 @@ export default {
 .card-right {
     width: inherit;
 }
-.row-right__upper > span {
-    font-size: 15px;
-    font-weight: 600;
-    opacity: 0.5;
-}
-
-.flex-inline {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-
-
 .infinite-list {
     min-height: 700px;
     width: 100%;

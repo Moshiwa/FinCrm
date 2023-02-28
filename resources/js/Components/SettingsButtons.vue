@@ -83,6 +83,7 @@ export default {
             }
 
             this.$emit('commentSend', data);
+            this.comment = '';
             this.visibleCommentForm = false;
         },
 

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\Space\SpaceService;
+use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -33,5 +34,6 @@ class AppServiceProvider extends ServiceProvider
             SpaceService::prepareAllSpaceConnections();
         }
         SpaceService::prepareAllUploadDirectories();
+        Carbon::setLocale(config('app.locale'));
     }
 }
