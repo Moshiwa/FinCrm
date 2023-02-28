@@ -98,7 +98,7 @@
                     <el-timeline
                         class="infinite-list"
                     >
-                        <comment-item
+                        <comments
                             :comments="thisDeal.comments"
                             :auth="auth"
                             @commentSend="prepareCommentDataSend($event)"
@@ -131,7 +131,7 @@ import Contenteditable from "../../Components/Contenteditable.vue";
 import FileUpload from "../../Components/FileUpload.vue";
 import { ElNotification } from 'element-plus'
 import SettingsButton from "../../Components/SettingsButtons.vue";
-import CommentItem from "../../Components/CommentItem.vue";
+import Comments from "../../Components/Comments.vue";
 import Field from "../../Components/Field.vue";
 
 export default {
@@ -141,7 +141,7 @@ export default {
         FileUpload,
         SettingsButton,
         Field,
-        CommentItem
+        Comments
     },
     props: {
         auth: {
@@ -204,6 +204,7 @@ export default {
     },
     mounted() {
         $(document).on('scroll', this.loadMore);
+        console.log(this.thisDeal);
         this.thisDeal.fields = this.dealFields;
         this.thisDeal.client.fields = this.clientFields;
     },

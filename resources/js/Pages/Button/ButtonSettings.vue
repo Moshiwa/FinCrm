@@ -21,7 +21,7 @@
                     class="button__item"
                     v-for="button in currentPipeline.buttons"
                 >
-                    <custom-button
+                    <action-button
                         :button="button"
                         @click="openEditButton(button)"
                     />
@@ -184,11 +184,11 @@
 
 <script>
 import { ElMessageBox, ElSwitch } from 'element-plus'
-import CustomButton from "../../Components/CustomButton.vue";
+import ActionButton from "../../Components/ActionButton.vue";
 export default {
     name: 'ButtonSettings',
     components: {
-        CustomButton
+        ActionButton
     },
     props: {
         buttons: {

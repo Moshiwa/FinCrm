@@ -1,7 +1,7 @@
 <template>
     <div class="card-body flex-column">
         <div v-for="button in stageButtons">
-            <custom-button
+            <action-button
                 v-if="button.visible.some(item => item.id === stage.id)"
                 :button="button"
                 @click="buttonClick(button)"
@@ -31,11 +31,11 @@
 
 <script>
 
-import CustomButton from "./CustomButton.vue";
+import ActionButton from "./ActionButton.vue";
 export default {
     name: 'SettingsButton',
     components: {
-        CustomButton
+        ActionButton
     },
     props: {
         buttons: {

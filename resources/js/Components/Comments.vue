@@ -67,7 +67,7 @@ import {ElMessageBox} from "element-plus";
 import {Bell, ChatDotSquare, Paperclip} from "@element-plus/icons-vue";
 
 export default {
-    name: 'CommentItem',
+    name: 'Comments',
     props: {
         comments: {
             type: Array,

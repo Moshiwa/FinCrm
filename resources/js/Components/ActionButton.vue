@@ -10,7 +10,7 @@
 
 <script>
 export default {
-    name: 'CustomButton',
+    name: 'ActionButton',
     props: {
         button: {
             type: Object,
