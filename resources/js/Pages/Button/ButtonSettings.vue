@@ -261,7 +261,7 @@ export default {
             if (!!button) {
                 this.allPipelines.forEach((pipeline) => {
                     if (pipeline.id === button.pipeline_id) {
-                        this.currentActionPipeline = this.findStagesForPipeline(button.action.pipeline.id);
+                        this.currentActionPipeline = this.findStagesForPipeline(button.action?.pipeline?.id);
                         this.currentResponsible = button.action.responsible ?? {};
 
                         this.responsibles = [this.currentResponsible];
