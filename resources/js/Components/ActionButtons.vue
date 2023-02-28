@@ -32,6 +32,7 @@
 <script>
 
 import ActionButton from "./ActionButton.vue";
+import {ElNotification} from "element-plus";
 export default {
     name: 'ActionButtons',
     components: {
@@ -58,6 +59,7 @@ export default {
     data() {
         return {
             visibleCommentForm: false,
+            errorMessage: false,
             comment: '',
 
             currentButton: {}
@@ -82,9 +84,17 @@ export default {
                 button: this.currentButton,
             }
 
-            this.$emit('commentSend', data);
-            this.comment = '';
-            this.visibleCommentForm = false;
+            if (this.comment) {
+                this.$emit('commentSend', data);
+                this.comment = '';
+                this.visibleCommentForm = false;
+            } else {
+                ElNotification({
+                    title: 'Напишите комментарий',
+                    type: 'error',
+                    position: 'bottom-right',
+                });
+            }
         },
 
         change(button) {
