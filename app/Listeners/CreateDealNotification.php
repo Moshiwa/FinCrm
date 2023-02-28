@@ -18,11 +18,13 @@ class CreateDealNotification
             $event->deal->comments()->create([
                 'type' => CommentTypeEnum::action->name,
                 'title' => 'Сделка создана',
+                'content' => '',
                 'author_id' => backpack_user()->id
             ]);
         } else {
             $event->deal->comments()->create([
                 'type' => CommentTypeEnum::action->name,
+                'content' => '',
                 'title' => 'Сделка создана автоматически',
             ]);
         }
