@@ -33,7 +33,7 @@
 
 import ActionButton from "./ActionButton.vue";
 export default {
-    name: 'SettingsButton',
+    name: 'ActionButtons',
     components: {
         ActionButton
     },

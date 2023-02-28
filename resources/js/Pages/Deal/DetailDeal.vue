@@ -85,19 +85,8 @@
 
             <div class="card-right">
                 <div class="card-body row">
-                    <div>
-                        <el-select
-                            class="m-3"
-                        >
-                            <el-option
-
-                            />
-                        </el-select>
-                        <el-button @click="visibleFileUploadForm = true">Прикрепить документ</el-button>
-                    </div>
-                    <el-timeline
-                        class="infinite-list"
-                    >
+                    <el-button @click="visibleFileUploadForm = true">Прикрепить документ</el-button>
+                    <el-timeline class="infinite-list">
                         <comments
                             :comments="thisDeal.comments"
                             :auth="auth"
@@ -108,13 +97,13 @@
             </div>
         </div>
 
-        <settings-button
+        <action-buttons
             :buttons="stageButtons"
             :stage="thisDeal.stage"
-
             @commentSend="sendComment($event)"
             @changeData="changeData($event)"
         />
+
     </div>
 
     <el-drawer v-model="visibleFileUploadForm" :show-close="false">
@@ -130,7 +119,7 @@ import { ElInput } from 'element-plus';
 import Contenteditable from "../../Components/Contenteditable.vue";
 import FileUpload from "../../Components/FileUpload.vue";
 import { ElNotification } from 'element-plus'
-import SettingsButton from "../../Components/SettingsButtons.vue";
+import ActionButtons from "../../Components/ActionButtons.vue";
 import Comments from "../../Components/Comments.vue";
 import Field from "../../Components/Field.vue";
 
@@ -139,7 +128,7 @@ export default {
     components: {
         Contenteditable,
         FileUpload,
-        SettingsButton,
+        ActionButtons,
         Field,
         Comments
     },
