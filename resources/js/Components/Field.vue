@@ -2,6 +2,7 @@
     <div v-if="field.type.name === 'select'">
         <el-select
             v-model="field.pivot.value"
+            :name="'fields['+ fieldIndex +'][value]'"
             @change="send"
         >
             <el-option
@@ -16,6 +17,7 @@
     <div v-else-if="field.type.name === 'date'">
         <el-input
             v-model="field.pivot.value"
+            :name="'fields['+ fieldIndex +'][value]'"
             type="date"
             @change="send"
         />
@@ -24,6 +26,7 @@
     <div v-else-if="field.type.name === 'checkbox'">
         <el-checkbox
             v-model="field.pivot.value"
+            :name="'fields['+ fieldIndex +'][value]'"
             :label="field.name"
             @change="send"
         />
@@ -32,6 +35,7 @@
     <div v-else-if="field.type.name === 'email'">
         <el-input
             v-model="field.pivot.value"
+            :name="'fields['+ fieldIndex +'][value]'"
             type="email"
             :label="field.name"
             @change="send"
@@ -41,6 +45,7 @@
     <div v-else>
         <el-input
             v-model="field.pivot.value"
+            :name="'fields['+ fieldIndex +'][value]'"
             :label="field.name"
             @change="send"
         />
@@ -57,6 +62,10 @@ export default {
         field: {
             type: Object,
             required: true
+        },
+        fieldIndex: {
+            type: Number,
+            default: 0
         }
     },
     mounted() {

@@ -1,5 +1,4 @@
 <template>
-
         <el-form-item label="Имя" prop="client.name">
             <el-input
                 name="name"
@@ -7,39 +6,9 @@
             />
         </el-form-item>
         <div v-for="(field, fieldIndex) in client.fields">
-            <el-form-item
-                v-if="field.type.name === 'select'"
-                :label="field.name"
-            >
-                <el-select
-                    v-model="field.pivot.value"
-                    :name="'fields['+ fieldIndex +'][value]'"
-                >
-                    <el-option
-                        v-for="(option, index) in field.options"
-                        :key="index"
-                        :value="option.value"
-                        :label="option.value"
-                    />
-                </el-select>
+            <el-form-item :label="field.name">
+                <field :field="field" :field-index="fieldIndex"/>
             </el-form-item>
-            <el-form-item
-                v-else-if="field.type.name === 'checkbox'"
-                :label="field.name"
-            >
-                <el-checkbox
-                    v-model="field.pivot.value"
-                    :name="'fields['+ fieldIndex +'][value]'"
-                    :label="field.name"
-                />
-            </el-form-item>
-            <el-form-item v-else :label="field.name" prop="field.*.value">
-                <el-input
-                    :name="'fields['+ fieldIndex +'][value]'"
-                    v-model="field.pivot.value"
-                />
-            </el-form-item>
-
             <el-input
                 type="hidden"
                 :name="'fields['+ fieldIndex +'][id]'"
