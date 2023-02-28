@@ -29,7 +29,7 @@ class DealController extends Controller
     {
         $data = $request->validated();
 
-        $deal = Deal::query()->find($data['id']);
+        $deal = Deal::query()->with(['pipeline', 'stage', 'responsible'])->find($data['id']);
 
         $deal->name = $data['name'];
         $deal->pipeline_id = $data['pipeline_id'];

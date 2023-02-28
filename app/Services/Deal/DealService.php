@@ -43,19 +43,7 @@ class DealService
         $deal_id = $deal->id;
         $comments = $data['comments'] ?? [];
 
-        foreach ($comments as $comment) {
-            $model_comment = DealComment::query()->find($comment['id']);
-            if ($model_comment->author->id !== backpack_user()->id) {
-                continue;
-            }
-
-            $model_comment->update([
-                'type' => $comment['type'] ?? CommentTypeEnum::comment,
-                'content' => $comment['content'],
-                'deal_id' => $comment['deal_id'] ?? $deal_id,
-                'author_id' => backpack_user()->id,
-            ]);
-        }
+        //Здесь возможно редактирование сообщений
 
         $this->deleteComments($deal, $data);
     }

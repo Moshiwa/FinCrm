@@ -310,7 +310,10 @@ export default {
                     comment.files.forEach((file, fileIndex) => {
                         formData.append('new_comment[files][' + fileIndex + ']', file);
                     })
-                } else {
+                }
+
+                //Замедляет не нужно отправлять все сообщения снова
+                /*else {
                     formData.append('comments[' + commentIndex + '][id]', comment.id ?? '');
                     formData.append('comments[' + commentIndex + '][deal_id]', this.thisDeal.id);
                     formData.append('comments[' + commentIndex + '][type]', comment.type);
@@ -319,7 +322,7 @@ export default {
                     comment.files.forEach((file, fileIndex) => {
                         formData.append('comments[' + commentIndex + '][files][' + fileIndex + ']', file);
                     })
-                }
+                }*/
             });
 
             axios

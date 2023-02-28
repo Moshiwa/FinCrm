@@ -16,8 +16,8 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete();
             $table->string('type')->default(CommentTypeEnum::comment->value);
-            $table->string('title')->nullable();
-            $table->text('content')->nullable();
+            $table->string('title')->default('');
+            $table->text('content')->default('');
             $table->timestamps();
         });
 
