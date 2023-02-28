@@ -4,13 +4,9 @@ namespace App\Http\Controllers\Admin\Operations;
 
 use App\Models\Button;
 use App\Models\Client;
-use App\Models\Deal;
-use App\Models\Field;
 use App\Models\Pipeline;
 use App\Models\Stage;
-use App\Services\SettingService;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 
 trait DealOperation
@@ -27,10 +23,10 @@ trait DealOperation
 
     public function newDealForm()
     {
-        $pipelines = Pipeline::query()->select('id', 'name')->get();
-        $first_pipeline = $pipelines->first()->id;
-        $stages = Stage::query()->where('pipeline_id', $first_pipeline)->get();;
-        $first_stage = $stages->first()->id;
+        $pipelines = Pipeline::query()->select('id', 'name')->first();
+        $first_pipeline = $pipelines->id;
+        $stages = Stage::query()->where('pipeline_id', $first_pipeline)->first();
+        $first_stage = $stages->id;
 
         $client_id = $this->crud->getCurrentEntryId();
         $client = Client::query()->find($client_id);
