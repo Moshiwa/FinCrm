@@ -20,7 +20,7 @@ class DealRequest extends FormRequest
 
             'stage_id' => 'nullable|exists:stages,id',
             'pipeline_id' => 'nullable|exists:pipelines,id',
-            'responsible_id' => 'nullable|exists:users,id',
+            'responsible_id' => 'nullable|exists:App\Models\User,id',
             'client_id' => 'nullable|exists:clients,id',
 
             'client.*' => 'nullable',

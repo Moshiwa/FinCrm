@@ -65,30 +65,6 @@ class Deal extends Model
             event(new CreateDeal($deal));
         });
         static::updating(function (self $deal) {
-           /* if ($deal->isDirty('pipeline_id')) {
-                $old_data = [
-                    'pipeline_id' => $deal->getOriginal('pipeline_id'),
-                    'stage_id' => $deal->getOriginal('stage_id')
-                ];
-
-                event(new ChangePipeline($deal, $old_data));
-            }
-
-            if ($deal->isDirty('stage_id')) {
-                $old_data = [
-                    'stage_id' => $deal->getOriginal('stage_id')
-                ];
-
-                event(new ChangeStage($deal, $old_data));
-            }
-
-            if ($deal->isDirty('responsible_id')) {
-                $old_data = [
-                    'responsible_id' => $deal->getOriginal('responsible_id')
-                ];
-
-                event(new ChangeResponsible($deal, $old_data));
-            }*/
         });
     }
 }

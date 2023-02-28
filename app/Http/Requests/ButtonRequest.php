@@ -16,15 +16,15 @@ class ButtonRequest extends FormRequest
         return [
             'id' => 'nullable',
             'name' => 'required|min:3|max:255',
-            'pipeline_id' => 'required',
+            'pipeline_id' => 'required|exists:pipelines,id',
             'color' => 'nullable|string',
             'icon' => 'nullable|string',
             'visible' => 'array',
             'visible.*.id' => 'exclude_unless:visible.*.is_active,true',
             'action' => 'required|array',
-            'action.stage_id' => 'nullable',
-            'action.pipeline_id' => 'nullable',
-            'action.responsible_id' => 'nullable',
+            'action.stage_id' => 'nullable|exists:stages,id',
+            'action.pipeline_id' => 'nullable|exists:pipelines,id',
+            'action.responsible_id' => 'nullable|exists:App\Models\User,id',
             'action.comment' => 'nullable|boolean',
         ];
     }
