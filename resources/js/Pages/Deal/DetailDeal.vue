@@ -55,8 +55,8 @@
                 </el-form-item>
 
                 <el-collapse v-model="active">
-                    <el-collapse-item v-for="field in dealFields" title="Дополнительные поля" name="1">
-                        <el-form-item :label="field.name">
+                    <el-collapse-item title="Дополнительные поля" name="1">
+                        <el-form-item v-for="field in dealFields" :label="field.name">
                             <field
                                 :field="field"
                                 @send="send"
