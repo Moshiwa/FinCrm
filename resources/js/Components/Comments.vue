@@ -68,6 +68,7 @@ import {Bell, ChatDotSquare, Paperclip} from "@element-plus/icons-vue";
 
 export default {
     name: 'Comments',
+    emits: ['commentSend'],
     props: {
         comments: {
             type: Array,

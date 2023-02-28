@@ -56,7 +56,7 @@
 
                 <el-collapse v-model="active">
                     <el-collapse-item title="Дополнительные поля" name="1">
-                        <el-form-item v-for="field in dealFields" :label="field.name">
+                        <el-form-item v-for="field in thisDeal.fields" :label="field.name">
                             <field
                                 :field="field"
                                 @send="send"
@@ -73,7 +73,7 @@
                                 @change="send"
                             />
                         </el-form-item>
-                        <el-form-item v-for="field in clientFields" :label="field.name">
+                        <el-form-item v-for="field in thisDeal.client.fields" :label="field.name">
                             <field
                                 :field="field"
                                 @send="send"
@@ -177,8 +177,6 @@ export default {
             allPipelines: this.pipelines ?? [],
             allStages: this.stages ?? [],
             stageButtons: this.buttons ?? [],
-            clientFields: this.clientFields ?? [],
-            dealFields: this.dealFields ?? [],
             responsibles: this.users ?? [],
 
             deleteCommentId: 0,
@@ -221,7 +219,6 @@ export default {
                 this.loading = true;
                 axios.get('/deal/' + this.thisDeal.id + '/load_comments?offset=' + this.thisDeal.comments.length).then((response) => {
                     this.thisDeal.comments = this.thisDeal.comments.concat(response.data.comments)
-                    console.log( this.thisDeal );
                     this.loading = false;
                 })
             }

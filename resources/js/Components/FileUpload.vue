@@ -42,6 +42,7 @@
 <script>
 export default {
     name: 'FileUpload',
+    emits: ['send'],
     data() {
         return {
             imagesData: [],

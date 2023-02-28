@@ -1,4 +1,5 @@
 <template>
+    <div>
         <el-form-item label="Имя" prop="client.name">
             <el-input
                 name="name"
@@ -15,12 +16,13 @@
                 v-model="field.id"
             />
         </div>
+    </div>
 </template>
 
 <script>
 import Field from "../../Components/Field.vue";
 export default {
-    name: 'ClientEdit.vue',
+    name: 'Edit.vue',
     components: {
         Field,
     },

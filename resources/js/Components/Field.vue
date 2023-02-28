@@ -58,6 +58,7 @@
 
 export default {
     name: 'Fields',
+    emits: ['send'],
     props: {
         field: {
             type: Object,
@@ -67,9 +68,6 @@ export default {
             type: Number,
             default: 0
         }
-    },
-    mounted() {
-        console.log(this.field)
     },
     methods: {
         send(e) {

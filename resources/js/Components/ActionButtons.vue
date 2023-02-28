@@ -2,7 +2,7 @@
     <div class="card-body flex-column">
         <div v-for="button in stageButtons">
             <action-button
-                v-if="button.visible.some(item => item.id === stage.id)"
+                v-if="button.visible.some(item => item.id === thisStage.id)"
                 :button="button"
                 @click="buttonClick(button)"
             />
@@ -35,6 +35,7 @@ import ActionButton from "./ActionButton.vue";
 import {ElNotification} from "element-plus";
 export default {
     name: 'ActionButtons',
+    emits: ['changeData', 'commentSend'],
     components: {
         ActionButton
     },
@@ -52,7 +53,7 @@ export default {
         stageButtons() {
             return this.buttons ?? [];
         },
-        stage() {
+        thisStage() {
             return this.stage ?? {};
         }
     },
