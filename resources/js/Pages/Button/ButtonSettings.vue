@@ -1,4 +1,10 @@
 <template>
+    <a href="#" class="btn btn-primary" data-style="zoom-in" @click="openEditButton()">
+        <span class="ladda-label">
+            <i class="la la-plus"></i>
+            Добавить Кнопку
+        </span>
+    </a>
     <div class="b-settings__container">
         <div class="b-settings__header">
             <div class="b-settings__pipelines">
@@ -32,8 +38,7 @@
                 v-if="this.currentPipeline.id"
                 class="b-settings__actions"
             >
-                <a :href="'/admin/pipeline/' + this.currentPipeline.id + '/edit'">Настройки воронки</a>
-                <el-button type="primary"  @click="openEditButton()">Добавить</el-button>
+                <a :href="'/admin/pipeline/' + this.currentPipeline.id + '/edit'">Настроить воронку</a>
             </div>
             <div
                 v-else
@@ -291,7 +296,6 @@ export default {
         save() {
             this.prepareData();
             let data = {};
-            console.log(this.currentButton.action)
             data.id = this.currentButton.id ?? null;
             data.name = this.currentButton.name ?? null;
             data.pipeline_id = this.currentButton.pipeline_id ?? null;
@@ -352,6 +356,7 @@ export default {
     flex-direction: column;
     background: white;
     border-radius: 4px;
+    margin-top: 10px;
     padding: 15px;
 }
 .b-settings__header {

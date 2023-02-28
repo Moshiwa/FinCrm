@@ -14,7 +14,7 @@
     $crud = [];
 
     $service = new ButtonService();
-    $pipelines = Pipeline::query()->get();
+    $pipelines = Pipeline::query()->select('id', 'name')->get();
 
     $reade_pipelines = [];
     foreach ($pipelines as $pipeline) {
@@ -31,8 +31,8 @@
         <div id="vue-app">
             <section class="container-fluid">
                 <h2>
-                    <span class="text-capitalize">Настрйоки</span>
-                    <small>Поднасрйки</small>
+                    <span class="text-capitalize">Кнопки</span>
+                    <small>Настройки</small>
                 </h2>
             </section>
             <button-settings

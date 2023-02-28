@@ -2,7 +2,7 @@
     <div class="wrap">
         <div class="card">
             <div class="card-left">
-                <el-form-item label="Наименование">
+                <el-form-item label="Сделка">
                     <el-input
                         v-model="thisDeal.name"
                         @change="send"
@@ -65,14 +65,14 @@
                     </el-collapse-item>
                 </el-collapse>
 
+                <el-form-item label="Клиент">
+                    <el-input
+                        v-model="thisDeal.client.name"
+                        @change="send"
+                    />
+                </el-form-item>
                 <el-collapse v-model="active">
                     <el-collapse-item title="Данные о клиенте" name="2">
-                        <el-form-item label="Наименование">
-                            <el-input
-                                v-model="thisDeal.client.name"
-                                @change="send"
-                            />
-                        </el-form-item>
                         <el-form-item v-for="field in thisDeal.client.fields" :label="field.name">
                             <field
                                 :field="field"
@@ -181,11 +181,10 @@ export default {
 
             deleteCommentId: 0,
 
-            allFiles: this.deal?.comments?.reduce((acc, item) => {
+            /*allFiles: this.deal?.comments?.reduce((acc, item) => {
                 return [...acc,...item.files];
-            }, []),
+            }, []),*/
 
-            files: [],
             newComment: { id: '', type: 'comment', content: '', author_id: null, files: [] },
         }
     },
@@ -197,12 +196,16 @@ export default {
     },
     methods: {
         changePipeline(item) {
-            this.send();
             axios
                 .get('/deal/get_stages/' + item.id,)
                 .then((response) => {
                     this.allStages = response.data;
+                    this.thisDeal.stage = response.data[0] ?? {}
+                    this.send();
                 });
+        },
+        changeStage() {
+            this.send();
         },
         loadMore (e) {
             if (this.loading) {
@@ -222,9 +225,6 @@ export default {
                     this.loading = false;
                 })
             }
-        },
-        changeStage() {
-            this.send();
         },
         sendComment(e) {
             this.visibleCommentForm = false;
