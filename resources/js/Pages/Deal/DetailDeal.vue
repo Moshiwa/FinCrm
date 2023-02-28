@@ -180,7 +180,7 @@ export default {
             responsibles: this.users ?? [],
 
             deleteCommentId: 0,
-
+            action: {},
             /*allFiles: this.deal?.comments?.reduce((acc, item) => {
                 return [...acc,...item.files];
             }, []),*/
@@ -268,6 +268,7 @@ export default {
             this.send();
         },
         prepareDataByButtonOptions(action) {
+            this.action = action;
             this.thisDeal.pipeline.id = !!action.pipeline_id ? action.pipeline_id : this.thisDeal.pipeline.id;
             this.thisDeal.stage.id = !!action.stage_id ? action.stage_id : this.thisDeal.stage.id;
             this.thisDeal.responsible.id = !!action.responsible_id ? action.responsible_id : this.thisDeal.responsible.id;
@@ -283,6 +284,8 @@ export default {
 
             formData.append('comment_count', this.thisDeal.comments.length ?? 0);
             formData.append('delete_comment_id', this.deleteCommentId);
+
+            formData.append('action[id]', this.action.id);
 
             this.thisDeal.fields = this.thisDeal.fields ?? [];
             this.thisDeal?.fields.forEach((field, fieldIndex) => {
@@ -308,25 +311,12 @@ export default {
                         formData.append('new_comment[files][' + fileIndex + ']', file);
                     })
                 }
-
-                //Замедляет не нужно отправлять все сообщения снова
-                /*else {
-                    formData.append('comments[' + commentIndex + '][id]', comment.id ?? '');
-                    formData.append('comments[' + commentIndex + '][deal_id]', this.thisDeal.id);
-                    formData.append('comments[' + commentIndex + '][type]', comment.type);
-                    formData.append('comments[' + commentIndex + '][content]', comment.content);
-                    comment.files = comment.files ?? [];
-                    comment.files.forEach((file, fileIndex) => {
-                        formData.append('comments[' + commentIndex + '][files][' + fileIndex + ']', file);
-                    })
-                }*/
             });
 
             axios
                 .post('/deal/update',  formData)
                 .then((response) => {
                     this.thisDeal = response.data.deal;
-
                     this.allStages = response.data.stages;
                     this.allPipelines = response.data.pipelines;
                     this.responsibles = [this.thisDeal.responsible];

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\CommentTypeEnum;
 use App\Events\ChangePipeline;
 use App\Http\Requests\DealRequest;
+use App\Models\ButtonAction;
 use App\Models\Deal;
 use App\Models\DealComment;
 use App\Models\Pipeline;
@@ -28,6 +29,11 @@ class DealController extends Controller
     public function update(DealRequest $request)
     {
         $data = $request->validated();
+
+        $action = null;
+        if ($data['action']['id']) {
+            $action = ButtonAction::query()->with(['pipeline', 'stage', 'responsible'])->find($data['action']['id']);
+        }
 
         $deal = Deal::query()->with(['pipeline', 'stage', 'responsible'])->find($data['id']);
 

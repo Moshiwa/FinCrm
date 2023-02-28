@@ -28,6 +28,9 @@ class DealRequest extends FormRequest
             'comments.*' => 'nullable',
             'new_comment.*' => 'nullable',
 
+            'action' => 'nullable|array',
+            'action.id' => 'required|exists:button_actions,id',
+
             'delete_comment_id' => 'nullable|numeric',
             'comment_offset' => 'nullable|numeric',
         ];
