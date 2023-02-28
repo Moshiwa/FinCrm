@@ -43,9 +43,9 @@ class FieldCrudController extends CrudController
                 return view('crud::buttons.field_checkbox', ['entry' => $entry]);
             });
 
+        $request_entity = $this->crud->getRequest()->get('entity');
         CRUD::addButton('top', 'pipelines', 'view', 'crud::buttons.pipelines');
 
-        $request_entity = $this->crud->getRequest()->get('entity');
         if ($request_entity === FieldsEntitiesEnum::deal->value) {
             $this->crud->addClause('where', 'entity', FieldsEntitiesEnum::deal->value);
             CRUD::setEntityNameStrings('Поле', 'Поля сделок');

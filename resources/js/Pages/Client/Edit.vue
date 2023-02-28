@@ -8,7 +8,7 @@
         </el-form-item>
         <div v-for="(field, fieldIndex) in client.fields">
             <el-form-item
-                v-if="field.type === 'select'"
+                v-if="field.type.name === 'select'"
                 :label="field.name"
             >
                 <el-select
@@ -22,6 +22,16 @@
                         :label="option.value"
                     />
                 </el-select>
+            </el-form-item>
+            <el-form-item
+                v-else-if="field.type.name === 'checkbox'"
+                :label="field.name"
+            >
+                <el-checkbox
+                    v-model="field.pivot.value"
+                    :name="'fields['+ fieldIndex +'][value]'"
+                    :label="field.name"
+                />
             </el-form-item>
             <el-form-item v-else :label="field.name" prop="field.*.value">
                 <el-input
@@ -39,8 +49,12 @@
 </template>
 
 <script>
+import Field from "../../Components/Field.vue";
 export default {
     name: 'ClientEdit.vue',
+    components: {
+        Field,
+    },
     props: {
         fields: {
             type: Array,
