@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\ClientController;
+use App\Http\Controllers\Api\DealController;
+use App\Http\Controllers\Api\PipelineController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,11 +18,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::group([
+    'middleware' => 'auth:sanctum',
+], function () {
+    Route::get('user', function (Request $request) {
+        return $request->user();
+    });
 
-//ToDo обернуть в мидлвейр
-Route::resources([
-    'clients' => ClientController::class,
-]);
+    Route::group(['middleware' => 'space.api'], function () {
+        Route::resources([
+            'clients' => ClientController::class,
+            'users' => UserController::class,
+            'deals' => DealController::class,
+            'pipelines' => PipelineController::class,
+        ]);
+    });
+});

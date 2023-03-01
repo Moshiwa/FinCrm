@@ -12,6 +12,7 @@
         "backpack/settings": "^3.0",
         "guzzlehttp/guzzle": "^7.2",
         "itsgoingd/clockwork": "^5.1",
+        "laravel/fortify": "^1.16",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7"
