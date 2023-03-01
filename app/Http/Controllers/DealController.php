@@ -2,20 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\CommentTypeEnum;
-use App\Events\ChangePipeline;
 use App\Http\Requests\DealRequest;
-use App\Models\ButtonAction;
 use App\Models\Deal;
-use App\Models\DealComment;
 use App\Models\Pipeline;
 use App\Services\Deal\DealService;
-use App\Services\SettingService;
-use App\Services\Space\SpaceService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use PhpParser\Comment;
 
 class DealController extends Controller
 {
@@ -30,21 +21,18 @@ class DealController extends Controller
     {
         $data = $request->validated();
 
-        $action = null;
-        if ($data['action']['id']) {
-            $action = ButtonAction::query()->with(['pipeline', 'stage', 'responsible'])->find($data['action']['id']);
-        }
+        $deal = Deal::query()->find($data['id']);
 
-        $deal = Deal::query()->with(['pipeline', 'stage', 'responsible'])->find($data['id']);
+        $comment_data = $this->service->prepareCommentData($deal, $data);
 
         $deal->name = $data['name'];
         $deal->pipeline_id = $data['pipeline_id'];
         $deal->client_id = $data['client_id'];
         $deal->stage_id = $data['stage_id'];
         $deal->responsible_id = $data['responsible_id'];
-        $this->service->createNewMessage($deal, $data);
         $deal->save();
 
+        $this->service->createNewMessage($deal, $comment_data);
         $deal->fields()->sync($data['fields'] ?? []);
         $this->service->updateClient($deal, $data);
         $this->service->updateComments($deal, $data);

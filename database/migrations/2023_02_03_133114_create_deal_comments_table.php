@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\CommentTypeEnum;
 use App\Services\Space\SpaceService;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -15,8 +14,8 @@ return new class extends Migration
             $table->foreignId('deal_id')
                 ->constrained()
                 ->cascadeOnDelete();
-            $table->string('type')->default(CommentTypeEnum::comment->value);
-            $table->string('title')->default('');
+            $table->string('type');
+            $table->text('title')->default('');
             $table->text('content')->default('');
             $table->timestamps();
         });

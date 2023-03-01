@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\CommentTypeEnum;
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -11,6 +9,10 @@ use Illuminate\Support\Carbon;
 
 class DealComment extends Model
 {
+
+    const COMMENT = 'comment';
+    const ACTION = 'action';
+
     protected $fillable = [
         'deal_id',
         'type',
@@ -21,10 +23,6 @@ class DealComment extends Model
 
     protected $appends = [
         'date_create'
-    ];
-
-    protected $casts = [
-        'type' => CommentTypeEnum::class,
     ];
 
     public function files(): BelongsToMany

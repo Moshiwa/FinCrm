@@ -2,8 +2,8 @@
 
 namespace App\Listeners;
 
-use App\Enums\CommentTypeEnum;
 use App\Events\ChangeStage;
+use App\Models\DealComment;
 
 class ChangeStageNotification
 {
@@ -20,7 +20,7 @@ class ChangeStageNotification
             . "<i><b>" . $event->deal->stage->name . "</b></i>";
 
         $event->deal->comments()->create([
-            'type' => CommentTypeEnum::action->name,
+            'type' => DealComment::ACTION,
             'content' => $message,
             'author_id' => backpack_user()?->id ?? null
         ]);

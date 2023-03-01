@@ -43,7 +43,7 @@
                         reserve-keyword
                         placeholder="Please enter a keyword"
                         :remote-method="getUsers"
-                        @change="send"
+                        @change="changeResponsible"
                     >
                         <el-option
                             v-for="user in responsibles"
@@ -199,12 +199,21 @@ export default {
             axios
                 .get('/deal/get_stages/' + item.id,)
                 .then((response) => {
+                    this.action = { pipeline_id: item.id }
+
                     this.allStages = response.data;
                     this.thisDeal.stage = response.data[0] ?? {}
                     this.send();
                 });
         },
-        changeStage() {
+        changeStage(item) {
+            this.action = { stage_id: item.id };
+
+            this.send();
+        },
+        changeResponsible(item) {
+            this.action = { responsible_id: item.id }
+
             this.send();
         },
         loadMore (e) {
@@ -285,7 +294,27 @@ export default {
             formData.append('comment_count', this.thisDeal.comments.length ?? 0);
             formData.append('delete_comment_id', this.deleteCommentId);
 
-            formData.append('action[id]', this.action.id);
+            if (!!this.action) {
+                if (!!this.action.id) {
+                    formData.append('action[id]', this.action.id ?? null);
+                }
+
+                if (!!this.action.pipeline_id) {
+                    formData.append('action[pipeline_id]', this.action.pipeline_id ?? null);
+                }
+
+                if (!!this.action.stage_id) {
+                    formData.append('action[stage_id]', this.action.stage_id ?? null);
+                }
+
+                if (!!this.action.responsible_id) {
+                    formData.append('action[responsible_id]', this.action.responsible_id ?? null);
+                }
+
+                if (!!this.action.comment) {
+                    formData.append('action[comment]', this.action.comment ?? false);
+                }
+            }
 
             this.thisDeal.fields = this.thisDeal.fields ?? [];
             this.thisDeal?.fields.forEach((field, fieldIndex) => {
@@ -321,6 +350,7 @@ export default {
                     this.allPipelines = response.data.pipelines;
                     this.responsibles = [this.thisDeal.responsible];
                     this.stageButtons = response.data.deal.pipeline.buttons;
+                    this.action = null;
                     ElNotification({
                         title: 'Сохранено',
                         type: 'success',

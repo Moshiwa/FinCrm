@@ -2,38 +2,36 @@
 
 namespace App\Services\Deal;
 
-use App\Enums\CommentTypeEnum;
 use App\Models\DealComment;
 use App\Models\File;
-use App\Models\Pipeline;
-use App\Models\Stage;
-use App\Models\User;
+use App\Services\Button\ActionService;
 use App\Services\Space\SpaceService;
-use Barryvdh\Debugbar\Facades\Debugbar;
-use Barryvdh\Debugbar\Twig\Extension\Debug;
 use Illuminate\Support\Facades\Storage;
 
 class DealService
 {
+    public function prepareCommentData($deal, $data): array
+    {
+        $result = [
+            'comment' => [],
+            'files' => []
+        ];
+
+        $action = $data['action'] ?? [];
+        $result['comment'] += $this->getActionMessage($deal, $action);
+        $result['comment']['content'] = $data['new_comment']['content'] ?? '';
+        $result['comment']['author_id'] = backpack_user()->id;
+
+       $result['files'] += $data['new_comment']['files'] ?? [];
+
+        return $result;
+    }
 
     public function updateClient($deal, array $data): void
     {
         $deal->client()->update([
             'name' => $data['client']['name']
         ]);
-
-        /*$fields = $data['client']['fields'] ?? [];
-        $old_fields = $deal->client->fields;
-        foreach ($fields as $id => $field) {
-            $value = $field['value'] ?? '';
-
-            $field = $old_fields->find($id);
-            $old_value = $field->pivot->value;
-
-            if ($old_value !== $value) {
-                //это событие, кто то поменял
-            }
-        }*/
 
         $deal->client->fields()->sync($data['client']['fields'] ?? []);
     }
@@ -48,12 +46,67 @@ class DealService
         $this->deleteComments($deal, $data);
     }
 
+    public function createNewMessage($deal, $comment): void
+    {
+        if ($comment['comment']) {
+            $commentModel = $deal->comments()->create($comment['comment']);
+            $files = $this->saveFiles($comment['files'] ?? [], $deal);
+            $commentModel->files()->attach($files);
+        }
+    }
+
+    private function getActionMessage(object $deal, array $action): array
+    {
+        $actionService = new ActionService();
+        $actions = $actionService->definitionAction($action, $deal);
+
+        $comment = [
+            'title' => '',
+            'type' => '',
+            'content' => ''
+        ];
+
+        $action_comment = '';
+
+        foreach ($actions as $action_name => $value) {
+            if ($action_name === $actionService::COMMENT) {
+                $comment['title'] = 'Комментарий';
+                $comment['type'] = DealComment::COMMENT;
+            }
+
+            if ($action_name === $actionService::CHANGE_PIPELINE) {
+                if ($value['old'] !== $value['new']) {
+                    $action_comment .= 'Смена воронки с <i style="color: #0B90C4">' . $value['old'] . '</i> на <i style="color: #0B90C4">' . $value['new'] . '</i><br>';
+                }
+            }
+
+            if ($action_name === $actionService::CHANGE_STAGE) {
+                if ($value['old'] !== $value['new']) {
+                    $action_comment .= 'Смена стадии с <i style="color: #0B90C4">' . $value['old'] . '</i> на <i style="color: #0B90C4">' . $value['new'] . '</i><br>';
+                }
+            }
+
+            if ($action_name === $actionService::CHANGE_RESPONSIBLE) {
+                if ($value['old'] !== $value['new']) {
+                    $action_comment .= 'Смена ответственного с <i style="color: #0B90C4">' . $value['old'] . '</i> на <i style="color: #0B90C4">' . $value['new'] . '</i><br>';
+                }
+            }
+        }
+
+        if (!empty($action_comment)) {
+            $comment['title'] = $action_comment;
+            $comment['type'] = DealComment::ACTION;
+        }
+
+        return $comment;
+    }
+
     private function deleteComments($deal, array $data)
     {
         if (! empty($data['delete_comment_id'])) {
             $model_comment = DealComment::query()->find($data['delete_comment_id']);
             //Action нельзя удалять
-            if ($model_comment->type === CommentTypeEnum::action) {
+            if ($model_comment->type === DealComment::ACTION) {
                 $model_comment->update(['content' => '']);
             } else {
                 foreach ($model_comment->files as $file) {
@@ -64,34 +117,6 @@ class DealService
                 $model_comment->delete();
             }
         }
-    }
-
-    public function createNewMessage($deal, $data): void
-    {
-        $title = $this->definitionTitleComment($deal);
-        $comment = $data['new_comment'] ?? [];
-        if (empty($title)) {
-            if (!empty($comment)) {
-                $title = 'Комментарий';
-                $files = $this->saveFiles($comment['files'] ?? [], $deal);
-                $comment_model = $deal->comments()->create([
-                    'title' => $title,
-                    'content' => $comment['content'],
-                    'type' => empty($files) ? CommentTypeEnum::comment->value : CommentTypeEnum::document->value,
-                    'author_id' => backpack_user()->id,
-                ]);
-
-                $comment_model->files()->attach($files);
-            }
-        } else {
-            $deal->comments()->create([
-                'content' => $data['new_comment']['content'] ?? '',
-                'title' => $title,
-                'type' => CommentTypeEnum::action->value,
-                'author_id' => backpack_user()->id,
-            ]);
-        }
-
     }
 
     private function saveFiles($files, $deal)
@@ -118,30 +143,5 @@ class DealService
         }
 
         return $result;
-    }
-
-    private function definitionTitleComment($deal): string
-    {
-        $actions = [];
-
-        $new_deal = $deal->getAttributes();
-
-        if ($deal->isDirty('pipeline_id')) {
-            $new_deal['pipeline'] = Pipeline::query()->select('id', 'name')->find($new_deal['pipeline_id'])->toArray();
-            $actions[] = 'Смена воронки с <i style="color: #0B90C4">' . $deal->pipeline->name . '</i> на <i style="color: #0B90C4">' . $new_deal['pipeline']['name'] . '</i>';
-        }
-
-        if ($deal->isDirty('stage_id')) {
-            $new_deal['stage'] = Stage::query()->select('id', 'name')->find($new_deal['stage_id'])->toArray();
-            $actions[] = 'Смена стадии с <i style="color: #0B90C4">' . $deal->stage->name . '</i> на <i style="color: #0B90C4">' . $new_deal['stage']['name'] . '</i>';
-        }
-
-        if ($deal->isDirty('responsible_id')) {
-            $new_deal['responsible'] = User::query()->select('id', 'name')->find($new_deal['responsible_id'])->toArray();
-            $actions[] = 'Смена ответственного с <i style="color: #0B90C4">' . $deal->responsible->name . '</i> на <i style="color: #0B90C4">' . $new_deal['responsible']['name'] . '</i>';
-        }
-
-
-        return implode('<br>', $actions);
     }
 }

@@ -29,7 +29,11 @@ class DealRequest extends FormRequest
             'new_comment.*' => 'nullable',
 
             'action' => 'nullable|array',
-            'action.id' => 'required|exists:button_actions,id',
+            'action.id' => 'nullable|exists:button_actions,id',
+            'action.pipeline_id' => 'nullable|exists:pipelines,id',
+            'action.stage_id' => 'nullable|exists:stages,id',
+            'action.responsible_id' => 'nullable|exists:App\Models\User,id',
+            'action.comment' => 'nullable',
 
             'delete_comment_id' => 'nullable|numeric',
             'comment_offset' => 'nullable|numeric',

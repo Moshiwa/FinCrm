@@ -2,9 +2,9 @@
 
 namespace App\Listeners;
 
-use App\Enums\CommentTypeEnum;
 use App\Events\ChangePipeline;
 use App\Models\Deal;
+use App\Models\DealComment;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
@@ -35,7 +35,7 @@ class ChangePipelineNotification
             . "<i><b>" . $event->deal->stage->name . "</b></i>";
 
         $event->deal->comments()->create([
-            'type' => CommentTypeEnum::action->name,
+            'type' => DealComment::ACTION,
             'content' => $message,
             'author_id' => backpack_user()?->id ?? null
         ]);
