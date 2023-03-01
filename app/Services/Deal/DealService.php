@@ -24,6 +24,12 @@ class DealService
 
        $result['files'] += $data['new_comment']['files'] ?? [];
 
+       if (empty($result['comment']['type'])) {
+           if (! empty($result['files'])) {
+               $result['comment']['type'] = DealComment::DOCUMENT;
+           }
+       }
+
         return $result;
     }
 
@@ -48,7 +54,7 @@ class DealService
 
     public function createNewMessage($deal, $comment): void
     {
-        if ($comment['comment']) {
+        if ($comment['comment']['type']) {
             $commentModel = $deal->comments()->create($comment['comment']);
             $files = $this->saveFiles($comment['files'] ?? [], $deal);
             $commentModel->files()->attach($files);

@@ -12,6 +12,7 @@ class DealComment extends Model
 
     const COMMENT = 'comment';
     const ACTION = 'action';
+    const DOCUMENT = 'document';
 
     protected $fillable = [
         'deal_id',
@@ -39,7 +40,6 @@ class DealComment extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 
     public function getDateCreateAttribute() {
         return Carbon::make($this->created_at)->translatedFormat('j F Y H:i');
