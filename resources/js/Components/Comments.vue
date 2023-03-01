@@ -34,7 +34,10 @@
                                 fit="cover"
                             />
                             <div v-else>
-                                <a :href="file.full_path" target="_blank">Doc</a>
+                                <a :href="file.full_path" target="_blank">
+                                    <i class="las la-file-alt"></i>
+                                    {{ file.original_name }}
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -92,7 +95,7 @@ export default {
         removeComment(comment) {
             ElMessageBox.confirm(
                 'Вы уверены?',
-                'Удаление',
+                'Удалить сообщение',
                 {
                     confirmButtonText: 'Хорошо',
                     cancelButtonText: 'Отмена',
@@ -159,7 +162,10 @@ export default {
     justify-content: space-between;
     width: 100%;
 }
-.row-right__content i {
+.row-right__content {
+    padding-left: 10px;
+}
+.row-right__content .la-trash-alt {
     cursor: pointer;
     font-size: 20px;
     color: red;

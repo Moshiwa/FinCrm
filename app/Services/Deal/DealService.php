@@ -26,6 +26,7 @@ class DealService
 
        if (empty($result['comment']['type'])) {
            if (! empty($result['files'])) {
+               $result['comment']['title'] = 'Документы';
                $result['comment']['type'] = DealComment::DOCUMENT;
            }
        }
