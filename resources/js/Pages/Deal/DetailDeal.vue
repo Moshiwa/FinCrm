@@ -56,7 +56,11 @@
 
                 <el-collapse v-model="active">
                     <el-collapse-item title="Дополнительные поля" name="1">
-                        <el-form-item v-for="field in thisDeal.fields" :label="field.name">
+                        <el-form-item
+                            v-for="field in thisDeal.fields"
+                            :label="field.name"
+                            :required="field.is_required"
+                        >
                             <field
                                 :field="field"
                                 @send="send"
@@ -73,7 +77,11 @@
                 </el-form-item>
                 <el-collapse v-model="active">
                     <el-collapse-item title="Данные о клиенте" name="2">
-                        <el-form-item v-for="field in thisDeal.client.fields" :label="field.name">
+                        <el-form-item
+                            v-for="field in thisDeal.client.fields"
+                            :label="field.name"
+                            :required="field.is_required"
+                        >
                             <field
                                 :field="field"
                                 @send="send"

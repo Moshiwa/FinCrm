@@ -38,23 +38,27 @@
             :name="'fields['+ fieldIndex +'][value]'"
             type="email"
             :label="field.name"
+            :class="error ? 'error' : ''"
             @change="send"
+            @input="check"
+            @focus="check"
         />
     </div>
-
-    <div v-else>
+    <div v-else-if="field.type.name === 'phone'">
         <el-input
             v-model="field.pivot.value"
             :name="'fields['+ fieldIndex +'][value]'"
             :label="field.name"
+            :class="error ? 'error' : ''"
             @change="send"
+            @input="check"
+            @focus="check"
         />
     </div>
-
-
 </template>
 
 <script>
+import {ElNotification} from "element-plus";
 
 export default {
     name: 'Fields',
@@ -69,15 +73,36 @@ export default {
             default: 0
         }
     },
+    data() {
+        return {
+            error: false,
+        }
+    },
     methods: {
-        send(e) {
-            this.$emit('update:modelValue', this.$el.innerHTML);
-            this.$emit('send');
+        check() {
+            let field = this.field;
+            this.error = false;
+            if (field.is_required) {
+                if (!field.pivot.value) {
+                    this.error = true;
+                }
+            }
+        },
+        send() {
+            if (this.error) {
+                ElNotification({
+                    title: 'Поле обязательно',
+                    type: 'error',
+                    position: 'bottom-right',
+                });
+            } else {
+                this.$emit('update:modelValue', this.$el.innerHTML);
+                this.$emit('send');
+            }
         }
     }
 }
 </script>
 
 <style scoped>
-
 </style>

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('entity');
             $table->json('options')->nullable();
             $table->boolean('is_active')->default(false);
+            $table->boolean('is_required')->default(false);
         });
     }
 

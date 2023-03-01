@@ -82,6 +82,7 @@ class FieldCrudController extends CrudController
         CRUD::field('name')->label('Наименование');
         CRUD::field('entity')->type('hidden')->default($entity);
         CRUD::field('is_active')->label('Активирован');
+        CRUD::field('is_required')->label('Обязательность');
         CRUD::field('options')
             ->type('table')
             ->columns(['value' => 'Значение'])

@@ -23,7 +23,8 @@ class Field extends Model
         'name',
         'entity',
         'options',
-        'is_active'
+        'is_active',
+        'is_required'
     ];
 
     protected $with = [
