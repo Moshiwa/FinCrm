@@ -29,20 +29,20 @@ class FieldService
         return $fields;
     }
 
-    public function getDealFields($deal): array
+    public function getTaskFields($task): array
     {
-        $included_fields = Field::includedDeal()->get();
-        $filled_deal_fields = $deal->fields->toArray();
-        $all_deal_fields = $included_fields->toArray();
+        $included_fields = Field::includedTask()->get();
+        $filled_task_fields = $task->fields->toArray();
+        $all_task_fields = $included_fields->toArray();
 
         $fields = [];
-        foreach ($all_deal_fields as $index => $deal_field) {
-            $deal_field['pivot'] = [ 'value' => '' ];
-            $fields[$index] = $deal_field;
-            foreach ($filled_deal_fields as $filled_deal_field) {
-                if ($deal_field['id'] === $filled_deal_field['id']) {
-                    $filled_deal_field['pivot']['value'] = $this->castFieldValue($filled_deal_field);
-                    $fields[$index] = $filled_deal_field;
+        foreach ($all_task_fields as $index => $task_field) {
+            $task_field['pivot'] = [ 'value' => '' ];
+            $fields[$index] = $task_field;
+            foreach ($filled_task_fields as $filled_task_field) {
+                if ($task_field['id'] === $filled_task_field['id']) {
+                    $filled_task_field['pivot']['value'] = $this->castFieldValue($filled_task_field);
+                    $fields[$index] = $filled_task_field;
                 }
             }
         }

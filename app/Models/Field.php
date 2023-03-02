@@ -54,4 +54,11 @@ class Field extends Model
             ->where('entity', FieldsEntitiesEnum::deal->value)
             ->where('is_active', true);
     }
+
+    public function scopeIncludedTask(Builder $builder)
+    {
+        return $builder
+            ->where('entity', FieldsEntitiesEnum::task->value)
+            ->where('is_active', true);
+    }
 }
