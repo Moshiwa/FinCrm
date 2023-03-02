@@ -11,3 +11,5 @@
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('button') }}"><i class="nav-icon la la-icons"></i> {{  __('sidebar.buttons') }}</a></li>
     </ul>
 </li>
+
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('task') }}"><i class="nav-icon la la-question"></i> Tasks</a></li>

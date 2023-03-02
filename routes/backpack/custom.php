@@ -29,6 +29,8 @@ Route::group([
     Route::crud('settings', 'SettingsCrudController');
     Route::crud('client', 'ClientCrudController');
     Route::crud('stage', 'StageCrudController');
+    Route::crud('button', 'ButtonCrudController');
+    Route::crud('task', 'TaskCrudController');
 
     Route::get('space-change/{code}', [SpaceCrudController::class, 'spaceChange'])->name('space.change');
 
@@ -48,7 +50,4 @@ Route::group([
         Route::post('/save', [ButtonCrudController::class, 'save'])->name('save');
         Route::delete('/{button}', [ButtonCrudController::class, 'delete'])->name('delete');
     });
-
-
-    Route::crud('button', 'ButtonCrudController');
 });
