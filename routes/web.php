@@ -17,11 +17,3 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return redirect('admin');
 });
-
-Route::prefix('deal')->name('deal.')->group(function () {
-    Route::post('/update', [DealController::class, 'update'])->name('update');
-    Route::get('/get_stages/{pipeline}', [DealController::class, 'getStagesByPipeline'])->name('stages');
-    Route::post('/{deal}/save_files', [DealController::class, 'saveFiles'])->name('saveFiles');
-    Route::post('/{deal}/change_pipeline', [DealController::class, 'changePipeline'])->name('changePipeline');
-    Route::get('/{deal}/load_comments', [DealController::class, 'loadComments'])->name('loadComments');
-});

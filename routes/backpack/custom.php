@@ -35,7 +35,14 @@ Route::group([
 
     Route::get('space-change/{code}', [SpaceCrudController::class, 'spaceChange'])->name('space.change');
 
-    Route::get('client/{id}/deal-create', [DealCrudController::class, 'dealCreate'])->name('deal.deal-create');
+    Route::prefix('deal')->name('deal.')->group(function () {
+        Route::post('/update', [DealCrudController::class, 'update'])->name('update');
+        Route::get('/get_stages/{pipeline}', [DealCrudController::class, 'getStagesByPipeline'])->name('stages');
+        Route::post('/{deal}/change_pipeline', [DealCrudController::class, 'changePipeline'])->name('changePipeline');
+        Route::get('/{deal}/load_comments', [DealCrudController::class, 'loadComments'])->name('loadComments');
+        Route::get('/client/{id}', [DealCrudController::class, 'dealCreate'])->name('deal.deal-create');
+    });
+
 
     Route::prefix('user')->name('user.')->group(function () {
         Route::get('find-users', [UserCrudController::class, 'findUsers'])->name('find');

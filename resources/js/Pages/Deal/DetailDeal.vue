@@ -205,7 +205,7 @@ export default {
     methods: {
         changePipeline(item) {
             axios
-                .get('/deal/get_stages/' + item.id,)
+                .get('/admin/deal/get_stages/' + item.id,)
                 .then((response) => {
                     this.action = { pipeline_id: item.id }
 
@@ -237,7 +237,7 @@ export default {
 
             if (can) {
                 this.loading = true;
-                axios.get('/deal/' + this.thisDeal.id + '/load_comments?offset=' + this.thisDeal.comments.length).then((response) => {
+                axios.get('/admin/deal/' + this.thisDeal.id + '/load_comments?offset=' + this.thisDeal.comments.length).then((response) => {
                     this.thisDeal.comments = this.thisDeal.comments.concat(response.data.comments)
                     this.loading = false;
                 })
@@ -351,7 +351,7 @@ export default {
             });
 
             axios
-                .post('/deal/update',  formData)
+                .post('/admin/deal/update',  formData)
                 .then((response) => {
                     this.thisDeal = response.data.deal;
                     this.allStages = response.data.stages;
