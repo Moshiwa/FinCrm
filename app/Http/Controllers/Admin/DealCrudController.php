@@ -150,7 +150,7 @@ class DealCrudController extends CrudController
             'responsible_id' => backpack_user()->id,
         ]);
 
-        return redirect('/admin/deal/' . $deal->id);
+        return redirect('/admin/deal/' . $deal->id . '/detail');
     }
 
 }

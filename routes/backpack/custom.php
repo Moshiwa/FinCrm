@@ -47,7 +47,7 @@ Route::group([
     Route::prefix('task')->name('task.')->group(function () {
         Route::post('/update', [TaskCrudController::class, 'update'])->name('update');
         Route::get('/{task}/load_comments', [TaskCrudController::class, 'loadComments'])->name('loadComments');
-        Route::get('/create', [TaskCrudController::class, 'taskCreate'])->name('task.task-create');
+        Route::get('/new', [TaskCrudController::class, 'taskCreate'])->name('task.task-create');
     });
 
     Route::prefix('user')->name('user.')->group(function () {

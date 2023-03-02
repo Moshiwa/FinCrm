@@ -13,7 +13,7 @@ trait DealOperation
 {
     protected function setupDealRoutes($segment, $routeName, $controller)
     {
-        Route::get($segment.'/{id}', [
+        Route::get($segment.'/{id}/detail', [
             'as'        => $routeName.'.deal',
             'uses'      => $controller.'@getDealForm',
             'operation' => 'deal',

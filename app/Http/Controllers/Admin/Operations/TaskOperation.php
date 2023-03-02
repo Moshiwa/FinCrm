@@ -11,9 +11,9 @@ trait TaskOperation
 {
     protected function setupTaskRoutes($segment, $routeName, $controller)
     {
-        Route::get($segment.'/{id}', [
+        Route::get($segment.'/{id}/detail', [
             'as'        => $routeName.'.task',
-            'uses'      => $controller.'@task',
+            'uses'      => $controller.'@getTask',
             'operation' => 'task',
         ]);
     }
@@ -31,10 +31,11 @@ trait TaskOperation
         });
     }
 
-    public function task()
+    public function getTask()
     {
-        CRUD::hasAccessOrFail('task');
         $task = $this->crud->getCurrentEntry();
+        CRUD::hasAccessOrFail('task');
+        $this->crud->setHeading('Задача');
         // prepare the fields you need to show
         $this->data['crud'] = $this->crud;
         $this->data['task'] = $task;

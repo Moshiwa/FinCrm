@@ -23,24 +23,10 @@ class TaskCrudController extends CrudController
 
     protected function setupListOperation()
     {
-        CRUD::addButton('top', 'pipelines', 'view', 'crud::buttons.task_create');
+        CRUD::addButton('top', 'task_create', 'view', 'crud::buttons.task_create');
 
         CRUD::column('name');
         CRUD::column('start');
-    }
-
-    protected function setupCreateOperation()
-    {
-        CRUD::setValidation(TaskRequest::class);
-        CRUD::field('name');
-
-        //CRUD::field('status')->type('select_from_array')->options(Task::getStatuses());
-
-    }
-
-    protected function setupUpdateOperation()
-    {
-        $this->setupCreateOperation();
     }
 
     public function taskCreate()
@@ -60,6 +46,6 @@ class TaskCrudController extends CrudController
             'executor_id' => null,
         ]);
 
-        return redirect('/admin/task/' . $task->id);
+        return redirect('/admin/task/' . $task->id . '/detail');
     }
 }

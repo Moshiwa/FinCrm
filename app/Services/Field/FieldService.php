@@ -29,6 +29,27 @@ class FieldService
         return $fields;
     }
 
+    public function getDealFields($deal): array
+    {
+        $included_fields = Field::includedDeal()->get();
+        $filled_deal_fields = $deal->fields->toArray();
+        $all_deal_fields = $included_fields->toArray();
+
+        $fields = [];
+        foreach ($all_deal_fields as $index => $deal_field) {
+            $deal_field['pivot'] = [ 'value' => '' ];
+            $fields[$index] = $deal_field;
+            foreach ($filled_deal_fields as $filled_deal_field) {
+                if ($deal_field['id'] === $filled_deal_field['id']) {
+                    $filled_deal_field['pivot']['value'] = $this->castFieldValue($filled_deal_field);
+                    $fields[$index] = $filled_deal_field;
+                }
+            }
+        }
+
+        return $fields;
+    }
+
     public function getTaskFields($task): array
     {
         $included_fields = Field::includedTask()->get();
