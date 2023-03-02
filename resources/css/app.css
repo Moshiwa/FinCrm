@@ -23,6 +23,10 @@
     border-left: 2px solid #ecf5ff;
 }
 
+.hidden-border > .el-input__wrapper {
+    box-shadow: none;
+}
+
 .error > .el-input__wrapper {
     box-shadow:  0 0 0 1px var(--el-color-danger,var(--el-color-danger)) inset;
 }

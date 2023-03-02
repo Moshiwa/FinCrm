@@ -32,7 +32,7 @@
 
     $task_fields = $service->getTaskFields($task);
     $stages = \App\Models\TaskStage::query()->get();
-    $users = User::query()->where('id', $task->responsible_id)->get();
+    $users = User::query()->select(['id', 'name'])->get();
 @endphp
 
 @section('content')
@@ -56,6 +56,7 @@
                 :task="{{ $task }}"
                 :auth="{{ backpack_user() }}"
                 :stages="{{ $stages }}"
+                :users="{{ $users }}"
                 :task-fields="{{ json_encode($task_fields) }}"
             />
         </div>

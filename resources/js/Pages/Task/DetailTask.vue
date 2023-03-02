@@ -2,9 +2,8 @@
     <div class="wrap">
         <div class="card">
             <div class="card-left">
-                Информация о задаче
                 <el-input
-                    class="input-title"
+                    class="input-title hidden-border"
                     v-model="thisTask.name"
                     @change="send"
                 />
@@ -30,11 +29,46 @@
                         remote
                         reserve-keyword
                         placeholder="Please enter a keyword"
-                        :remote-method="getUsers"
                         @change="changeResponsible"
                     >
                         <el-option
-                            v-for="user in responsibles"
+                            v-for="user in users"
+                            :key="user.id"
+                            :label="user.name"
+                            :value="user"
+                        />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="Наблюдатель">
+                    <el-select
+                        v-model="thisTask.manager"
+                        value-key="id"
+                        filterable
+                        remote
+                        reserve-keyword
+                        placeholder="Please enter a keyword"
+                        @change="changeManager"
+                    >
+                        <el-option
+                            v-for="user in users"
+                            :key="user.id"
+                            :label="user.name"
+                            :value="user"
+                        />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="Исполнитель">
+                    <el-select
+                        v-model="thisTask.executor"
+                        value-key="id"
+                        filterable
+                        remote
+                        reserve-keyword
+                        placeholder="Please enter a keyword"
+                        @change="changeExecutor"
+                    >
+                        <el-option
+                            v-for="user in users"
                             :key="user.id"
                             :label="user.name"
                             :value="user"
@@ -145,10 +179,10 @@ export default {
             visibleFileUploadForm: false,
 
             thisTask: this.task,
-            allPipelines: this.pipelines ?? [],
+
             allStages: this.stages ?? [],
             stageButtons: this.buttons ?? [],
-            responsibles: this.users ?? [],
+            users: this.users ?? [],
 
             deleteCommentId: 0,
             action: {},
@@ -169,7 +203,14 @@ export default {
         },
         changeResponsible(item) {
             this.action = { responsible_id: item.id }
-
+            this.send();
+        },
+        changeManager(item) {
+            this.action = { manager_id: item.id }
+            this.send();
+        },
+        changeExecutor(item) {
+            this.action = { executor_id: item.id }
             this.send();
         },
         loadMore (e) {
@@ -219,14 +260,6 @@ export default {
                 this.deleteCommentId = event;
             }
             this.send();
-        },
-        getUsers(query) {
-            if (query.length >= 3) {
-                axios.get('/admin/user/find-users?user_name=' + query)
-                    .then((response) => {
-                        this.responsibles = response.data.data;
-                    });
-            }
         },
         changeData(options) {
             this.prepareDataByButtonOptions(options);
