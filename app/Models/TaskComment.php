@@ -2,10 +2,46 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Carbon;
 
 class TaskComment extends Model
 {
-    use HasFactory;
+
+    const COMMENT = 'comment';
+    const ACTION = 'action';
+    const DOCUMENT = 'document';
+
+    protected $fillable = [
+        'deal_id',
+        'type',
+        'title',
+        'content',
+        'author_id'
+    ];
+
+    protected $appends = [
+        'date_create'
+    ];
+
+    public function files(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            File::class,
+            'deal_comments_files',
+            'deal_comment_id',
+            'file_id'
+        );
+    }
+
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function getDateCreateAttribute() {
+        return Carbon::make($this->created_at)->translatedFormat('j F Y H:i');
+    }
 }

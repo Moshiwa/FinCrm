@@ -42,7 +42,7 @@ class Task extends Model
 
     public function stage(): BelongsTo
     {
-        return $this->belongsTo(TaskStage::class);
+        return $this->belongsTo(TaskStage::class, 'task_stage_id');
     }
 
     public function fields(): BelongsToMany

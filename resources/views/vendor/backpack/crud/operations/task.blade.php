@@ -24,11 +24,14 @@
         'comments.files',
         'comments.author' => function ($query) {
             $query->select('id', 'name');
-        }
+        },
+        'responsible',
+        'manager',
+        'executor',
     ]);
 
     $task_fields = $service->getTaskFields($task);
-
+    $stages = \App\Models\TaskStage::query()->get();
     $users = User::query()->where('id', $task->responsible_id)->get();
 @endphp
 
@@ -50,8 +53,10 @@
             </section>
 
             <detail-task
-                task="{{ $task }}"
+                :task="{{ $task }}"
                 :auth="{{ backpack_user() }}"
+                :stages="{{ $stages }}"
+                :task-fields="{{ json_encode($task_fields) }}"
             />
         </div>
     </div>

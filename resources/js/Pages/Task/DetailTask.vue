@@ -2,27 +2,15 @@
     <div class="wrap">
         <div class="card">
             <div class="card-left">
-                <el-form-item label="Сделка">
-                    <el-input
-                        v-model="thisDeal.name"
-                        @change="send"
-                    />
-                </el-form-item>
-                <el-form-item label="Воронка">
+                Информация о задаче
+                <el-input
+                    class="input-title"
+                    v-model="thisTask.name"
+                    @change="send"
+                />
+                <el-form-item label="Статус">
                     <el-select
-                        v-model="thisDeal.pipeline"
-                        value-key="id"
-                        @change="changePipeline"
-                    >
-                        <el-option
-                            v-for="pipeline in allPipelines"
-                            :key="pipeline.id"
-                            :label="pipeline.name"
-                            :value="pipeline"
-                        />
-                    </el-select>
-                    <el-select
-                        v-model="thisDeal.stage"
+                        v-model="thisTask.stage"
                         value-key="id"
                         @change="changeStage"
                     >
@@ -36,7 +24,7 @@
                 </el-form-item>
                 <el-form-item label="Ответственный">
                     <el-select
-                        v-model="thisDeal.responsible"
+                        v-model="thisTask.responsible"
                         value-key="id"
                         filterable
                         remote
@@ -57,28 +45,7 @@
                 <el-collapse v-model="active">
                     <el-collapse-item title="Дополнительные поля" name="1">
                         <el-form-item
-                            v-for="field in thisDeal.fields"
-                            :label="field.name"
-                            :required="field.is_required"
-                        >
-                            <field
-                                :field="field"
-                                @send="send"
-                            />
-                        </el-form-item>
-                    </el-collapse-item>
-                </el-collapse>
-
-                <el-form-item label="Клиент">
-                    <el-input
-                        v-model="thisDeal.client.name"
-                        @change="send"
-                    />
-                </el-form-item>
-                <el-collapse v-model="active">
-                    <el-collapse-item title="Данные о клиенте" name="2">
-                        <el-form-item
-                            v-for="field in thisDeal.client.fields"
+                            v-for="field in thisTask.fields"
                             :label="field.name"
                             :required="field.is_required"
                         >
@@ -96,7 +63,7 @@
                     <el-button @click="visibleFileUploadForm = true">Прикрепить документ</el-button>
                     <el-timeline class="infinite-list">
                         <comments
-                            :comments="thisDeal.comments"
+                            :comments="thisTask.comments"
                             :auth="auth"
                             @commentSend="prepareCommentDataSend($event)"
                         />
@@ -107,7 +74,7 @@
 
         <action-buttons
             :buttons="stageButtons"
-            :stage="thisDeal.stage"
+            :stage="thisTask.stage"
             @commentSend="sendComment($event)"
             @changeData="changeData($event)"
         />
@@ -145,7 +112,7 @@ export default {
             type: Object,
             required: true
         },
-        deal: {
+        task: {
             type: Object,
             required: true
         },
@@ -157,11 +124,7 @@ export default {
             type: Array,
             default: [{}]
         },
-        dealFields: {
-            type: Array,
-            default: [{}]
-        },
-        clientFields: {
+        taskFields: {
             type: Array,
             default: [{}]
         },
@@ -181,7 +144,7 @@ export default {
             visibleCommentForm: false,
             visibleFileUploadForm: false,
 
-            thisDeal: this.deal,
+            thisTask: this.task,
             allPipelines: this.pipelines ?? [],
             allStages: this.stages ?? [],
             stageButtons: this.buttons ?? [],
@@ -189,31 +152,16 @@ export default {
 
             deleteCommentId: 0,
             action: {},
-            /*allFiles: this.deal?.comments?.reduce((acc, item) => {
-                return [...acc,...item.files];
-            }, []),*/
 
             newComment: { id: '', type: 'comment', content: '', author_id: null, files: [] },
         }
     },
     mounted() {
         $(document).on('scroll', this.loadMore);
-        console.log(this.thisDeal);
-        this.thisDeal.fields = this.dealFields;
-        this.thisDeal.client.fields = this.clientFields;
+        console.log(this.thisTask);
+        this.thisTask.fields = this.taskFields;
     },
     methods: {
-        changePipeline(item) {
-            axios
-                .get('/admin/deal/get_stages/' + item.id,)
-                .then((response) => {
-                    this.action = { pipeline_id: item.id }
-
-                    this.allStages = response.data;
-                    this.thisDeal.stage = response.data[0] ?? {}
-                    this.send();
-                });
-        },
         changeStage(item) {
             this.action = { stage_id: item.id };
 
@@ -237,8 +185,8 @@ export default {
 
             if (can) {
                 this.loading = true;
-                axios.get('/admin/deal/' + this.thisDeal.id + '/load_comments?offset=' + this.thisDeal.comments.length).then((response) => {
-                    this.thisDeal.comments = this.thisDeal.comments.concat(response.data.comments)
+                axios.get('/admin/task/' + this.thisTask.id + '/load_comments?offset=' + this.thisTask.comments.length).then((response) => {
+                    this.thisTask.comments = this.thisTask.comments.concat(response.data.comments)
                     this.loading = false;
                 })
             }
@@ -247,7 +195,7 @@ export default {
             this.visibleCommentForm = false;
             this.newComment.content = e.comment;
             if (this.newComment.content.length > 0) {
-                this.thisDeal.comments.unshift(this.newComment);
+                this.thisTask.comments.unshift(this.newComment);
             }
 
             this.prepareDataByButtonOptions(e.button.action);
@@ -260,7 +208,7 @@ export default {
             this.newComment.files = event;
             this.newComment.type = 'document';
             if (this.newComment.files.length > 0) {
-                this.thisDeal.comments.unshift(this.newComment);
+                this.thisTask.comments.unshift(this.newComment);
             }
 
             this.newComment = { id: '', type: 'comment', content: '', author_id: null, files: [] };
@@ -286,16 +234,17 @@ export default {
         },
         prepareDataByButtonOptions(action) {
             this.action = action;
-            this.thisDeal.pipeline.id = !!action.pipeline_id ? action.pipeline_id : this.thisDeal.pipeline.id;
-            this.thisDeal.stage.id = !!action.stage_id ? action.stage_id : this.thisDeal.stage.id;
-            this.thisDeal.responsible.id = !!action.responsible_id ? action.responsible_id : this.thisDeal.responsible.id;
+            this.thisTask.stage.id = !!action.stage_id ? action.stage_id : this.thisTask.stage.id;
+            /*this.thisTask.pipeline.id = !!action.pipeline_id ? action.pipeline_id : this.thisDeal.pipeline.id;
+            this.thisTask.stage.id = !!action.stage_id ? action.stage_id : this.thisDeal.stage.id;
+            this.thisTask.responsible.id = !!action.responsible_id ? action.responsible_id : this.thisDeal.responsible.id;*/
         },
         send() {
             const formData = new FormData();
-            formData.append('id', this.thisDeal.id);
-            formData.append('name', this.thisDeal.name);
-            formData.append('pipeline_id', this.thisDeal.pipeline.id);
-            formData.append('stage_id', this.thisDeal.stage.id);
+            formData.append('id', this.thisTask.id);
+            formData.append('name', this.thisTask.name);
+            formData.append('description', this.thisTask.description);
+            formData.append('task_stage_id', this.thisTask.stage.id);
             formData.append('responsible_id', this.thisDeal.responsible.id);
             formData.append('client_id', this.thisDeal.client_id);
 
@@ -380,6 +329,11 @@ export default {
     flex-direction: row;
     gap: 10px;
     width: calc(100% - 200px);
+}
+.input-title {
+    margin: 10px 0 10px 0;
+    height: 40px;
+    font-size: 30px;
 }
 .card-left {
     min-width: 55%;
