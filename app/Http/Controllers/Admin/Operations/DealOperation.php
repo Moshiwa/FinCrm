@@ -20,31 +20,6 @@ trait DealOperation
         ]);
     }
 
-
-    public function newDealForm()
-    {
-        $pipelines = Pipeline::query()->select('id', 'name')->first();
-        $first_pipeline = $pipelines->id;
-        $stages = Stage::query()->where('pipeline_id', $first_pipeline)->first();
-        $first_stage = $stages->id;
-
-        $client_id = $this->crud->getCurrentEntryId();
-        $client = Client::query()->find($client_id);
-        $deal = $client->deals()->create([
-            'name' => 'Новая сделка',
-            'pipeline_id' => $first_pipeline,
-            'stage_id' => $first_stage,
-            'responsible_id' => backpack_user()->id,
-        ]);
-
-        $this->data['deal'] = $deal;
-        $this->data['crud'] = $this->crud;
-        $this->data['pipelines'] = $pipelines;
-        $this->data['stages'] = $stages;
-
-        return view('crud::create_deal', $this->data);
-    }
-
     public function getDealForm()
     {
         $entry = $this->crud->getCurrentEntry();
@@ -73,7 +48,7 @@ trait DealOperation
         $this->data['stages'] = $entry->pipeline->stages;
         $this->data['buttons'] = Button::query()->with(['visible', 'action'])->where('pipeline_id', $entry->pipeline->id)->get();
 
-        return view('crud::deal', $this->data);
+        return view('crud::operations.deal', $this->data);
     }
 
     protected function setupDealDefaults()

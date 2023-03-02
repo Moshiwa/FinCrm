@@ -16,11 +16,13 @@ class Task extends Model
 
     protected $fillable = [
         'name',
+        'task_stage_id',
         'description',
         'start',
         'end',
-        'status',
-        'manager_id'
+        'responsible_id',
+        'manager_id',
+        'executor_id',
     ];
 
     public function responsible(): BelongsTo

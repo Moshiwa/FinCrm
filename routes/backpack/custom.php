@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ClientCrudController;
 use App\Http\Controllers\Admin\DealCrudController;
 use App\Http\Controllers\Admin\FieldCrudController;
 use App\Http\Controllers\Admin\StageCrudController;
+use App\Http\Controllers\Admin\TaskCrudController;
 use App\Http\Controllers\Admin\UserCrudController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SpaceCrudController;
@@ -43,6 +44,11 @@ Route::group([
         Route::get('/client/{id}', [DealCrudController::class, 'dealCreate'])->name('deal.deal-create');
     });
 
+    Route::prefix('task')->name('task.')->group(function () {
+        Route::post('/update', [TaskCrudController::class, 'update'])->name('update');
+        Route::get('/{task}/load_comments', [TaskCrudController::class, 'loadComments'])->name('loadComments');
+        Route::get('/create', [TaskCrudController::class, 'taskCreate'])->name('task.task-create');
+    });
 
     Route::prefix('user')->name('user.')->group(function () {
         Route::get('find-users', [UserCrudController::class, 'findUsers'])->name('find');

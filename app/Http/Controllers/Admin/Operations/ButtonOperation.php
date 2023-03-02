@@ -35,6 +35,6 @@ trait ButtonOperation
         $this->data['title'] = CRUD::getTitle() ?? 'Button '.$this->crud->entity_name;
 
         // load the view
-        return view('crud::button', $this->data);
+        return view('crud::operations.button', $this->data);
     }
 }

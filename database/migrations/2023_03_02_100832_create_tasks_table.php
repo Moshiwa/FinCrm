@@ -15,8 +15,7 @@ return new class extends Migration
             $table->foreignId('task_stage_id')->constrained();
             $table->text('description')->nullable();
             $table->dateTime('start');
-            $table->dateTime('end');
-            $table->string('status');
+            $table->dateTime('end')->nullable();
             $table->timestamps();
         });
 
@@ -33,7 +32,7 @@ return new class extends Migration
             'manager_id',
             'users',
             'cascade',
-            false
+            true
         );
 
         SpaceService::addBaseModelForeignIdMigration(
@@ -41,7 +40,7 @@ return new class extends Migration
             'executor_id',
             'users',
             'cascade',
-            false
+            true
         );
     }
 

@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Operations\TaskOperation;
 use App\Http\Requests\TaskRequest;
 use App\Models\Task;
+use App\Models\TaskStage;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 class TaskCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use TaskOperation;
 
     public function setup()
     {
@@ -24,30 +23,43 @@ class TaskCrudController extends CrudController
 
     protected function setupListOperation()
     {
+        CRUD::addButton('top', 'pipelines', 'view', 'crud::buttons.task_create');
+
         CRUD::column('name');
         CRUD::column('start');
-        CRUD::column('end');
-        CRUD::column('status');
     }
 
     protected function setupCreateOperation()
     {
-        $now = now();
         CRUD::setValidation(TaskRequest::class);
         CRUD::field('name');
-        CRUD::field('description')->default('');
-        CRUD::field('start')->type('datetime')->default($now);
-        CRUD::field('end')->type('datetime');
-        CRUD::field('manager_id')->type('hidden')->default(backpack_user()->id);
-        CRUD::field('executors')
-            ->label('Исполнители')
-            ->type('relationship');
-        CRUD::field('status')->type('select_from_array')->options(Task::getStatuses());
+
+        //CRUD::field('status')->type('select_from_array')->options(Task::getStatuses());
 
     }
 
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    public function taskCreate()
+    {
+        $stage = TaskStage::query()->first();
+        $first_stage = $stage->id;
+        $now = now();
+
+        $task = Task::query()->create([
+            'name' => 'Новая задача',
+            'task_stage_id' => $first_stage,
+            'description' => '',
+            'start' => $now,
+            'end' => null,
+            'responsible_id' => backpack_user()->id,
+            'manager_id' => null,
+            'executor_id' => null,
+        ]);
+
+        return redirect('/admin/task/' . $task->id);
     }
 }

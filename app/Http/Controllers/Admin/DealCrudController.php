@@ -138,17 +138,15 @@ class DealCrudController extends CrudController
 
     public function dealCreate()
     {
-        $pipelines = Pipeline::query()->select('id', 'name')->get();
-        $first_pipeline = $pipelines->first()->id;
-        $stages = Stage::query()->where('pipeline_id', $first_pipeline)->get();;
-        $first_stage = $stages->first()->id;
+        $pipeline = Pipeline::query()->select('id', 'name')->first();
+        $stage = Stage::query()->where('pipeline_id', $pipeline->id)->first();
 
         $client_id = $this->crud->getCurrentEntryId();
         $client = Client::query()->find($client_id);
         $deal = $client->deals()->create([
             'name' => 'Новая сделка',
-            'pipeline_id' => $first_pipeline,
-            'stage_id' => $first_stage,
+            'pipeline_id' => $pipeline->id,
+            'stage_id' => $stage->id,
             'responsible_id' => backpack_user()->id,
         ]);
 
