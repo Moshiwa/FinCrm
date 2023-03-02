@@ -18,7 +18,6 @@ class ClientCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
-    use \App\Http\Controllers\Admin\Operations\DealCreateOperation;
 
     private ClientService $service;
 
@@ -34,6 +33,7 @@ class ClientCrudController extends CrudController
 
     protected function setupListOperation()
     {
+        CRUD::addButton('line', 'deal-create', 'view', 'crud::buttons.deal_create');
 
         CRUD::column('name')->label('Имя');
         CRUD::column('Количество сделок')

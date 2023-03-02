@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ButtonCrudController;
 use App\Http\Controllers\Admin\ClientCrudController;
+use App\Http\Controllers\Admin\DealCrudController;
 use App\Http\Controllers\Admin\FieldCrudController;
 use App\Http\Controllers\Admin\StageCrudController;
 use App\Http\Controllers\Admin\UserCrudController;
@@ -33,6 +34,8 @@ Route::group([
     Route::crud('task', 'TaskCrudController');
 
     Route::get('space-change/{code}', [SpaceCrudController::class, 'spaceChange'])->name('space.change');
+
+    Route::get('client/{id}/deal-create', [DealCrudController::class, 'dealCreate'])->name('deal.deal-create');
 
     Route::prefix('user')->name('user.')->group(function () {
         Route::get('find-users', [UserCrudController::class, 'findUsers'])->name('find');
