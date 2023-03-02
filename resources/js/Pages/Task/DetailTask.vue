@@ -7,6 +7,13 @@
                     v-model="thisTask.name"
                     @change="send"
                 />
+                <el-form-item label="Описание">
+                    <el-input
+                        type="textarea"
+                        v-model="thisTask.description"
+                        @change="send"
+                    />
+                </el-form-item>
                 <el-form-item label="Статус">
                     <el-select
                         v-model="thisTask.stage"
@@ -74,6 +81,23 @@
                             :value="user"
                         />
                     </el-select>
+                </el-form-item>
+
+                <el-form-item label="Дата начала">
+                    <el-date-picker
+                        v-model="thisTask.start"
+                        type="datetime"
+                        placeholder="Select date and time"
+                        :shortcuts="shortcuts"
+                    />
+                </el-form-item>
+                <el-form-item label="Дата окончания">
+                    <el-date-picker
+                        v-model="thisTask.end"
+                        type="datetime"
+                        placeholder="Select date and time"
+                        :shortcuts="shortcuts"
+                    />
                 </el-form-item>
 
                 <el-collapse v-model="active">
@@ -177,7 +201,28 @@ export default {
             active: ['1'],
             visibleCommentForm: false,
             visibleFileUploadForm: false,
-
+            shortcuts: [
+                {
+                    text: 'Today',
+                    value: new Date(),
+                },
+                {
+                    text: 'Yesterday',
+                    value: () => {
+                        const date = new Date()
+                        date.setTime(date.getTime() - 3600 * 1000 * 24)
+                        return date
+                    },
+                },
+                {
+                    text: 'A week ago',
+                    value: () => {
+                        const date = new Date()
+                        date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+                        return date
+                    },
+                },
+            ],
             thisTask: this.task,
 
             allStages: this.stages ?? [],
