@@ -12,7 +12,8 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description')->default('');
+            $table->foreignId('task_stage_id')->constrained();
+            $table->text('description')->nullable();
             $table->dateTime('start');
             $table->dateTime('end');
             $table->string('status');
@@ -21,7 +22,23 @@ return new class extends Migration
 
         SpaceService::addBaseModelForeignIdMigration(
             'tasks',
+            'responsible_id',
+            'users',
+            'cascade',
+            false
+        );
+
+        SpaceService::addBaseModelForeignIdMigration(
+            'tasks',
             'manager_id',
+            'users',
+            'cascade',
+            false
+        );
+
+        SpaceService::addBaseModelForeignIdMigration(
+            'tasks',
+            'executor_id',
             'users',
             'cascade',
             false

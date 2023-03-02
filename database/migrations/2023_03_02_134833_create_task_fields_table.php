@@ -8,15 +8,16 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('task_files', function (Blueprint $table) {
+        Schema::create('task_fields', function (Blueprint $table) {
             $table->id();
             $table->foreignId('task_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('file_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('field_id')->constrained()->cascadeOnDelete();
+            $table->string('value')->nullable();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('task_files');
+        Schema::dropIfExists('task_fields');
     }
 };

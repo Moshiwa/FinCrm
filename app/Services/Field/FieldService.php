@@ -2,7 +2,9 @@
 
 namespace App\Services\Field;
 
+use App\Enums\FieldsEntitiesEnum;
 use App\Models\Field;
+use Illuminate\Support\Str;
 
 class FieldService
 {
@@ -46,6 +48,27 @@ class FieldService
         }
 
         return $fields;
+    }
+
+    public static function getEntityFromRequest($request): FieldsEntitiesEnum
+    {
+        $request_entity = $request->get('entity');
+        if (empty($request_entity)) {
+            $referer = $request->headers->get('referer');
+            $referer = parse_url($referer);
+            $query = $referer['query'] ?? '';
+
+            $entity = match (true) {
+                Str::contains('entity=client', $query) => FieldsEntitiesEnum::findValue('client'),
+                Str::contains('entity=task', $query) => FieldsEntitiesEnum::findValue('task'),
+                default => FieldsEntitiesEnum::findValue('deal')
+            };
+
+        } else {
+            $entity = FieldsEntitiesEnum::findValue($request_entity);
+        }
+
+        return empty($entity) ? FieldsEntitiesEnum::deal : $entity;
     }
 
     private function castFieldValue($field)

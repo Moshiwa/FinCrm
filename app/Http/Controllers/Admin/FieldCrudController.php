@@ -6,6 +6,7 @@ use App\Enums\FieldsEntitiesEnum;
 use App\Http\Requests\FieldRequest;
 use App\Models\Field;
 use App\Models\FieldType;
+use App\Services\Field\FieldService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Backpack\CRUD\app\Library\Widget;
@@ -43,19 +44,11 @@ class FieldCrudController extends CrudController
                 return view('crud::buttons.field_checkbox', ['entry' => $entry]);
             });
 
-        $request_entity = $this->crud->getRequest()->get('entity');
-        CRUD::addButton('top', 'pipelines', 'view', 'crud::buttons.pipelines');
+        CRUD::addButton('top', 'pipelines', 'view', 'crud::buttons.field_entities');
 
-        if ($request_entity === FieldsEntitiesEnum::deal->value) {
-            $this->crud->addClause('where', 'entity', FieldsEntitiesEnum::deal->value);
-            CRUD::setEntityNameStrings('Поле', 'Поля сделок');
-        } elseif ($request_entity === FieldsEntitiesEnum::client->value) {
-            $this->crud->addClause('where', 'entity', FieldsEntitiesEnum::client->value);
-            CRUD::setEntityNameStrings('Поле', 'Поля клиентов');
-        } else {
-            $this->crud->addClause('where', 'entity', FieldsEntitiesEnum::deal->value);
-            CRUD::setEntityNameStrings('Поле', 'Поля сделок');
-        }
+        $entity = FieldService::getEntityFromRequest($this->crud->getRequest());
+        $this->crud->addClause('where', 'entity', $entity->value);
+        CRUD::setEntityNameStrings('Поле', __('fields.crud_titles.many.' . $entity->value));
     }
 
     protected function setupCreateOperation()
@@ -63,15 +56,8 @@ class FieldCrudController extends CrudController
         CRUD::setValidation(FieldRequest::class);
         Widget::add()->type('script')->content(asset('assets/js/admin/fields/toggle_options_block.js'));
 
-        $referer = $this->crud->getRequest()->headers->get('referer');
-        $referer = parse_url($referer);
-        $entity = FieldsEntitiesEnum::deal->value;
-        CRUD::setEntityNameStrings('Поле', 'Поле сделок');
-        if (Str::contains('entity=client', $referer['query'] ?? '')) {
-            CRUD::setEntityNameStrings('Поле', 'Поле клиентов');
-            $entity = FieldsEntitiesEnum::client->value;;
-        }
-
+        $entity = FieldService::getEntityFromRequest($this->crud->getRequest());
+        CRUD::setEntityNameStrings('Поле', __('fields.crud_titles.one.' . $entity->value));
 
         CRUD::field('type_id')
             ->label('Тип')
