@@ -29,7 +29,6 @@
 
     $task_fields = $service->getTaskFields($task);
 
-
     $users = User::query()->where('id', $task->responsible_id)->get();
 @endphp
 
@@ -50,7 +49,10 @@
                 </h2>
             </section>
 
-
+            <detail-task
+                task="{{ $task }}"
+                :auth="{{ backpack_user() }}"
+            />
         </div>
     </div>
 

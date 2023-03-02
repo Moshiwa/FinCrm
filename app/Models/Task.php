@@ -40,8 +40,7 @@ class Task extends Model
         return $this->belongsTo(User::class);
     }
 
-
-    public function status(): BelongsTo
+    public function stage(): BelongsTo
     {
         return $this->belongsTo(TaskStage::class);
     }

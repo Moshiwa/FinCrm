@@ -191,7 +191,7 @@
 import { ElMessageBox, ElSwitch } from 'element-plus'
 import ActionButton from "../../Components/ActionButton.vue";
 export default {
-    name: 'ButtonSettings',
+    name: 'DetailButton',
     components: {
         ActionButton
     },

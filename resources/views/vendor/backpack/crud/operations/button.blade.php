@@ -35,7 +35,7 @@
                     <small>Настройки</small>
                 </h2>
             </section>
-            <button-settings
+            <detail-button
                 :pipelines="{{ json_encode($reade_pipelines) }}"
             />
         </div>

@@ -16,11 +16,11 @@
 
 @include('crud::fields.inc.wrapper_start')
 <div id="vue-app">
-    <client-edit
+    <detail-client
         :entry="{{json_encode($entry)}}"
         :fields="{{json_encode($fields)}}"
-        :user="{{backpack_user()}}">
-    </client-edit>
+        :user="{{backpack_user()}}"
+    />
 </div>
 @include('crud::fields.inc.wrapper_end')
 

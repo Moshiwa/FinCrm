@@ -5,10 +5,12 @@ import {createApp} from 'vue/dist/vue.esm-bundler.js';
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import DetailDeal from "./Pages/Deal/DetailDeal.vue";
-import ClientEdit from "./Pages/Client/Edit.vue";
+
+import DetailClient from "./Pages/Client/DetailClient.vue";
 import StageSettings from "./Pages/Stage/StageSettings.vue";
-import ButtonSettings from "./Pages/Button/ButtonSettings.vue";
+import DetailDeal from "./Pages/Deal/DetailDeal.vue";
+import DetailButton from "./Pages/Button/DetailButton.vue";
+import DetailTask from "./Pages/Task/DetailTask.vue";
 
 if (document.getElementById("vue-app")) {
 
@@ -16,7 +18,7 @@ if (document.getElementById("vue-app")) {
         .use(ElementPlus)
         .mixin({
             components: {
-                DetailDeal, ClientEdit, StageSettings, ButtonSettings
+                DetailDeal, DetailClient, StageSettings, DetailButton, DetailTask
             }
         });
 

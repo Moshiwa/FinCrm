@@ -30,7 +30,7 @@
 <script>
 import Field from "../../Components/Field.vue";
 export default {
-    name: 'Edit.vue',
+    name: 'DetailClient.vue',
     components: {
         Field,
     },
