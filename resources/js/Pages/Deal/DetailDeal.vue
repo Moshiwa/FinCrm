@@ -2,12 +2,11 @@
     <div class="wrap">
         <div class="card">
             <div class="card-left">
-                <el-form-item label="Сделка">
-                    <el-input
-                        v-model="thisDeal.name"
-                        @change="send"
-                    />
-                </el-form-item>
+                <el-input
+                    class="input-title hidden-border"
+                    v-model="thisDeal.name"
+                    @change="send"
+                />
                 <el-form-item label="Воронка">
                     <el-select
                         v-model="thisDeal.pipeline"
@@ -384,6 +383,11 @@ export default {
 .card-left {
     min-width: 55%;
     padding: 8px;
+}
+.input-title {
+    margin: 10px 0 10px 0;
+    height: 40px;
+    font-size: 30px;
 }
 .card-body {
     justify-content: flex-end;
