@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ButtonStage extends Model
+class DealButtonStage extends Model
 {
     use HasFactory;
 

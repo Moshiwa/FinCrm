@@ -22,7 +22,7 @@ class Pipeline extends Model
 
     public function buttons(): HasMany
     {
-        return $this->hasMany(Button::class);
+        return $this->hasMany(DealButton::class);
     }
 
     protected static function booted()

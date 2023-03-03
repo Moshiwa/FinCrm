@@ -8,9 +8,9 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('button_stages', function (Blueprint $table) {
+        Schema::create('deal_button_stages', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('button_id')
+            $table->foreignId('deal_button_id')
                 ->constrained()
                 ->cascadeOnDelete();
             $table->foreignId('stage_id')
@@ -22,6 +22,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('button_stages');
+        Schema::dropIfExists('deal_button_stages');
     }
 };

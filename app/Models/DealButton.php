@@ -8,7 +8,7 @@ use Backpack\CRUD\Tests81\Unit\Models\Enums\StyleEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Button extends Model
+class DealButton extends Model
 {
     use HasFactory;
     use CrudTrait;
@@ -25,12 +25,12 @@ class Button extends Model
 
     public function visible()
     {
-        return $this->belongsToMany(Stage::class, 'button_stages');
+        return $this->belongsToMany(Stage::class, 'deal_button_stages');
     }
 
     public function action()
     {
-        return $this->HasOne(ButtonAction::class);
+        return $this->HasOne(DealButtonAction::class);
     }
 
     protected static function booted()

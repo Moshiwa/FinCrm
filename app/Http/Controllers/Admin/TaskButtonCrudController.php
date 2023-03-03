@@ -17,7 +17,7 @@ class TaskButtonCrudController extends CrudController
 
     public function setup()
     {
-        CRUD::setModel(\App\Models\Button::class);
+        CRUD::setModel(\App\Models\DealButton::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/button');
         CRUD::setEntityNameStrings('button', 'buttons');
     }

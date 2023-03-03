@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Operations;
 
-use App\Models\Button;
+use App\Models\DealButton;
 use App\Models\Client;
 use App\Models\Pipeline;
 use App\Models\Stage;
@@ -46,7 +46,7 @@ trait DealOperation
         $this->data['entry'] = $entry;
         $this->data['pipelines'] = Pipeline::query()->select('id', 'name')->get();
         $this->data['stages'] = $entry->pipeline->stages;
-        $this->data['buttons'] = Button::query()->with(['visible', 'action'])->where('pipeline_id', $entry->pipeline->id)->get();
+        $this->data['buttons'] = DealButton::query()->with(['visible', 'action'])->where('pipeline_id', $entry->pipeline->id)->get();
 
         return view('crud::operations.deal', $this->data);
     }

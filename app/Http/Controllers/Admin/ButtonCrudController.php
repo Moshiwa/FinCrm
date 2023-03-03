@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\Operations\ButtonOperation;
 use App\Http\Requests\ButtonRequest;
-use App\Models\Button;
+use App\Models\DealButton;
 use App\Models\Pipeline;
 use App\Services\Button\ButtonService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -17,7 +17,7 @@ class ButtonCrudController extends CrudController
 
     public function setup()
     {
-        CRUD::setModel(\App\Models\Button::class);
+        CRUD::setModel(\App\Models\DealButton::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/button');
         CRUD::setEntityNameStrings('button', 'buttons');
     }
@@ -26,7 +26,7 @@ class ButtonCrudController extends CrudController
     {
         $data = $request->validated();
 
-        $button = Button::query();
+        $button = DealButton::query();
         $options = [];
 
         if (empty($data['id'])) {
@@ -70,7 +70,7 @@ class ButtonCrudController extends CrudController
         ]);
     }
 
-    public function delete(Button $button)
+    public function delete(DealButton $button)
     {
         $button->delete();
     }
