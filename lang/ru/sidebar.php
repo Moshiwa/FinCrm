@@ -10,5 +10,7 @@ return [
     'pipelines' => 'Воронки',
     'spaces' => 'Организации',
     'directories' => 'Справочники',
-    'buttons' => 'Кнопки'
+    'deal_buttons' => 'Кнопки сделок',
+    'task_stages' => 'Статусы задач',
+    'tasks' => 'Задачи'
 ];
