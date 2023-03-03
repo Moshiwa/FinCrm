@@ -30,8 +30,8 @@ class TaskComment extends Model
     {
         return $this->belongsToMany(
             File::class,
-            'deal_comments_files',
-            'deal_comment_id',
+            'task_comments_files',
+            'task_comment_id',
             'file_id'
         );
     }

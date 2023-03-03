@@ -4,6 +4,7 @@ namespace App\Services\Task;
 
 use App\Models\DealComment;
 use App\Models\File;
+use App\Models\TaskComment;
 use App\Services\Button\ActionService;
 use App\Services\Space\SpaceService;
 use Illuminate\Support\Facades\Storage;
@@ -56,7 +57,7 @@ class TaskService
     private function deleteComments(array $data)
     {
         if (! empty($data['delete_comment_id'])) {
-            $model_comment = DealComment::query()->find($data['delete_comment_id']);
+            $model_comment = TaskComment::query()->find($data['delete_comment_id']);
             //Action нельзя удалять
             if ($model_comment->type === DealComment::ACTION) {
                 $model_comment->update(['content' => '']);
