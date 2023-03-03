@@ -48,7 +48,9 @@ class ButtonCrudController extends CrudController
             ]);
         }
 
-        $stages = Arr::flatten($data['visible']);
+
+        $stages = Arr::pluck($data['visible'], 'id');
+        $stages = array_filter($stages);
         $button->visible()->sync($stages);
         $button->action()->update([
             'pipeline_id' => $data['action']['pipeline_id'] ?? null,
