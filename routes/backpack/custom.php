@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ClientCrudController;
 use App\Http\Controllers\Admin\DealCrudController;
 use App\Http\Controllers\Admin\FieldCrudController;
 use App\Http\Controllers\Admin\StageCrudController;
+use App\Http\Controllers\Admin\TaskButtonCrudController;
 use App\Http\Controllers\Admin\TaskCrudController;
 use App\Http\Controllers\Admin\UserCrudController;
 use Illuminate\Support\Facades\Route;
@@ -47,7 +48,9 @@ Route::group([
     Route::prefix('task')->name('task.')->group(function () {
         Route::post('/update', [TaskCrudController::class, 'update'])->name('update');
         Route::get('/{task}/load_comments', [TaskCrudController::class, 'loadComments'])->name('loadComments');
-        Route::get('/new', [TaskCrudController::class, 'taskCreate'])->name('task.task-create');
+        Route::get('/new', [TaskCrudController::class, 'taskCreate'])->name('task-create');
+        Route::post('/buttons/save', [TaskButtonCrudController::class, 'save'])->name('button.save');
+        Route::delete('/buttons/{button}', [TaskButtonCrudController::class, 'delete'])->name('button.delete');
     });
 
     Route::prefix('user')->name('user.')->group(function () {
@@ -67,4 +70,5 @@ Route::group([
         Route::delete('/{button}', [ButtonCrudController::class, 'delete'])->name('delete');
     });
     Route::crud('task-stage', 'TaskStageCrudController');
+    Route::crud('task-button', 'TaskButtonCrudController');
 });

@@ -1,8 +1,9 @@
 @extends(backpack_view('blank'))
 
 @php
-    use \App\Models\Pipeline;
+    use \App\Models\TaskStage;
     use \App\Services\Button\ButtonService;
+    use \App\Models\User;
 
     $defaultBreadcrumbs = [
       trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
@@ -14,13 +15,14 @@
     $crud = [];
 
     $service = new ButtonService();
-    $pipelines = Pipeline::query()->select('id', 'name')->get();
+    $task_stages = TaskStage::query()->select(['id', 'name'])->get();
 
-    $ready_pipelines = [];
-    foreach ($pipelines as $pipeline) {
-        $ready_pipelines[] = $service->mergeDealButtonsSettings($pipeline);
+    $ready_task_stages = [];
+    foreach ($task_stages as $task_stage) {
+        $ready_task_stages[] = $service->mergeTaskButtonsSettings($task_stage);
     }
 
+    $users = User::query()->select(['id', 'name'])->get();
 @endphp
 
 
@@ -35,8 +37,9 @@
                     <small>Настройки</small>
                 </h2>
             </section>
-            <detail-deal-button
-                :pipelines="{{ json_encode($ready_pipelines) }}"
+            <detail-task-button
+                :task-stages="{{ json_encode($ready_task_stages) }}"
+                :users="{{ $users }}"
             />
         </div>
     </div>

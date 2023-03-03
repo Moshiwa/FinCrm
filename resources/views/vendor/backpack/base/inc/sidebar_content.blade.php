@@ -11,5 +11,6 @@
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('pipeline') }}"><i class="nav-icon la la-book"></i> {{ __('sidebar.pipelines') }} </a></li>
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('task-stage') }}"><i class="nav-icon la la-book"></i> {{ __('sidebar.task_stages') }}</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('button') }}"><i class="nav-icon la la-icons"></i> {{  __('sidebar.deal_buttons') }}</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('task-button') }}"><i class="nav-icon la la-icons"></i> {{ __('sidebar.task_buttons') }} </a></li>
     </ul>
 </li>

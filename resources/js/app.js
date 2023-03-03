@@ -8,8 +8,10 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 import DetailClient from "./Pages/Client/DetailClient.vue";
 import StageSettings from "./Pages/Stage/StageSettings.vue";
+import ActionButton from "./Components/ActionButton.vue";
 import DetailDeal from "./Pages/Deal/DetailDeal.vue";
-import DetailButton from "./Pages/Button/DetailButton.vue";
+import DetailDealButton from "./Pages/Deal/DetailDealButton.vue";
+import DetailTaskButton from "./Pages/Task/DetailTaskButton.vue";
 import DetailTask from "./Pages/Task/DetailTask.vue";
 
 if (document.getElementById("vue-app")) {
@@ -18,7 +20,13 @@ if (document.getElementById("vue-app")) {
         .use(ElementPlus)
         .mixin({
             components: {
-                DetailDeal, DetailClient, StageSettings, DetailButton, DetailTask
+                ActionButton,
+                DetailDeal,
+                DetailClient,
+                StageSettings,
+                DetailDealButton,
+                DetailTask,
+                DetailTaskButton
             }
         });
 

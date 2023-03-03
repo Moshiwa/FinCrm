@@ -2,9 +2,11 @@
 
 namespace App\Services\Button;
 
+use App\Models\TaskStage;
+
 class ButtonService
 {
-    public function mergeButtonsSettings($pipeline): array
+    public function mergeDealButtonsSettings($pipeline): array
     {
         $pipeline->load([
             'stages',
@@ -26,6 +28,32 @@ class ButtonService
         }
 
         return $pipeline;
+    }
+
+    public function mergeTaskButtonsSettings($task_stage): array
+    {
+        $task_stage->load([
+            'buttons' => [
+                'visible',
+                'action' => [
+                    'responsible',
+                    'manager',
+                    'executor',
+                    'stage'
+                ]
+            ],
+        ]);
+
+        $task_stages_all = TaskStage::query()->get()->toArray();
+
+        $task_stage = $task_stage->toArray();
+        if (! empty($task_stage['buttons'])) {
+            foreach ($task_stage['buttons'] as $buttonIndex => $button) {
+                $task_stage['buttons'][$buttonIndex] = $this->mergeVisibleStages($button, $task_stages_all);
+            }
+        }
+
+        return $task_stage;
     }
 
     private function mergeVisibleStages($button, $stages)

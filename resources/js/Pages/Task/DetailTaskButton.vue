@@ -7,16 +7,16 @@
     </a>
     <div class="b-settings__container">
         <div class="b-settings__header">
-            <div class="b-settings__pipelines">
-                <div class="pipeline__buttons">
+            <div class="b-settings__stages">
+                <div class="stage__buttons">
                     <div
-                        v-for="pipeline in allPipelines" @click="selectPipeline(pipeline)"
+                        v-for="taskStage in allTaskStages" @click="selectStage(taskStage)"
                         :class="{
-                            active: pipeline.id === this.currentPipeline.id,
-                            'pipeline__item': true
+                            active: taskStage.id === this.currentTaskStage.id,
+                            'stage__item': true
                         }"
                     >
-                        <a>{{ pipeline.name }}</a>
+                        <a>{{ taskStage.name }}</a>
                     </div>
                 </div>
             </div>
@@ -25,7 +25,7 @@
             <div class="b-settings__buttons">
                 <div
                     class="button__item"
-                    v-for="button in currentPipeline.buttons"
+                    v-for="button in currentTaskStage.buttons"
                 >
                     <action-button
                         :button="button"
@@ -35,16 +35,16 @@
             </div>
 
             <div
-                v-if="this.currentPipeline.id"
+                v-if="this.currentTaskStage.id"
                 class="b-settings__actions"
             >
-                <a :href="'/admin/pipeline/' + this.currentPipeline.id + '/edit'">Настроить воронку</a>
+                <a :href="'/admin/task-stage/' + this.currentTaskStage.id + '/edit'">Настроить статус</a>
             </div>
             <div
                 v-else
                 class="b-settings__actions"
             >
-                <a :href="'/admin/pipeline/create'">Создать воронку</a>
+                <a :href="'/admin/task-stage/create'">Создать статус</a>
             </div>
         </div>
     </div>
@@ -69,26 +69,26 @@
                         <div class="flex-column mr-2">
                             <div class="item__title">Цвет</div>
                             <div class="color__container">
-                            <div
-                                v-for="color in colors"
-                                class="color-item"
-                                @click="currentColor = color"
-                                :class="'btn-custom__' + color + ' ' + (currentColor === color ? 'active' : '')"
-                            >
+                                <div
+                                    v-for="color in colors"
+                                    class="color-item"
+                                    @click="currentColor = color"
+                                    :class="'btn-custom__' + color + ' ' + (currentColor === color ? 'active' : '')"
+                                >
+                                </div>
                             </div>
-                        </div>
                         </div>
                         <div class="flex-column">
                             <div class="item__title">Иконка</div>
                             <div class="icon__container">
-                            <div
-                                v-for="icon in icons"
-                                class="icon-item"
-                                @click="currentIcon = icon"
-                                :class="'las la-' + icon + ' ' + (currentIcon === icon ? 'active' : '')"
-                            >
+                                <div
+                                    v-for="icon in icons"
+                                    class="icon-item"
+                                    @click="currentIcon = icon"
+                                    :class="'las la-' + icon + ' ' + (currentIcon === icon ? 'active' : '')"
+                                >
+                                </div>
                             </div>
-                        </div>
                         </div>
                     </div>
                     <hr>
@@ -117,25 +117,13 @@
                             Смена этапа на
 
                             <el-select
-                                v-model="currentButton.action.pipeline_id"
-                                @change="selectActionPipeline"
+                                v-model="currentButton.action.task_stage_id"
+                                @change="selectActionStage"
                                 value-key="id"
                                 clearable
                             >
                                 <el-option
-                                    v-for="pipeline in allPipelines"
-                                    :key="pipeline.id"
-                                    :label="pipeline.name"
-                                    :value="pipeline.id"
-                                />
-                            </el-select>
-                            >
-                            <el-select
-                                v-model="currentButton.action.stage_id"
-                                clearable
-                            >
-                                <el-option
-                                    v-for="stage in currentActionPipeline.stages"
+                                    v-for="stage in allTaskStages"
                                     :key="stage.id"
                                     :label="stage.name"
                                     :value="stage.id"
@@ -150,23 +138,69 @@
                             label="Менять"
                         />
                         <el-select
-                            v-model="currentResponsible"
+                            v-model="currentButton.action.responsible"
                             v-if="actionChangeResponsible"
                             value-key="id"
                             filterable
                             remote
                             reserve-keyword
                             placeholder="Please enter a keyword"
-                            :remote-method="getUsers"
                         >
                             <el-option
-                                v-for="user in responsibles"
+                                v-for="user in allUsers"
                                 :key="user.id"
                                 :label="user.name"
                                 :value="user"
                             />
                         </el-select>
                     </div>
+                    <div class="popup__item">
+                        <div class="item__title">Смена наблюдателя</div>
+                        <el-checkbox
+                            v-model="actionChangeManager"
+                            label="Менять"
+                        />
+                        <el-select
+                            v-model="currentButton.action.manager"
+                            v-if="actionChangeManager"
+                            value-key="id"
+                            filterable
+                            remote
+                            reserve-keyword
+                            placeholder="Please enter a keyword"
+                        >
+                            <el-option
+                                v-for="user in allUsers"
+                                :key="user.id"
+                                :label="user.name"
+                                :value="user"
+                            />
+                        </el-select>
+                    </div>
+                    <div class="popup__item">
+                        <div class="item__title">Смена исполнителя</div>
+                        <el-checkbox
+                            v-model="actionChangeExecutor"
+                            label="Менять"
+                        />
+                        <el-select
+                            v-model="currentButton.action.executor"
+                            v-if="actionChangeExecutor"
+                            value-key="id"
+                            filterable
+                            remote
+                            reserve-keyword
+                            placeholder="Please enter a keyword"
+                        >
+                            <el-option
+                                v-for="user in allUsers"
+                                :key="user.id"
+                                :label="user.name"
+                                :value="user"
+                            />
+                        </el-select>
+                    </div>
+
                     <div class="popup__item">
                         <div class="item__title">Комментарий</div>
                         <el-checkbox
@@ -183,44 +217,38 @@
             </div>
         </div>
     </el-drawer>
-
-
 </template>
 
 <script>
-import { ElMessageBox, ElSwitch } from 'element-plus'
-import ActionButton from "../../Components/ActionButton.vue";
+
 export default {
-    name: 'DetailButton',
-    components: {
-        ActionButton
-    },
+    name: 'DetailTaskButton',
     props: {
-        buttons: {
+        taskStages: {
             type: Array,
             default: [],
         },
-        pipelines: {
+        users: {
             type: Array,
-            default: [],
-        },
+            default: []
+        }
     },
     data() {
         return {
             visibleDrawer: false,
 
-            allPipelines: this.pipelines ?? [],
-            responsibles: [],
+            allTaskStages: this.taskStages ?? [],
+            allUsers: this.users ?? [],
 
-            currentResponsible: {},
-            currentPipeline: this.pipelines[0] ?? { buttons: [] },
+            currentTaskStage: this.taskStages[0] ?? { buttons: [] },
             currentButton: {},
-            currentActionPipeline: {},
             currentColor: '',
             currentIcon: '',
 
             actionChangeStage: false,
             actionChangeResponsible: false,
+            actionChangeManager: false,
+            actionChangeExecutor: false,
             actionLeaveComment: false,
 
             colors: [
@@ -237,55 +265,51 @@ export default {
         }
     },
     mounted() {
-        console.log(this.pipelines)
+        console.log(this.taskStages)
     },
     methods: {
-        selectPipeline(pipeline) {
-            this.currentPipeline = pipeline;
+        selectStage(stage) {
+            console.log(stage)
+            this.currentTaskStage = stage;
         },
-        selectActionPipeline(pipeline_id) {
-            if (!pipeline_id) {
-                this.currentActionPipeline = {};
+        selectActionStage(stage_id) {
+            if (!stage_id) {
+                this.currentActionStage = {};
             }
 
-            this.allPipelines.forEach((pipeline) => {
-                if (pipeline.id === pipeline_id) {
-                    this.currentActionPipeline = pipeline;
-                    this.currentButton.action.stage_id = pipeline.stages[0].id;
+            this.allTaskStages.forEach((stage) => {
+                if (stage.id === stage_id) {
+                    this.currentActionStage = stage;
                 }
             })
 
         },
         openEditButton(button = null) {
-            this.currentResponsible = {};
-            this.currentActionPipeline = {};
-
             this.actionChangeStage = false;
             this.actionChangeResponsible = false;
+            this.actionChangeManager = false;
+            this.actionChangeExecutor = false;
             this.actionLeaveComment = false;
             if (!!button) {
-                this.allPipelines.forEach((pipeline) => {
-                    if (pipeline.id === button.pipeline_id) {
-                        this.currentActionPipeline = this.findStagesForPipeline(button.action?.pipeline?.id);
-                        this.currentResponsible = button.action.responsible ?? {};
-
-                        this.responsibles = [this.currentResponsible];
-
-                        this.actionChangeStage = !!button.action.stage_id;
-                        this.actionChangeResponsible = !!button.action.responsible_id;
+                this.allTaskStages.forEach((stage) => {
+                    if (stage.id === button.task_stage_id) {
                         this.actionLeaveComment = !!button.action.comment;
+                        this.actionChangeStage = !!button.action.task_stage_id;
+                        this.actionChangeResponsible = !!button.action.responsible_id;
+                        this.actionChangeManager = !!button.action.manager_id;
+                        this.actionChangeExecutor = !!button.action.executor_id;
                     }
                 })
             } else {
                 button = {
                     name: '',
-                    visible: this.currentPipeline.stages,
+                    visible: this.allTaskStages,
                     color: 'default',
                     icon: 'angle-double-right',
                     action: {
-                        pipeline: this.currentActionPipeline,
+                        stage: this.currentActionStage,
                     },
-                    pipeline_id: this.currentPipeline.id
+                    task_stage_id: this.currentTaskStage.id
                 }
             }
             this.currentColor = button.color
@@ -298,54 +322,33 @@ export default {
             let data = {};
             data.id = this.currentButton.id ?? null;
             data.name = this.currentButton.name ?? null;
-            data.pipeline_id = this.currentButton.pipeline_id ?? null;
+            data.task_stage_id = this.currentButton.task_stage_id ?? null;
             data.action = this.currentButton.action ?? null;
             data.visible = this.currentButton.visible ?? null;
             data.color = this.currentColor ?? 'default';
             data.icon = this.currentIcon ?? 'angle-double-right';
 
-            axios.post('/admin/button/save', data)
+            axios.post('/admin/task/buttons/save', data)
                 .then((response) => {
-                    this.currentPipeline = response.data.data.pipeline ?? [];
+                    this.currentTaskStage = response.data.data.task_stage ?? [];
                     this.visibleDrawer = false;
                 });
         },
+        prepareData() {
+            this.currentButton.action.task_stage_id = this.actionChangeStage ? this.currentButton.action.task_stage_id : '';
+            this.currentButton.action.comment = !!this.actionLeaveComment;
+        },
         remove() {
-            axios.delete('/admin/button/' + this.currentButton.id)
+            axios.delete('/admin/task/buttons/' + this.currentButton.id)
                 .then((response) => {
-                    this.currentPipeline.buttons.forEach((button, index) => {
+                    this.currentTaskStage.buttons.forEach((button, index) => {
                         if(button.id === this.currentButton.id) {
                             this.visibleDrawer = false;
-                            this.currentPipeline.buttons.splice(index, 1);
+                            this.currentTaskStage.buttons.splice(index, 1);
                         }
                     })
                 });
         },
-        getUsers(query) {
-            if (query.length >= 3) {
-                axios.get('/admin/user/find-users?user_name=' + query)
-                    .then((response) => {
-                        this.responsibles = response.data.data;
-                    });
-            }
-        },
-        prepareData() {
-            this.currentButton.action.stage_id = this.actionChangeStage ? this.currentButton.action.stage_id : '';
-            this.currentButton.action.pipeline_id = this.actionChangeStage ? this.currentButton.action.pipeline_id : '';
-            this.currentButton.action.responsible_id = this.actionChangeResponsible ? this.currentResponsible.id : '';
-            this.currentButton.action.comment = !!this.actionLeaveComment;
-        },
-        findStagesForPipeline(pipeline_id) {
-            let result = {};
-            this.allPipelines.forEach((pipeline) => {
-                if (pipeline.id === pipeline_id) {
-                    result = pipeline
-                }
-            });
-
-            return result;
-        }
-
     }
 }
 </script>
@@ -362,7 +365,7 @@ export default {
 .b-settings__header {
     padding: 10px 0 10px 0;
 }
-.b-settings__pipelines {
+.b-settings__stages {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -370,23 +373,23 @@ export default {
     background: #f1f4f8;
     border-radius: 2px;
 }
-.pipeline__item {
+.stage__item {
     cursor: pointer;
     padding: 10px;
     background: #f1f4f8;
     color: #495057;
 }
-.pipeline__item:hover {
+.stage__item:hover {
     color: var(--indigo);
     border-radius: 2px;
     filter: brightness(97%);
 }
-.pipeline__item.active {
+.stage__item.active {
     color: var(--indigo);
     border-radius: 2px;
     filter: brightness(97%);
 }
-.pipeline__buttons {
+.stage__buttons {
     display: flex;
     flex-direction: row;
 }

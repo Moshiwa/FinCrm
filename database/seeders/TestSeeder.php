@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Client;
 use App\Models\Deal;
+use App\Models\TaskStage;
 use Illuminate\Database\Seeder;
 
 class TestSeeder extends Seeder
@@ -15,6 +16,10 @@ class TestSeeder extends Seeder
             ['name' => 'Aleks Fider',]
         );
        //$client->fields()->sync([1, ['value' => '+79875227611']]);
+
+        TaskStage::query()->firstOrcreate(['name' => 'TestTaskStage'], [
+            'name' => 'TestTaskStage'
+        ]);
 
 
         Deal::query()->firstOrcreate(['name' => 'deal 1', 'pipeline_id' => 1,], [
