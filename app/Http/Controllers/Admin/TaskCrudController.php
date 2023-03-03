@@ -11,6 +11,7 @@ use App\Services\Task\TaskService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class TaskCrudController extends CrudController
 {
@@ -82,7 +83,22 @@ class TaskCrudController extends CrudController
             'stages' => TaskStage::query()->get(),
             'users' => User::query()->select('id', 'name')->get(),
         ]);
+    }
 
+    public function loadComments(Task $task, Request $request)
+    {
+        $offset = $request->get('offset');
+        $task->load([
+            'comments' => function ($query) use ($offset) {
+                $query->offset($offset)->limit(5)->orderBy('created_at', 'desc');
+            },
+            'comments.files',
+            'comments.author' => function ($query) {
+                $query->select('id', 'name');
+            }
+        ]);
+
+        return $task;
     }
 
     public function taskCreate()
