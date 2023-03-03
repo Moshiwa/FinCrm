@@ -54,8 +54,13 @@ class ActionService
                 continue;
             }
 
-            $text = ActionsEnum::getMessageTemplate($action_name);
-            $text = Str::replaceArray('[ActionValue]', [$value['old'] ?? '', $value['new'] ?? ''], $text);
+            $text = '';
+            $value['old'] = $value['old'] ?? '';
+            $value['new'] = $value['new'] ?? '';
+            if ($value['old'] != $value['new']) {
+                $text = ActionsEnum::getMessageTemplate($action_name);
+                $text = Str::replaceArray('[ActionValue]', [$value['old'], $value['new']], $text);
+            }
 
             $action_comment .= $text;
         }
