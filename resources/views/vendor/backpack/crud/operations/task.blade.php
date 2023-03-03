@@ -3,6 +3,7 @@
 @php
     use App\Services\Field\FieldService;
     use App\Models\User;
+    use App\Models\TaskButton;
 
     $defaultBreadcrumbs = [];
 
@@ -29,6 +30,7 @@
     $task_fields = $service->getTaskFields($task);
     $stages = \App\Models\TaskStage::query()->get();
     $users = User::query()->select(['id', 'name'])->get();
+    $buttons = TaskButton::query()->with(['visible', 'action'])->where('task_stage_id', $task->stage->id)->get();
 @endphp
 
 @section('content')
@@ -48,6 +50,7 @@
                 :auth="{{ backpack_user() }}"
                 :stages="{{ $stages }}"
                 :users="{{ $users }}"
+                :buttons="{{ $buttons }}"
                 :task-fields="{{ json_encode($task_fields) }}"
             />
         </div>
