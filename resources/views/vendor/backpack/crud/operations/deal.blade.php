@@ -3,6 +3,8 @@
 @php
     use App\Services\Field\FieldService;
     use App\Models\User;
+    use App\Models\Pipeline;
+    use App\Models\DealButton;
 
     $defaultBreadcrumbs = [];
 
@@ -11,10 +13,30 @@
 
     $service = new FieldService();
 
-    $deal_fields = $service->getDealFields($entry);
-    $client_fields = $service->getClientFields($entry->client);
+    $deal->load([
+            'stage',
+            'pipeline',
+            'responsible',
+            'client',
+            'fields.type',
+            'client.fields',
+            'comments' => function ($query) {
+                $query->offset(0)->limit(10)->orderBy('created_at', 'desc');
+            },
+            'comments.files',
+            'comments.author' => function ($query) {
+                $query->select('id', 'name');
+            }
+        ]);
 
-    $users = User::query()->where('id', $entry->responsible_id)->get();
+    $pipelines = Pipeline::query()->select('id', 'name')->get();
+    $stages = $deal->pipeline->stages;
+    $buttons = DealButton::query()->with(['visible', 'action'])->where('pipeline_id', $deal->pipeline->id)->get();
+
+    $deal_fields = $service->getDealFields($deal);
+    $client_fields = $service->getClientFields($deal->client);
+
+    $users = User::query()->where('id', $deal->responsible_id)->get();
 @endphp
 
 @section('content')
@@ -31,7 +53,7 @@
 
         <detail-deal
             :auth="{{ backpack_user() }}"
-            :deal="{{ $entry }}"
+            :deal="{{ $deal }}"
             :pipelines="{{ $pipelines }}"
             :stages="{{ $stages }}"
             :deal-fields="{{ json_encode($deal_fields) }}"

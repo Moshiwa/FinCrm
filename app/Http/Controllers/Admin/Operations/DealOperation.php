@@ -26,27 +26,8 @@ trait DealOperation
         $this->crud->hasAccessOrFail('deal');
         $this->crud->setHeading('Сделка');
 
-        $entry->load([
-            'stage',
-            'pipeline',
-            'responsible',
-            'client',
-            'fields.type',
-            'client.fields',
-            'comments' => function ($query) {
-                $query->offset(0)->limit(10)->orderBy('created_at', 'desc');
-            },
-            'comments.files',
-            'comments.author' => function ($query) {
-                $query->select('id', 'name');
-            }
-        ]);
-
         $this->data['crud'] = $this->crud;
-        $this->data['entry'] = $entry;
-        $this->data['pipelines'] = Pipeline::query()->select('id', 'name')->get();
-        $this->data['stages'] = $entry->pipeline->stages;
-        $this->data['buttons'] = DealButton::query()->with(['visible', 'action'])->where('pipeline_id', $entry->pipeline->id)->get();
+        $this->data['deal'] = $entry;
 
         return view('crud::operations.deal', $this->data);
     }
