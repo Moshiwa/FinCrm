@@ -138,7 +138,7 @@
                             label="Менять"
                         />
                         <el-select
-                            v-model="currentButton.action.responsible"
+                            v-model="currentButton.action.responsible_id"
                             v-if="actionChangeResponsible"
                             value-key="id"
                             filterable
@@ -150,7 +150,7 @@
                                 v-for="user in allUsers"
                                 :key="user.id"
                                 :label="user.name"
-                                :value="user"
+                                :value="user.id"
                             />
                         </el-select>
                     </div>
@@ -161,7 +161,7 @@
                             label="Менять"
                         />
                         <el-select
-                            v-model="currentButton.action.manager"
+                            v-model="currentButton.action.manager_id"
                             v-if="actionChangeManager"
                             value-key="id"
                             filterable
@@ -173,7 +173,7 @@
                                 v-for="user in allUsers"
                                 :key="user.id"
                                 :label="user.name"
-                                :value="user"
+                                :value="user.id"
                             />
                         </el-select>
                     </div>
@@ -184,7 +184,7 @@
                             label="Менять"
                         />
                         <el-select
-                            v-model="currentButton.action.executor"
+                            v-model="currentButton.action.executor_id"
                             v-if="actionChangeExecutor"
                             value-key="id"
                             filterable
@@ -196,7 +196,7 @@
                                 v-for="user in allUsers"
                                 :key="user.id"
                                 :label="user.name"
-                                :value="user"
+                                :value="user.id"
                             />
                         </el-select>
                     </div>
@@ -337,9 +337,9 @@ export default {
         },
         prepareData() {
             this.currentButton.action.task_stage_id = this.actionChangeStage ? this.currentButton.action.task_stage_id : '';
-            this.currentButton.action.responsible_id = this.actionChangeResponsible ? this.currentButton.action.responsible.id : '';
-            this.currentButton.action.manager_id = this.actionChangeManager ? this.currentButton.action.manager.id : '';
-            this.currentButton.action.executor_id = this.actionChangeExecutor ? this.currentButton.action.executor.id : '';
+            this.currentButton.action.responsible_id = this.actionChangeResponsible ? this.currentButton.action.responsible_id : '';
+            this.currentButton.action.manager_id = this.actionChangeManager ? this.currentButton.action.manager_id : '';
+            this.currentButton.action.executor_id = this.actionChangeExecutor ? this.currentButton.action.executor_id : '';
          /*   this.currentButton.action.start_time = this.a ? this.currentButton.action.executor_id : '';
             this.currentButton.action.end_time = this.actionChangeExecutor ? this.currentButton.action.executor_id : '';*/
             this.currentButton.action.comment = !!this.actionLeaveComment;
