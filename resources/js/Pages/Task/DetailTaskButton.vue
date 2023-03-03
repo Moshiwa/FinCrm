@@ -320,6 +320,7 @@ export default {
         save() {
             this.prepareData();
             let data = {};
+            console.log(this.currentButton);
             data.id = this.currentButton.id ?? null;
             data.name = this.currentButton.name ?? null;
             data.task_stage_id = this.currentButton.task_stage_id ?? null;
@@ -336,7 +337,13 @@ export default {
         },
         prepareData() {
             this.currentButton.action.task_stage_id = this.actionChangeStage ? this.currentButton.action.task_stage_id : '';
+            this.currentButton.action.responsible_id = this.actionChangeResponsible ? this.currentButton.action.responsible.id : '';
+            this.currentButton.action.manager_id = this.actionChangeManager ? this.currentButton.action.manager.id : '';
+            this.currentButton.action.executor_id = this.actionChangeExecutor ? this.currentButton.action.executor.id : '';
+         /*   this.currentButton.action.start_time = this.a ? this.currentButton.action.executor_id : '';
+            this.currentButton.action.end_time = this.actionChangeExecutor ? this.currentButton.action.executor_id : '';*/
             this.currentButton.action.comment = !!this.actionLeaveComment;
+            console.log( this.actionChangeExecutor );
         },
         remove() {
             axios.delete('/admin/task/buttons/' + this.currentButton.id)

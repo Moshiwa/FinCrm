@@ -324,16 +324,18 @@ export default {
             this.send();
         },
         prepareDataByButtonOptions(action) {
+            console.log(action);
             this.action = action;
             this.thisTask.stage.id = !!action.task_stage_id ? action.task_stage_id : this.thisTask.stage?.id;
-            this.thisTask.responsible.id = !!action.responsible_id ? action.responsible_id : this.thisTask.responsible?.id;
-            this.thisTask.manager.id = !!action.manager_id ? action.manager_id : this.thisTask.manager?.id;
-            this.thisTask.executor.id = !!action.executor_id ? action.executor_id : this.thisTask.executor?.id;
+            this.thisTask.responsible = !!action.responsible_id ? {id: action.responsible_id} : this.thisTask.responsible;
+            this.thisTask.manager = !!action.manager_id ? {id: action.manager_id} : this.thisTask.manager;
+            this.thisTask.executor = !!action.executor_id ? {id: action.executor_id} : this.thisTask.executor;
             this.thisTask.start = !!action.start_time ? action.start_time : this.thisTask.start;
             this.thisTask.end = !!action.end_time ? action.end_time : this.thisTask.end;
         },
         send() {
             const formData = new FormData();
+            console.log(this.thisTask);
             if (!!this.thisTask.id) {
                 formData.append('id', this.thisTask.id);
             }
