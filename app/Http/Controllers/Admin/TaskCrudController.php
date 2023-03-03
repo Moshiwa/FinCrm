@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Services\Task\TaskService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Carbon\Carbon;
 
 class TaskCrudController extends CrudController
 {
@@ -41,12 +42,12 @@ class TaskCrudController extends CrudController
 
         $task->name = $data['name'];
         $task->task_stage_id = $data['task_stage_id'];
-        $task->description = $data['description'];
-        $task->start = $data['start'] ?? now();
-        $task->end = $data['end'] ?? null;
-        $task->responsible_id = $data['responsible_id'];
-        $task->manager_id = $data['manager_id'];
-        $task->executor_id = $data['executor_id'];
+        $task->description = $data['description'] ?? '';
+        $task->start = empty($data['start']) ? null : Carbon::make($data['start']);
+        $task->end = empty($data['end']) ? null : Carbon::make($data['end']);
+        $task->responsible_id = $data['responsible_id'] ?? backpack_user()->id;
+        $task->manager_id = $data['manager_id'] ?? null;
+        $task->executor_id = $data['executor_id'] ?? null;
         $task->save();
 
         $service->createNewMessage($task, $comment_data);

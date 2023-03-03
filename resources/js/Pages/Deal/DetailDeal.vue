@@ -308,15 +308,15 @@ export default {
                 }
 
                 if (!!this.action.pipeline_id) {
-                    formData.append('action[pipeline_id]', this.action.pipeline_id ?? null);
+                    formData.append('action[change_pipeline]', this.action.pipeline_id ?? null);
                 }
 
                 if (!!this.action.stage_id) {
-                    formData.append('action[stage_id]', this.action.stage_id ?? null);
+                    formData.append('action[change_stage]', this.action.stage_id ?? null);
                 }
 
                 if (!!this.action.responsible_id) {
-                    formData.append('action[responsible_id]', this.action.responsible_id ?? null);
+                    formData.append('action[change_responsible]', this.action.responsible_id ?? null);
                 }
 
                 if (!!this.action.comment) {

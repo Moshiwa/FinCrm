@@ -2,39 +2,28 @@
 
 namespace App\Services\Button;
 
+use App\Enums\ActionsEnum;
 use App\Models\DealComment;
-use App\Models\Pipeline;
-use App\Models\Stage;
-use App\Models\User;
+use Illuminate\Support\Str;
 
 class ActionService
 {
-    const COMMENT = 'comment';
-    const CHANGE_PIPELINE = 'change_pipeline';
-    const CHANGE_STAGE = 'change_stage';
-    const CHANGE_RESPONSIBLE = 'change_responsible';
+    protected array $actions = [];
 
-    protected array $actions = [
-        self::COMMENT => [
-            'new' => false,
-        ],
-        self::CHANGE_PIPELINE => [
-            'old' => null,
-            'new' => null,
-        ],
-        self::CHANGE_STAGE => [
-            'old' => null,
-            'new' => null,
-        ],
-        self::CHANGE_RESPONSIBLE => [
-            'old' => null,
-            'new' => null,
-        ]
-    ];
+    public function __construct()
+    {
+        foreach (ActionsEnum::cases() as $case) {
+            $this->actions[$case->value] = [
+                'old' => null,
+                'new' => null,
+            ];
+        }
+    }
 
     public function definitionAction(array $action, object $entity): array
     {
         $action = $this->prepareAction($action);
+
         $this->definitionNewAction($action);
         $this->definitionOldAction($entity);
 
@@ -57,28 +46,18 @@ class ActionService
         $action_comment = '';
 
         foreach ($actions as $action_name => $value) {
-            if ($action_name === $actionService::COMMENT) {
-                $comment['title'] = 'Комментарий';
+            $action_name = ActionsEnum::findValue($action_name)?->value;
+
+            if ($action_name === ActionsEnum::COMMENT->value) {
+                $comment['title'] = ActionsEnum::getMessageTemplate($action_name);
                 $comment['type'] = DealComment::COMMENT;
+                continue;
             }
 
-            if ($action_name === $actionService::CHANGE_PIPELINE) {
-                if ($value['old'] !== $value['new']) {
-                    $action_comment .= 'Смена воронки с <i style="color: #0B90C4">' . $value['old'] . '</i> на <i style="color: #0B90C4">' . $value['new'] . '</i><br>';
-                }
-            }
+            $text = ActionsEnum::getMessageTemplate($action_name);
+            $text = Str::replaceArray('[ActionValue]', [$value['old'] ?? '', $value['new'] ?? ''], $text);
 
-            if ($action_name === $actionService::CHANGE_STAGE) {
-                if ($value['old'] !== $value['new']) {
-                    $action_comment .= 'Смена стадии с <i style="color: #0B90C4">' . $value['old'] . '</i> на <i style="color: #0B90C4">' . $value['new'] . '</i><br>';
-                }
-            }
-
-            if ($action_name === $actionService::CHANGE_RESPONSIBLE) {
-                if ($value['old'] !== $value['new']) {
-                    $action_comment .= 'Смена ответственного с <i style="color: #0B90C4">' . $value['old'] . '</i> на <i style="color: #0B90C4">' . $value['new'] . '</i><br>';
-                }
-            }
+            $action_comment .= $text;
         }
 
         if (!empty($action_comment)) {
@@ -90,64 +69,61 @@ class ActionService
         return $comment;
     }
 
-    private function prepareAction(array $action): array
+    private function prepareAction(array $actions): array
     {
         $result = [];
-        $result['pipeline'] = !empty($action['pipeline_id'])
-            ? Pipeline::query()->select('id', 'name')->find($action['pipeline_id'])->toArray()
-            : null;
-        $result['stage'] = !empty($action['stage_id'])
-            ? Stage::query()->select('id', 'name')->find($action['stage_id'])->toArray()
-            : null;
-        $result['responsible'] = !empty($action['responsible_id'])
-            ? User::query()->select('id', 'name')->find($action['responsible_id'])->toArray()
-            : null;
-        $result['comment'] = !empty($action['comment']);
+
+        foreach ($actions as $action_name => $action) {
+            $sys_action = ActionsEnum::findValue($action_name)?->value;
+            $entity = ActionsEnum::getEntity($sys_action);
+            $value = $action;
+            if ($entity) {
+                $entity = "App\\Models\\" . $entity;
+                if (class_exists($entity)) {
+                    $value = $entity::query()->select('id', 'name')->find($action)->toArray();
+                }
+            }
+
+            $result[$sys_action] = $value;
+        }
 
         return $result;
     }
 
-    private function definitionNewAction(array $action): void
+    private function definitionNewAction(array $actions): void
     {
-        if (! empty($action['comment'])) {
-            $this->actions[self::COMMENT] = [
-                'new' => true
-            ];
-        }
+        foreach ($actions as $action_name => $value) {
+            if (empty($value)) {
+                continue;
+            }
 
-        if (! empty($action['pipeline'])) {
-            $this->actions[self::CHANGE_PIPELINE] = [
-                'new' => $action['pipeline']['name']
-            ];
-        }
-
-        if (! empty($action['stage'])) {
-            $this->actions[self::CHANGE_STAGE] = [
-                'new' => $action['stage']['name']
-            ];
-        }
-
-        if (! empty($action['responsible'])) {
-            $this->actions[self::CHANGE_RESPONSIBLE] = [
-                'new' => $action['responsible']['name']
+            $this->actions[ActionsEnum::findValue($action_name)?->value] = [
+                'new' => $value['name'] ?? $value
             ];
         }
     }
 
     private function definitionOldAction(object $entity): void
     {
-        $entity = $this->entityLoadRelations($entity);
+        /*$entity = $this->entityLoadRelations($entity);*/
+        foreach ($this->actions as $action_name => $action) {
+            if (empty($action['new'])) {
+                continue;
+            }
 
-        if (! empty($this->actions['change_pipeline']['new'])) {
-            $this->actions['change_pipeline']['old'] = $entity->pipeline->name;
-        }
+            $relation = ActionsEnum::getRelation($action_name);
+            $relations = explode('.', $relation);
 
-        if (! empty($this->actions['change_stage']['new'])) {
-            $this->actions['change_stage']['old'] = $entity->stage->name;
-        }
+            if (empty($relations[0])) {
+                continue;
+            }
 
-        if (! empty($this->actions['change_responsible']['new'])) {
-            $this->actions['change_responsible']['old'] = $entity->responsible->name;
+            if ($entity->{$relations[0]}) {
+                $this->actions[$action_name]['old'] = $entity->{$relations[0]};
+                if (isset($relations[1])) {
+                    $this->actions[$action_name]['old'] = $entity->{$relations[0]}->{$relations[1]};
+                }
+            }
         }
     }
 

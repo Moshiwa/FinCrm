@@ -248,8 +248,7 @@ export default {
     },
     methods: {
         changeStage(item) {
-            this.action = { stage_id: item.id };
-
+            this.action = { task_stage_id: item.id };
             this.send();
         },
         changeResponsible(item) {
@@ -326,22 +325,40 @@ export default {
         },
         prepareDataByButtonOptions(action) {
             this.action = action;
-            this.thisTask.stage.id = !!action.stage_id ? action.stage_id : this.thisTask.stage.id;
+            this.thisTask.stage.id = !!action.task_stage_id ? action.task_stage_id : this.thisTask.stage.id;
             this.thisTask.responsible.id = !!action.responsible_id ? action.responsible_id : this.thisTask.responsible.id;
             this.thisTask.manager.id = !!action.manager_id ? action.manager_id : this.thisTask.manager.id;
             this.thisTask.executor.id = !!action.executor_id ? action.executor_id : this.thisTask.executor.id;
         },
         send() {
             const formData = new FormData();
-            formData.append('id', this.thisTask.id);
-            formData.append('name', this.thisTask.name);
-            formData.append('description', this.thisTask.description);
-            formData.append('start', this.thisTask.start);
-            formData.append('end', this.thisTask.end);
-            formData.append('task_stage_id', this.thisTask.stage.id);
-            formData.append('responsible_id', this.thisTask.responsible.id);
-            formData.append('manager_id', this.thisTask.manager.id);
-            formData.append('executor_id', this.thisTask.executor.id);
+            if (!!this.thisTask.id) {
+                formData.append('id', this.thisTask.id);
+            }
+            if (!!this.thisTask.name) {
+                formData.append('name', this.thisTask.name);
+            }
+            if (!!this.thisTask.description) {
+                formData.append('description', this.thisTask.description);
+            }
+            if (!!this.thisTask.start) {
+                formData.append('start', this.thisTask.start);
+            }
+            if (!!this.thisTask.end) {
+                formData.append('end', this.thisTask.end);
+            }
+            if (!!this.thisTask.stage?.id) {
+                formData.append('task_stage_id', this.thisTask.stage.id);
+            }
+            if (!!this.thisTask.responsible?.id) {
+                formData.append('responsible_id', this.thisTask.responsible.id);
+            }
+            if (!!this.thisTask.manager?.id) {
+                formData.append('manager_id', this.thisTask.manager.id);
+            }
+            if (!!this.thisTask.executor?.id) {
+                formData.append('executor_id', this.thisTask.executor.id);
+            }
 
             formData.append('comment_count', this.thisTask.comments.length ?? 0);
             formData.append('delete_comment_id', this.deleteCommentId);
@@ -351,24 +368,32 @@ export default {
                     formData.append('action[id]', this.action.id ?? null);
                 }
 
-                if (!!this.action.stage_id) {
-                    formData.append('action[stage_id]', this.action.stage_id ?? null);
+                if (!!this.action.task_stage_id) {
+                    formData.append('action[change_task_stage]', this.action.task_stage_id ?? null);
                 }
 
                 if (!!this.action.manager_id) {
-                    formData.append('action[manager_id]', this.action.manager_id ?? null);
+                    formData.append('action[change_manager]', this.action.manager_id ?? null);
                 }
 
                 if (!!this.action.executor_id) {
-                    formData.append('action[executor_id]', this.action.executor_id ?? null);
+                    formData.append('action[change_executor]', this.action.executor_id ?? null);
                 }
 
                 if (!!this.action.responsible_id) {
-                    formData.append('action[responsible_id]', this.action.responsible_id ?? null);
+                    formData.append('action[change_responsible]', this.action.responsible_id ?? null);
                 }
 
                 if (!!this.action.comment) {
                     formData.append('action[comment]', this.action.comment ?? false);
+                }
+
+                if (!!this.action.start) {
+                    formData.append('action[change_start_time]', this.action.start ?? false);
+                }
+
+                if (!!this.action.end) {
+                    formData.append('action[change_end_time]', this.action.end ?? false);
                 }
             }
 

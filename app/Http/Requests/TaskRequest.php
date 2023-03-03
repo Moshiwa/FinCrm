@@ -15,7 +15,7 @@ class TaskRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'required|exists:deals,id',
+            'id' => 'required|exists:tasks,id',
             'name' => 'required|max:255',
             'description' => 'nullable',
             'start' => 'nullable',
@@ -31,11 +31,6 @@ class TaskRequest extends FormRequest
             'new_comment.*' => 'nullable',
 
             'action' => 'nullable|array',
-            'action.id' => 'nullable|exists:button_actions,id',
-            'action.pipeline_id' => 'nullable|exists:pipelines,id',
-            'action.stage_id' => 'nullable|exists:stages,id',
-            'action.responsible_id' => 'nullable|exists:App\Models\User,id',
-            'action.comment' => 'nullable',
 
             'delete_comment_id' => 'nullable|numeric',
             'comment_offset' => 'nullable|numeric',

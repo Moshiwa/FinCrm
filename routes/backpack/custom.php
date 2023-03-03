@@ -66,4 +66,5 @@ Route::group([
         Route::post('/save', [ButtonCrudController::class, 'save'])->name('save');
         Route::delete('/{button}', [ButtonCrudController::class, 'delete'])->name('delete');
     });
+    Route::crud('task-stage', 'TaskStageCrudController');
 });
