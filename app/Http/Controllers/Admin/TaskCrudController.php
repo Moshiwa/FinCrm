@@ -59,6 +59,8 @@ class TaskCrudController extends CrudController
 
         $task->load([
             'stage',
+            'stage.buttons.visible',
+            'stage.buttons.action',
             'responsible'=> function ($query) {
                 $query->select('id', 'name');
             },

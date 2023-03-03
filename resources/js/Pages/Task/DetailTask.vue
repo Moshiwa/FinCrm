@@ -325,10 +325,12 @@ export default {
         },
         prepareDataByButtonOptions(action) {
             this.action = action;
-            this.thisTask.stage.id = !!action.task_stage_id ? action.task_stage_id : this.thisTask.stage.id;
-            this.thisTask.responsible.id = !!action.responsible_id ? action.responsible_id : this.thisTask.responsible.id;
-            this.thisTask.manager.id = !!action.manager_id ? action.manager_id : this.thisTask.manager.id;
-            this.thisTask.executor.id = !!action.executor_id ? action.executor_id : this.thisTask.executor.id;
+            this.thisTask.stage.id = !!action.task_stage_id ? action.task_stage_id : this.thisTask.stage?.id;
+            this.thisTask.responsible.id = !!action.responsible_id ? action.responsible_id : this.thisTask.responsible?.id;
+            this.thisTask.manager.id = !!action.manager_id ? action.manager_id : this.thisTask.manager?.id;
+            this.thisTask.executor.id = !!action.executor_id ? action.executor_id : this.thisTask.executor?.id;
+            this.thisTask.start = !!action.start_time ? action.start_time : this.thisTask.start;
+            this.thisTask.end = !!action.end_time ? action.end_time : this.thisTask.end;
         },
         send() {
             const formData = new FormData();
@@ -422,7 +424,7 @@ export default {
                     this.thisTask = response.data.task;
                     this.allStages = response.data.stages;
                     this.users = response.data.users;
-                    this.stageButtons = [];
+                    this.stageButtons = response.data.task.stage.buttons;
                     this.action = null;
                     ElNotification({
                         title: 'Сохранено',
