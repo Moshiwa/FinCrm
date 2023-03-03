@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\Operations\TaskOperation;
 use App\Http\Requests\TaskRequest;
 use App\Models\Task;
 use App\Models\TaskStage;
+use App\Models\User;
+use App\Services\Task\TaskService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -27,6 +29,59 @@ class TaskCrudController extends CrudController
 
         CRUD::column('name');
         CRUD::column('start');
+    }
+
+    public function update(TaskRequest $request)
+    {
+        $service = new TaskService();
+        $data = $request->validated();
+
+        $task = Task::query()->find($data['id']);
+        $comment_data = $service->prepareCommentData($task, $data);
+
+        $task->name = $data['name'];
+        $task->task_stage_id = $data['task_stage_id'];
+        $task->description = $data['description'];
+        $task->start = $data['start'] ?? now();
+        $task->end = $data['end'] ?? null;
+        $task->responsible_id = $data['responsible_id'];
+        $task->manager_id = $data['manager_id'];
+        $task->executor_id = $data['executor_id'];
+        $task->save();
+
+        $service->createNewMessage($task, $comment_data);
+        $task->fields()->sync($data['fields'] ?? []);
+        $service->updateComments($task, $data);
+
+        $comment_count = $data['comment_count'] ?? 10;
+
+        $task->load([
+            'stage',
+            'responsible'=> function ($query) {
+                $query->select('id', 'name');
+            },
+            'manager'=> function ($query) {
+                $query->select('id', 'name');
+            },
+            'executor'=> function ($query) {
+                $query->select('id', 'name');
+            },
+            'fields',
+            'comments' => function ($query) use ($comment_count) {
+                $query->orderBy('created_at', 'desc')->offset(0)->limit($comment_count);
+            },
+            'comments.files',
+            'comments.author' => function ($query) {
+                $query->select('id', 'name');
+            }
+        ]);
+
+        return response()->json([
+            'task' => $task,
+            'stages' => TaskStage::query()->get(),
+            'users' => User::query()->select('id', 'name')->get(),
+        ]);
+
     }
 
     public function taskCreate()

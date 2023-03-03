@@ -2,6 +2,7 @@
 
 namespace App\Services\Button;
 
+use App\Models\DealComment;
 use App\Models\Pipeline;
 use App\Models\Stage;
 use App\Models\User;
@@ -31,15 +32,62 @@ class ActionService
         ]
     ];
 
-    public function definitionAction(array $action, object $deal): array
+    public function definitionAction(array $action, object $entity): array
     {
         $action = $this->prepareAction($action);
         $this->definitionNewAction($action);
-        $this->definitionOldAction($deal);
+        $this->definitionOldAction($entity);
 
         return array_filter($this->actions, function ($item) {
             return !empty($item['new']) || !empty($item['old']);
         });
+    }
+
+    public function getActionMessage(object $entity, array $action): array
+    {
+        $actionService = new ActionService();
+        $actions = $actionService->definitionAction($action, $entity);
+
+        $comment = [
+            'title' => '',
+            'type' => '',
+            'content' => ''
+        ];
+
+        $action_comment = '';
+
+        foreach ($actions as $action_name => $value) {
+            if ($action_name === $actionService::COMMENT) {
+                $comment['title'] = 'Комментарий';
+                $comment['type'] = DealComment::COMMENT;
+            }
+
+            if ($action_name === $actionService::CHANGE_PIPELINE) {
+                if ($value['old'] !== $value['new']) {
+                    $action_comment .= 'Смена воронки с <i style="color: #0B90C4">' . $value['old'] . '</i> на <i style="color: #0B90C4">' . $value['new'] . '</i><br>';
+                }
+            }
+
+            if ($action_name === $actionService::CHANGE_STAGE) {
+                if ($value['old'] !== $value['new']) {
+                    $action_comment .= 'Смена стадии с <i style="color: #0B90C4">' . $value['old'] . '</i> на <i style="color: #0B90C4">' . $value['new'] . '</i><br>';
+                }
+            }
+
+            if ($action_name === $actionService::CHANGE_RESPONSIBLE) {
+                if ($value['old'] !== $value['new']) {
+                    $action_comment .= 'Смена ответственного с <i style="color: #0B90C4">' . $value['old'] . '</i> на <i style="color: #0B90C4">' . $value['new'] . '</i><br>';
+                }
+            }
+        }
+
+        if (!empty($action_comment)) {
+            $comment['title'] = $action_comment;
+            //ToDo вынести константы в enum
+            $comment['type'] = DealComment::ACTION;
+        }
+
+        return $comment;
     }
 
     private function prepareAction(array $action): array
@@ -86,20 +134,34 @@ class ActionService
         }
     }
 
-    private function definitionOldAction(object $deal): void
+    private function definitionOldAction(object $entity): void
     {
-        $deal->load(['pipeline', 'stage', 'responsible']);
+        $entity = $this->entityLoadRelations($entity);
 
         if (! empty($this->actions['change_pipeline']['new'])) {
-            $this->actions['change_pipeline']['old'] = $deal->pipeline->name;
+            $this->actions['change_pipeline']['old'] = $entity->pipeline->name;
         }
 
         if (! empty($this->actions['change_stage']['new'])) {
-            $this->actions['change_stage']['old'] = $deal->stage->name;
+            $this->actions['change_stage']['old'] = $entity->stage->name;
         }
 
         if (! empty($this->actions['change_responsible']['new'])) {
-            $this->actions['change_responsible']['old'] = $deal->responsible->name;
+            $this->actions['change_responsible']['old'] = $entity->responsible->name;
         }
+    }
+
+    private function entityLoadRelations($entity)
+    {
+        $load = [];
+        $load[] = $entity->pipeline?->exists() ? 'pipeline' : '';
+        $load[] = $entity->stage?->exists() ? 'stage' : '';
+        $load[] = $entity->responsible?->exists() ? 'responsible' : '';
+        $load[] = $entity->executor?->exists() ? 'executor' : '';
+        $load[] = $entity->manager?->exists() ? 'manager' : '';
+        $load = array_filter($load);
+        $entity->load($load);
+
+        return $entity;
     }
 }

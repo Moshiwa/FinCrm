@@ -89,6 +89,9 @@
                         type="datetime"
                         placeholder="Select date and time"
                         :shortcuts="shortcuts"
+                        format="YYYY/MM/DD hh:mm:ss"
+                        value-format="YYYY-MM-DD h:m:s"
+                        @change="changeStartTime"
                     />
                 </el-form-item>
                 <el-form-item label="Дата окончания">
@@ -97,6 +100,9 @@
                         type="datetime"
                         placeholder="Select date and time"
                         :shortcuts="shortcuts"
+                        format="YYYY/MM/DD hh:mm:ss"
+                        value-format="YYYY-MM-DD h:m:s"
+                        @change="changeEndTime"
                     />
                 </el-form-item>
 
@@ -157,7 +163,7 @@ import Comments from "../../Components/Comments.vue";
 import Field from "../../Components/Field.vue";
 
 export default {
-    name: 'DetailDeal',
+    name: 'DetailTask',
     components: {
         Contenteditable,
         FileUpload,
@@ -258,6 +264,14 @@ export default {
             this.action = { executor_id: item.id }
             this.send();
         },
+        changeStartTime(item) {
+            this.action = { start: item }
+            this.send();
+        },
+        changeEndTime(item) {
+            this.action = { end: item }
+            this.send();
+        },
         loadMore (e) {
             if (this.loading) {
                 return;
@@ -313,20 +327,23 @@ export default {
         prepareDataByButtonOptions(action) {
             this.action = action;
             this.thisTask.stage.id = !!action.stage_id ? action.stage_id : this.thisTask.stage.id;
-            /*this.thisTask.pipeline.id = !!action.pipeline_id ? action.pipeline_id : this.thisDeal.pipeline.id;
-            this.thisTask.stage.id = !!action.stage_id ? action.stage_id : this.thisDeal.stage.id;
-            this.thisTask.responsible.id = !!action.responsible_id ? action.responsible_id : this.thisDeal.responsible.id;*/
+            this.thisTask.responsible.id = !!action.responsible_id ? action.responsible_id : this.thisTask.responsible.id;
+            this.thisTask.manager.id = !!action.manager_id ? action.manager_id : this.thisTask.manager.id;
+            this.thisTask.executor.id = !!action.executor_id ? action.executor_id : this.thisTask.executor.id;
         },
         send() {
             const formData = new FormData();
             formData.append('id', this.thisTask.id);
             formData.append('name', this.thisTask.name);
             formData.append('description', this.thisTask.description);
+            formData.append('start', this.thisTask.start);
+            formData.append('end', this.thisTask.end);
             formData.append('task_stage_id', this.thisTask.stage.id);
-            formData.append('responsible_id', this.thisDeal.responsible.id);
-            formData.append('client_id', this.thisDeal.client_id);
+            formData.append('responsible_id', this.thisTask.responsible.id);
+            formData.append('manager_id', this.thisTask.manager.id);
+            formData.append('executor_id', this.thisTask.executor.id);
 
-            formData.append('comment_count', this.thisDeal.comments.length ?? 0);
+            formData.append('comment_count', this.thisTask.comments.length ?? 0);
             formData.append('delete_comment_id', this.deleteCommentId);
 
             if (!!this.action) {
@@ -334,12 +351,16 @@ export default {
                     formData.append('action[id]', this.action.id ?? null);
                 }
 
-                if (!!this.action.pipeline_id) {
-                    formData.append('action[pipeline_id]', this.action.pipeline_id ?? null);
-                }
-
                 if (!!this.action.stage_id) {
                     formData.append('action[stage_id]', this.action.stage_id ?? null);
+                }
+
+                if (!!this.action.manager_id) {
+                    formData.append('action[manager_id]', this.action.manager_id ?? null);
+                }
+
+                if (!!this.action.executor_id) {
+                    formData.append('action[executor_id]', this.action.executor_id ?? null);
                 }
 
                 if (!!this.action.responsible_id) {
@@ -351,23 +372,16 @@ export default {
                 }
             }
 
-            this.thisDeal.fields = this.thisDeal.fields ?? [];
-            this.thisDeal?.fields.forEach((field, fieldIndex) => {
+            this.thisTask.fields = this.thisTask.fields ?? [];
+            this.thisTask?.fields.forEach((field, fieldIndex) => {
                 formData.append('fields[' + field.id + '][value]', field.pivot?.value ?? '');
             });
 
-            this.thisDeal.client = this.thisDeal.client ?? [];
-            formData.append('client[name]', this.thisDeal.client?.name);
-            this.thisDeal.client.fields = this.thisDeal.client?.fields ?? [];
-            this.thisDeal.client?.fields.forEach((field, fieldIndex) => {
-                formData.append('client[fields][' + field.id + '][value]', field.pivot?.value ?? '');
-            });
-
-            this.thisDeal.comments = this.thisDeal.comments ?? [];
-            this.thisDeal?.comments.forEach((comment, commentIndex) => {
+            this.thisTask.comments = this.thisTask.comments ?? [];
+            this.thisTask?.comments.forEach((comment, commentIndex) => {
                 if (!comment.id) {
                     formData.append('new_comment[id]', comment.id ?? '');
-                    formData.append('new_comment[deal_id]', this.thisDeal.id);
+                    formData.append('new_comment[task_id]', this.thisTask.id);
                     formData.append('new_comment[type]', comment.type);
                     formData.append('new_comment[content]', comment.content);
                     comment.files = comment.files ?? [];
@@ -378,13 +392,12 @@ export default {
             });
 
             axios
-                .post('/admin/deal/update',  formData)
+                .post('/admin/task/update',  formData)
                 .then((response) => {
-                    this.thisDeal = response.data.deal;
+                    this.thisTask = response.data.task;
                     this.allStages = response.data.stages;
-                    this.allPipelines = response.data.pipelines;
-                    this.responsibles = [this.thisDeal.responsible];
-                    this.stageButtons = response.data.deal.pipeline.buttons;
+                    this.users = response.data.users;
+                    this.stageButtons = [];
                     this.action = null;
                     ElNotification({
                         title: 'Сохранено',

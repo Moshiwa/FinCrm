@@ -26,7 +26,7 @@
                         >
                             <el-image
                                 v-if="definitionFileType(file.meme) === 'image'"
-                                style="width: 100px; height: 100px"
+                                style="width: 100px; height: 100px; border-radius: 4px;"
                                 :src="file.full_path"
                                 :zoom-rate="1.2"
                                 :preview-src-list="[file.full_path]"

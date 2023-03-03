@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Deal;
+namespace App\Services\Task;
 
 use App\Models\DealComment;
 use App\Models\File;
@@ -8,9 +8,9 @@ use App\Services\Button\ActionService;
 use App\Services\Space\SpaceService;
 use Illuminate\Support\Facades\Storage;
 
-class DealService
+class TaskService
 {
-    public function prepareCommentData($deal, $data): array
+    public function prepareCommentData($task, $data): array
     {
         $result = [
             'comment' => [],
@@ -18,51 +18,42 @@ class DealService
         ];
 
         $action = $data['action'] ?? [];
-        $result['comment'] += (new ActionService())->getActionMessage($deal, $action);
+        $result['comment'] += (new ActionService())->getActionMessage($task, $action);
         $result['comment']['content'] = $data['new_comment']['content'] ?? '';
         $result['comment']['author_id'] = backpack_user()->id;
 
-       $result['files'] += $data['new_comment']['files'] ?? [];
+        $result['files'] += $data['new_comment']['files'] ?? [];
 
-       if (empty($result['comment']['type'])) {
-           if (! empty($result['files'])) {
-               $result['comment']['title'] = 'Документы';
-               $result['comment']['type'] = DealComment::DOCUMENT;
-           }
-       }
+        if (empty($result['comment']['type'])) {
+            if (! empty($result['files'])) {
+                $result['comment']['title'] = 'Документы';
+                $result['comment']['type'] = DealComment::DOCUMENT;
+            }
+        }
 
         return $result;
     }
 
-    public function updateClient($deal, array $data): void
+    public function updateComments($task, array $data): void
     {
-        $deal->client()->update([
-            'name' => $data['client']['name']
-        ]);
-
-        $deal->client->fields()->sync($data['client']['fields'] ?? []);
-    }
-
-    public function updateComments($deal, array $data): void
-    {
-        $deal_id = $deal->id;
+        $task_id = $task->id;
         $comments = $data['comments'] ?? [];
 
         //Здесь возможно редактирование сообщений
 
-        $this->deleteComments($deal, $data);
+        $this->deleteComments($data);
     }
 
-    public function createNewMessage($deal, $comment): void
+    public function createNewMessage($task, $comment): void
     {
         if ($comment['comment']['type']) {
-            $commentModel = $deal->comments()->create($comment['comment']);
-            $files = $this->saveFiles($comment['files'] ?? [], $deal);
+            $commentModel = $task->comments()->create($comment['comment']);
+            $files = $this->saveFiles($comment['files'] ?? [], $task);
             $commentModel->files()->attach($files);
         }
     }
 
-    private function deleteComments($deal, array $data)
+    private function deleteComments(array $data)
     {
         if (! empty($data['delete_comment_id'])) {
             $model_comment = DealComment::query()->find($data['delete_comment_id']);
