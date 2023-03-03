@@ -132,6 +132,36 @@
                         </div>
                     </div>
                     <div class="popup__item">
+                        <div class="item__title">Иземнить время</div>
+                        <el-checkbox
+                            v-model="actionChangeStart"
+                            label="Менять"
+                        />
+                        <el-date-picker
+                            v-model="currentButton.action.start_time"
+                            v-if="actionChangeStart"
+                            type="datetime"
+                            placeholder="Select date and time"
+                            format="YYYY/MM/DD hh:mm:ss"
+                            value-format="YYYY-MM-DD h:m:s"
+                        />
+                    </div>
+                    <div class="popup__item">
+                        <div class="item__title">Иземнить время</div>
+                        <el-checkbox
+                            v-model="actionChangeEnd"
+                            label="Менять"
+                        />
+                        <el-date-picker
+                            v-model="currentButton.action.end_time"
+                            v-if="actionChangeEnd"
+                            type="datetime"
+                            placeholder="Select date and time"
+                            format="YYYY/MM/DD hh:mm:ss"
+                            value-format="YYYY-MM-DD h:m:s"
+                        />
+                    </div>
+                    <div class="popup__item">
                         <div class="item__title">Смена ответственного</div>
                         <el-checkbox
                             v-model="actionChangeResponsible"
@@ -250,6 +280,8 @@ export default {
             actionChangeManager: false,
             actionChangeExecutor: false,
             actionLeaveComment: false,
+            actionChangeStart: false,
+            actionChangeEnd: false,
 
             colors: [
                 'default', 'grey', 'black',
@@ -290,6 +322,8 @@ export default {
             this.actionChangeManager = false;
             this.actionChangeExecutor = false;
             this.actionLeaveComment = false;
+            this.actionChangeStart = false;
+            this.actionChangeEnd = false;
             if (!!button) {
                 this.allTaskStages.forEach((stage) => {
                     if (stage.id === button.task_stage_id) {
@@ -298,6 +332,8 @@ export default {
                         this.actionChangeResponsible = !!button.action.responsible_id;
                         this.actionChangeManager = !!button.action.manager_id;
                         this.actionChangeExecutor = !!button.action.executor_id;
+                        this.actionChangeStart = !!button.action.start_time;
+                        this.actionChangeEnd = !!button.action.end_time;
                     }
                 })
             } else {
@@ -340,8 +376,8 @@ export default {
             this.currentButton.action.responsible_id = this.actionChangeResponsible ? this.currentButton.action.responsible_id : '';
             this.currentButton.action.manager_id = this.actionChangeManager ? this.currentButton.action.manager_id : '';
             this.currentButton.action.executor_id = this.actionChangeExecutor ? this.currentButton.action.executor_id : '';
-         /*   this.currentButton.action.start_time = this.a ? this.currentButton.action.executor_id : '';
-            this.currentButton.action.end_time = this.actionChangeExecutor ? this.currentButton.action.executor_id : '';*/
+            this.currentButton.action.start_time = this.actionChangeStart ? this.currentButton.action.start_time : '';
+            this.currentButton.action.end_time = this.actionChangeEnd ? this.currentButton.action.end_time : '';
             this.currentButton.action.comment = !!this.actionLeaveComment;
             console.log( this.actionChangeExecutor );
         },

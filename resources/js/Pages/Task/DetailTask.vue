@@ -264,11 +264,11 @@ export default {
             this.send();
         },
         changeStartTime(item) {
-            this.action = { start: item }
+            this.action = { start_time: item }
             this.send();
         },
         changeEndTime(item) {
-            this.action = { end: item }
+            this.action = { end_time: item }
             this.send();
         },
         loadMore (e) {
@@ -324,7 +324,6 @@ export default {
             this.send();
         },
         prepareDataByButtonOptions(action) {
-            console.log(action);
             this.action = action;
             this.thisTask.stage.id = !!action.task_stage_id ? action.task_stage_id : this.thisTask.stage?.id;
             this.thisTask.responsible = !!action.responsible_id ? {id: action.responsible_id} : this.thisTask.responsible;
@@ -392,12 +391,12 @@ export default {
                     formData.append('action[comment]', this.action.comment ?? false);
                 }
 
-                if (!!this.action.start) {
-                    formData.append('action[change_start_time]', this.action.start ?? false);
+                if (!!this.action.start_time) {
+                    formData.append('action[change_start_time]', this.action.start_time ?? false);
                 }
 
-                if (!!this.action.end) {
-                    formData.append('action[change_end_time]', this.action.end ?? false);
+                if (!!this.action.end_time) {
+                    formData.append('action[change_end_time]', this.action.end_time ?? false);
                 }
             }
 
