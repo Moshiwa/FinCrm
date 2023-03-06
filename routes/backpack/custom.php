@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ButtonCrudController;
 use App\Http\Controllers\Admin\ClientCrudController;
 use App\Http\Controllers\Admin\DealCrudController;
 use App\Http\Controllers\Admin\FieldCrudController;
+use App\Http\Controllers\Admin\ManagerCrudController;
 use App\Http\Controllers\Admin\StageCrudController;
 use App\Http\Controllers\Admin\TaskButtonCrudController;
 use App\Http\Controllers\Admin\TaskCrudController;
@@ -55,6 +56,7 @@ Route::group([
 
     Route::prefix('user')->name('user.')->group(function () {
         Route::get('find-users', [UserCrudController::class, 'findUsers'])->name('find');
+        Route::get('/{user}/load_comments', [ManagerCrudController::class, 'loadComments'])->name('loadComments');
     });
 
     Route::prefix('stage')->name('stage.')->group(function () {
@@ -71,4 +73,5 @@ Route::group([
     });
     Route::crud('task-stage', 'TaskStageCrudController');
     Route::crud('task-button', 'TaskButtonCrudController');
+    Route::crud('manager', 'ManagerCrudController');
 });

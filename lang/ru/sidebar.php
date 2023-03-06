@@ -13,5 +13,6 @@ return [
     'deal_buttons' => 'Кнопки сделок',
     'task_buttons' => 'Кнопки задач',
     'task_stages' => 'Статусы задач',
-    'tasks' => 'Задачи'
+    'tasks' => 'Задачи',
+    'managers' => 'Менеджеры'
 ];

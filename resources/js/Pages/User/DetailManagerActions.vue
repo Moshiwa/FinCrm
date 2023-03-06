@@ -1,0 +1,173 @@
+<template>
+    <div v-for="comment in comments">
+        <el-card style="margin: 10px">
+            <div class="row-right">
+                <div class="row-right__upper">
+                    <span v-html="comment.title" /> {{ comment.date_create }}
+                </div>
+                <div class="row-right__content">
+                    <div
+                        v-if="comment.type === 'document'"
+                        class="flex-inline"
+                    >
+                        <div
+                            v-for="file in comment.files"
+                            class="row-right__item-files"
+                        >
+                            <el-image
+                                v-if="definitionFileType(file.meme) === 'image'"
+                                style="width: 100px; height: 100px; border-radius: 4px;"
+                                :src="file.full_path"
+                                :zoom-rate="1.2"
+                                :preview-src-list="[file.full_path]"
+                                :initial-index="4"
+                                fit="cover"
+                            />
+                            <div v-else>
+                                <a :href="file.full_path" target="_blank">
+                                    <i class="las la-file-alt"></i>
+                                    {{ file.original_name }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else>
+                        <div class="content-container" v-if="comment.content?.length > 0">
+                            <div class="comment-content">
+                                {{comment.content}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-right__author">
+                    <div v-if="comment.task_id">
+                        <a :href="'/admin/task/' + comment.task_id + '/detail'">Задача</a>
+                    </div>
+                    <div v-else-if="comment.deal_id">
+                        <a :href="'/admin/deal/' + comment.deal_id + '/detail'">Сделка</a>
+                    </div>
+                </div>
+            </div>
+        </el-card>
+    </div>
+</template>
+
+<script>
+import Comments from "../../Components/Comments.vue";
+export default {
+    name: 'DetailManagerActions',
+    components: {
+        Comments
+    },
+    props: {
+        user: {
+            type: Object,
+            required: true,
+        },
+        auth: {
+            type: Object,
+            required: true,
+        }
+    },
+    mounted() {
+        console.log(this.user);
+        this.unionComments();
+        $(document).on('scroll', this.loadMore);
+    },
+    data() {
+        return {
+            comments: [],
+            dealComments: this.user.deal_comments ?? [],
+            taskComments: this.user.task_comments ?? [],
+
+            loading: false,
+        }
+    },
+    methods: {
+        unionComments() {
+            let data = this.dealComments.concat(this.taskComments);
+            this.comments = data.sort((a, b) => this.timestamp(b.created_at) - this.timestamp(a.created_at));
+            this.loading = false;
+        },
+        timestamp(date) {
+            var datum = Date.parse(date);
+            return datum/1000;
+        },
+        loadMore (e) {
+            if (this.loading) {
+                return;
+            }
+            let can = false;
+            let currentPos = window.pageYOffset;
+            let pos = document.body.offsetHeight - window.innerHeight;
+            if (pos <= (currentPos + 3)) {
+                can = true;
+            }
+
+            if (can) {
+                this.loading = true;
+                axios.get(
+                    '/admin/user/' + this.user.id + '/load_comments?offset_deal=' + this.dealComments.length + '&offset_task=' + this.taskComments.length
+                ).then((response) => {
+                    this.dealComments = this.dealComments.concat(response.data.deal_comments ?? []);
+                    this.taskComments = this.taskComments.concat(response.data.task_comments ?? []);
+                    this.unionComments();
+                })
+            }
+        },
+        definitionFileType(meme) {
+            switch (meme) {
+                case 'jpg':
+                case 'jpeg':
+                case 'png':
+                case 'svg':
+                    return 'image'
+                default:
+                    return 'document'
+            }
+        },
+
+    }
+}
+</script>
+
+<style scoped>
+.row-right__upper {
+    display: inline-flex;
+    justify-content: space-between;
+    width: 100%;
+}
+.row-right__content {
+    padding-left: 10px;
+}
+.row-right__content .la-trash-alt {
+    cursor: pointer;
+    font-size: 20px;
+    color: red;
+}
+.row-right__content i:hover {
+    filter: brightness(80%);
+}
+.row-right__upper > span {
+    font-size: 15px;
+    font-weight: 600;
+    opacity: 0.5;
+}
+.row-right__content {
+    display: flex;
+    justify-content: space-between;
+}
+.row-right__author {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    gap: 10px;
+    padding: 5px;
+}
+.flex-inline {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+</style>

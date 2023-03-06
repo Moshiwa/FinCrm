@@ -13,6 +13,7 @@ import DetailDeal from "./Pages/Deal/DetailDeal.vue";
 import DetailDealButton from "./Pages/Deal/DetailDealButton.vue";
 import DetailTaskButton from "./Pages/Task/DetailTaskButton.vue";
 import DetailTask from "./Pages/Task/DetailTask.vue";
+import DetailManagerActions from "./Pages/User/DetailManagerActions.vue";
 
 if (document.getElementById("vue-app")) {
 
@@ -26,7 +27,8 @@ if (document.getElementById("vue-app")) {
                 StageSettings,
                 DetailDealButton,
                 DetailTask,
-                DetailTaskButton
+                DetailTaskButton,
+                DetailManagerActions
             }
         });
 

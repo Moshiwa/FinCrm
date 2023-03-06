@@ -5,7 +5,7 @@ crud.field('type_id').onChange(function(field) {
 
 function toggleOptions() {
     let input = crud.field('type_id').input;
-    var text = input.options[input.selectedIndex].text;
+    let text = input.options[input.selectedIndex].text;
     if (text !== 'Выборка') {
         crud.field('options').hide();
     } else {
