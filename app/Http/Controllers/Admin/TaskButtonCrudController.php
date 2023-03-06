@@ -32,7 +32,6 @@ class TaskButtonCrudController extends CrudController
         if (empty($data['id'])) {
             $button = $button->create([
                 'name' => $data['name'],
-                'task_stage_id' => $data['task_stage_id'],
                 'color' => $data['color'] ?? null,
                 'icon' => $data['icon'] ?? null,
                 'options' => $options
@@ -41,7 +40,6 @@ class TaskButtonCrudController extends CrudController
             $button = $button->find($data['id']);
             $button->update([
                 'name' => $data['name'],
-                'task_stage_id' => $data['task_stage_id'],
                 'color' => $data['color'] ?? null,
                 'icon' => $data['icon'] ?? null,
                 'options' => $options
@@ -61,12 +59,13 @@ class TaskButtonCrudController extends CrudController
             'end_time' => $data['action']['end_time'] ?? null,
         ]);
 
-        $task_stage = TaskStage::query()->find($data['task_stage_id']);
-        $task_stage = (new ButtonService())->mergeTaskButtonsSettings($task_stage);
+        $buttons = \App\Models\TaskButton::query()->with(['visible', 'action'])->get();
+        $buttons = (new ButtonService())->mergeTaskButtonsSettings($buttons);
 
         return response()->json([
             'data' => [
-                'task_stage' => $task_stage
+                'buttons' => $buttons,
+                'task_stages' => TaskStage::query()->select(['id', 'name'])->get(),
             ],
             'errors' => [],
         ]);

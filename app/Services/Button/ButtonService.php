@@ -30,35 +30,24 @@ class ButtonService
         return $pipeline;
     }
 
-    public function mergeTaskButtonsSettings($task_stage): array
+    public function mergeTaskButtonsSettings($buttons): array
     {
-        $task_stage->load([
-            'buttons' => [
-                'visible',
-                'action' => [
-                    'responsible',
-                    'manager',
-                    'executor',
-                    'stage'
-                ]
-            ],
-        ]);
+        $buttons = $buttons->toArray();
 
-        $task_stages_all = TaskStage::query()->get()->toArray();
+        $all_stages = TaskStage::query()->get()->toArray();
 
-        $task_stage = $task_stage->toArray();
-        if (! empty($task_stage['buttons'])) {
-            foreach ($task_stage['buttons'] as $buttonIndex => $button) {
-                $task_stage['buttons'][$buttonIndex] = $this->mergeVisibleStages($button, $task_stages_all);
-            }
+        $result = [];
+
+        foreach ($buttons as $buttonIndex => $button) {
+            $result[] = $this->mergeVisibleStages($button, $all_stages);
         }
 
-        return $task_stage;
+        return $result;
     }
 
     private function mergeVisibleStages($button, $stages)
     {
-        $visible_stages= $button['visible'] ?? [];
+        $visible_stages = $button['visible'] ?? [];
 
         foreach ($stages as $index => $stage) {
             $stage['is_active'] = false;

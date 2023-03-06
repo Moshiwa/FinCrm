@@ -5,7 +5,6 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TaskStage extends Model
 {
@@ -17,20 +16,28 @@ class TaskStage extends Model
         'color'
     ];
 
-    public function buttons(): HasMany
+    public function buttons()
     {
-        return $this->hasMany(TaskButton::class);
+        return $this->belongsToMany(TaskButton::class, 'task_button_stages');
     }
 
     protected static function booted()
     {
         static::created(function (self $stage) {
-            $button = $stage->buttons()->create([
-                'name' => 'Комментировать',
-                'color' => 'green',
-                'icon' => 'comment',
-                'is_default' => true,
-            ]);
+            $button = TaskButton::query()->updateOrCreate(
+                [
+                    'name' => 'Комментировать',
+                    'color' => 'green',
+                    'icon' => 'comment',
+                    'is_default' => true,
+                ],
+                [
+                    'name' => 'Комментировать',
+                    'color' => 'green',
+                    'icon' => 'comment',
+                    'is_default' => true,
+                ]
+            );
 
             $button->visible()->attach($stage->id);
 

@@ -16,7 +16,6 @@ class TaskButton extends Model
 
     public $fillable = [
         'name',
-        'task_stage_id',
         'color',
         'icon',
         'is_default'

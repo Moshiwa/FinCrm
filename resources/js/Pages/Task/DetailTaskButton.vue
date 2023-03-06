@@ -7,44 +7,18 @@
     </a>
     <div class="b-settings__container">
         <div class="b-settings__header">
-<!--            <div class="b-settings__stages">
-                <div class="stage__buttons">
-                    <div
-                        v-for="taskStage in allTaskStages" @click="selectStage(taskStage)"
-                        :class="{
-                            active: taskStage.id === this.currentTaskStage.id,
-                            'stage__item': true
-                        }"
-                    >
-                        <a>{{ taskStage.name }}</a>
-                    </div>
-                </div>
-            </div>-->
         </div>
         <div class="b-settings__body">
             <div class="b-settings__buttons">
                 <div
                     class="button__item"
-                    v-for="button in currentTaskStage.buttons"
+                    v-for="button in allButtons"
                 >
                     <action-button
                         :button="button"
                         @click="openEditButton(button)"
                     />
                 </div>
-            </div>
-
-            <div
-                v-if="this.currentTaskStage.id"
-                class="b-settings__actions"
-            >
-                <a :href="'/admin/task-stage/' + this.currentTaskStage.id + '/edit'">Настроить статус</a>
-            </div>
-            <div
-                v-else
-                class="b-settings__actions"
-            >
-                <a :href="'/admin/task-stage/create'">Создать статус</a>
             </div>
         </div>
     </div>
@@ -254,6 +228,10 @@
 export default {
     name: 'DetailTaskButton',
     props: {
+        buttons: {
+            type: Array,
+            default: [],
+        },
         taskStages: {
             type: Array,
             default: [],
@@ -269,8 +247,8 @@ export default {
 
             allTaskStages: this.taskStages ?? [],
             allUsers: this.users ?? [],
+            allButtons: this.buttons ?? [],
 
-            currentTaskStage: this.taskStages[0] ?? { buttons: [] },
             currentButton: {},
             currentColor: '',
             currentIcon: '',
@@ -297,13 +275,9 @@ export default {
         }
     },
     mounted() {
-        console.log(this.taskStages)
+        console.log(this.buttons)
     },
     methods: {
-        /*selectStage(stage) {
-            console.log(stage)
-            this.currentTaskStage = stage;
-        },*/
         selectActionStage(stage_id) {
             if (!stage_id) {
                 this.currentActionStage = {};
@@ -345,7 +319,6 @@ export default {
                     action: {
                         stage: this.currentActionStage,
                     },
-                    task_stage_id: this.currentTaskStage.id
                 }
             }
             this.currentColor = button.color
@@ -359,7 +332,6 @@ export default {
             console.log(this.currentButton);
             data.id = this.currentButton.id ?? null;
             data.name = this.currentButton.name ?? null;
-            data.task_stage_id = this.currentButton.task_stage_id ?? null;
             data.action = this.currentButton.action ?? null;
             data.visible = this.currentButton.visible ?? null;
             data.color = this.currentColor ?? 'default';
@@ -367,7 +339,8 @@ export default {
 
             axios.post('/admin/task/buttons/save', data)
                 .then((response) => {
-                    this.currentTaskStage = response.data.data.task_stage ?? [];
+                    this.allButtons = response.data.data.buttons ?? [];
+                    this.allTaskStages = response.data.data.task_stages ?? [];
                     this.visibleDrawer = false;
                 });
         },
@@ -384,10 +357,10 @@ export default {
         remove() {
             axios.delete('/admin/task/buttons/' + this.currentButton.id)
                 .then((response) => {
-                    this.currentTaskStage.buttons.forEach((button, index) => {
+                    this.allButtons.forEach((button, index) => {
                         if(button.id === this.currentButton.id) {
                             this.visibleDrawer = false;
-                            this.currentTaskStage.buttons.splice(index, 1);
+                            this.allButtons.splice(index, 1);
                         }
                     })
                 });

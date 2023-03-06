@@ -32,7 +32,7 @@
     $task_fields = $service->getTaskFields($task);
     $stages = \App\Models\TaskStage::query()->get();
     $users = User::query()->select(['id', 'name'])->get();
-    $buttons = TaskButton::query()->with(['visible', 'action'])->where('task_stage_id', $task->stage->id)->get();
+    $buttons = TaskButton::query()->with(['visible', 'action'])->get();
 @endphp
 
 @section('content')

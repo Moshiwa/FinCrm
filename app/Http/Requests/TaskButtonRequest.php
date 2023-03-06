@@ -17,7 +17,6 @@ class TaskButtonRequest extends FormRequest
         return [
             'id' => 'nullable',
             'name' => 'required|min:3|max:255',
-            'task_stage_id' => 'required|exists:pipelines,id',
             'color' => 'nullable|string',
             'icon' => 'nullable|string',
             'visible' => 'array',

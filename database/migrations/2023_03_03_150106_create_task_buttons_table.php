@@ -11,9 +11,6 @@ return new class extends Migration
         Schema::create('task_buttons', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('task_stage_id')
-                ->constrained()
-                ->cascadeOnDelete();
             $table->string('color')->default('default');
             $table->string('icon')->default('angle-double-right');
             $table->boolean('is_default')->default(false);
