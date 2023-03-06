@@ -7,6 +7,7 @@ use App\Models\Client;
 use App\Models\Deal;
 use App\Models\Pipeline;
 use App\Models\Stage;
+use App\Models\User;
 use App\Services\Deal\DealService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -110,6 +111,7 @@ class DealCrudController extends CrudController
         return response()->json([
             'deal' => $deal,
             'stages' => $deal->pipeline->stages,
+            'users' => User::query()->select(['id', 'name'])->get(),
             'pipelines' => Pipeline::query()->select(['id', 'name'])->get(),
         ]);
 

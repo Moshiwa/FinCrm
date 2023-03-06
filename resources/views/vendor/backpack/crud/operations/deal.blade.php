@@ -36,7 +36,7 @@
     $deal_fields = $service->getDealFields($deal);
     $client_fields = $service->getClientFields($deal->client);
 
-    $users = User::query()->where('id', $deal->responsible_id)->get();
+    $users = User::query()->select(['id', 'name'])->get();
 @endphp
 
 @section('content')

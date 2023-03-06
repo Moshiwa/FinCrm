@@ -159,6 +159,7 @@ import Contenteditable from "../../Components/Contenteditable.vue";
 import FileUpload from "../../Components/FileUpload.vue";
 import { ElNotification } from 'element-plus'
 import ActionButtons from "../../Components/ActionButtons.vue";
+import ActionHelper from "../../Mixins/ActionHelper.vue";
 import Comments from "../../Components/Comments.vue";
 import Field from "../../Components/Field.vue";
 
@@ -171,6 +172,9 @@ export default {
         Field,
         Comments
     },
+    mixins: [
+        ActionHelper,
+    ],
     props: {
         auth: {
             type: Object,
@@ -209,11 +213,11 @@ export default {
             visibleFileUploadForm: false,
             shortcuts: [
                 {
-                    text: 'Today',
+                    text: 'Сегодня',
                     value: new Date(),
                 },
                 {
-                    text: 'Yesterday',
+                    text: 'Вчера',
                     value: () => {
                         const date = new Date()
                         date.setTime(date.getTime() - 3600 * 1000 * 24)
@@ -221,7 +225,7 @@ export default {
                     },
                 },
                 {
-                    text: 'A week ago',
+                    text: 'Неделю назад',
                     value: () => {
                         const date = new Date()
                         date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
@@ -248,27 +252,27 @@ export default {
     },
     methods: {
         changeStage(item) {
-            this.action = { task_stage_id: item.id };
+            this.action = this.actionChangeTaskStage(item.id);
             this.send();
         },
         changeResponsible(item) {
-            this.action = { responsible_id: item.id }
+            this.action = this.actionChangeResponsible(item.id);
             this.send();
         },
         changeManager(item) {
-            this.action = { manager_id: item.id }
+            this.action = this.actionChangeManager(item.id);
             this.send();
         },
         changeExecutor(item) {
-            this.action = { executor_id: item.id }
+            this.action = this.actionChangeExecutor(item.id);
             this.send();
         },
         changeStartTime(item) {
-            this.action = { start_time: item }
+            this.action = this.actionChangeStartTime(item);
             this.send();
         },
         changeEndTime(item) {
-            this.action = { end_time: item }
+            this.action = this.actionChangeEndTime(item);
             this.send();
         },
         loadMore (e) {
@@ -334,7 +338,6 @@ export default {
         },
         send() {
             const formData = new FormData();
-            console.log(this.thisTask);
             if (!!this.thisTask.id) {
                 formData.append('id', this.thisTask.id);
             }
@@ -366,40 +369,6 @@ export default {
             formData.append('comment_count', this.thisTask.comments.length ?? 0);
             formData.append('delete_comment_id', this.deleteCommentId);
 
-            if (!!this.action) {
-                if (!!this.action.id) {
-                    formData.append('action[id]', this.action.id ?? null);
-                }
-
-                if (!!this.action.task_stage_id) {
-                    formData.append('action[change_task_stage]', this.action.task_stage_id ?? null);
-                }
-
-                if (!!this.action.manager_id) {
-                    formData.append('action[change_manager]', this.action.manager_id ?? null);
-                }
-
-                if (!!this.action.executor_id) {
-                    formData.append('action[change_executor]', this.action.executor_id ?? null);
-                }
-
-                if (!!this.action.responsible_id) {
-                    formData.append('action[change_responsible]', this.action.responsible_id ?? null);
-                }
-
-                if (!!this.action.comment) {
-                    formData.append('action[comment]', this.action.comment ?? false);
-                }
-
-                if (!!this.action.start_time) {
-                    formData.append('action[change_start_time]', this.action.start_time ?? false);
-                }
-
-                if (!!this.action.end_time) {
-                    formData.append('action[change_end_time]', this.action.end_time ?? false);
-                }
-            }
-
             this.thisTask.fields = this.thisTask.fields ?? [];
             this.thisTask?.fields.forEach((field, fieldIndex) => {
                 formData.append('fields[' + field.id + '][value]', field.pivot?.value ?? '');
@@ -418,6 +387,11 @@ export default {
                     })
                 }
             });
+
+            let actionFormData = this.actionFormData(this.action);
+            for (let pair of actionFormData.entries()) {
+                formData.append(pair[0], pair[1]);
+            }
 
             axios
                 .post('/admin/task/update',  formData)

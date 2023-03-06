@@ -41,7 +41,6 @@
                         remote
                         reserve-keyword
                         placeholder="Please enter a keyword"
-                        :remote-method="getUsers"
                         @change="changeResponsible"
                     >
                         <el-option
@@ -129,6 +128,7 @@ import { ElNotification } from 'element-plus'
 import ActionButtons from "../../Components/ActionButtons.vue";
 import Comments from "../../Components/Comments.vue";
 import Field from "../../Components/Field.vue";
+import ActionHelper from "../../Mixins/ActionHelper.vue";
 
 export default {
     name: 'DetailDeal',
@@ -139,6 +139,9 @@ export default {
         Field,
         Comments
     },
+    mixins: [
+        ActionHelper
+    ],
     props: {
         auth: {
             type: Object,
@@ -206,21 +209,18 @@ export default {
             axios
                 .get('/admin/deal/get_stages/' + item.id,)
                 .then((response) => {
-                    this.action = { pipeline_id: item.id }
-
+                    this.action = this.actionChangePipeline(item.id);
                     this.allStages = response.data;
                     this.thisDeal.stage = response.data[0] ?? {}
                     this.send();
                 });
         },
         changeStage(item) {
-            this.action = { stage_id: item.id };
-
+            this.action = this.actionChangeStage(item.id);
             this.send();
         },
         changeResponsible(item) {
-            this.action = { responsible_id: item.id }
-
+            this.action = this.actionChangeResponsible(item.id);
             this.send();
         },
         loadMore (e) {
@@ -271,14 +271,6 @@ export default {
             }
             this.send();
         },
-        getUsers(query) {
-            if (query.length >= 3) {
-                axios.get('/admin/user/find-users?user_name=' + query)
-                    .then((response) => {
-                        this.responsibles = response.data.data;
-                    });
-            }
-        },
         changeData(options) {
             this.prepareDataByButtonOptions(options);
             this.send();
@@ -300,28 +292,6 @@ export default {
 
             formData.append('comment_count', this.thisDeal.comments.length ?? 0);
             formData.append('delete_comment_id', this.deleteCommentId);
-
-            if (!!this.action) {
-                if (!!this.action.id) {
-                    formData.append('action[id]', this.action.id ?? null);
-                }
-
-                if (!!this.action.pipeline_id) {
-                    formData.append('action[change_pipeline]', this.action.pipeline_id ?? null);
-                }
-
-                if (!!this.action.stage_id) {
-                    formData.append('action[change_stage]', this.action.stage_id ?? null);
-                }
-
-                if (!!this.action.responsible_id) {
-                    formData.append('action[change_responsible]', this.action.responsible_id ?? null);
-                }
-
-                if (!!this.action.comment) {
-                    formData.append('action[comment]', this.action.comment ?? false);
-                }
-            }
 
             this.thisDeal.fields = this.thisDeal.fields ?? [];
             this.thisDeal?.fields.forEach((field, fieldIndex) => {
@@ -349,13 +319,18 @@ export default {
                 }
             });
 
+            let actionFormData = this.actionFormData(this.action);
+            for (let pair of actionFormData.entries()) {
+                formData.append(pair[0], pair[1]);
+            }
+
             axios
                 .post('/admin/deal/update',  formData)
                 .then((response) => {
                     this.thisDeal = response.data.deal;
                     this.allStages = response.data.stages;
                     this.allPipelines = response.data.pipelines;
-                    this.responsibles = [this.thisDeal.responsible];
+                    this.responsibles = response.data.users;
                     this.stageButtons = response.data.deal.pipeline.buttons;
                     this.action = null;
                     ElNotification({
