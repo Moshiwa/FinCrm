@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\ColorStyleEnum;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Backpack\CRUD\Tests81\Unit\Models\Enums\StyleEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

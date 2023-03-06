@@ -17,10 +17,6 @@ class TestSeeder extends Seeder
         );
        //$client->fields()->sync([1, ['value' => '+79875227611']]);
 
-        TaskStage::query()->firstOrcreate(['name' => 'TestTaskStage'], [
-            'name' => 'TestTaskStage'
-        ]);
-
 
         Deal::query()->firstOrcreate(['name' => 'deal 1', 'pipeline_id' => 1,], [
             'name' => 'deal 1',

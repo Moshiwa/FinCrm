@@ -21,7 +21,7 @@ class TaskRequest extends FormRequest
             'start' => 'nullable',
             'end' => 'nullable',
 
-            'task_stage_id' => 'nullable|exists:stages,id',
+            'task_stage_id' => 'nullable|exists:task_stages,id',
             'responsible_id' => 'nullable|exists:App\Models\User,id',
             'manager_id' => 'nullable|exists:App\Models\User,id',
             'executor_id' => 'nullable|exists:App\Models\User,id',
@@ -50,7 +50,7 @@ class TaskRequest extends FormRequest
             'id.exists' => 'Задача с таким id не существует',
             'name.required' => 'Наименование задачи является обязательным полем',
             'name.max' => 'Наименование не должно превышать :max',
-            'stage.id.exists' => 'Стадии с таким id не существует',
+            'task_stage_id.exists' => 'Стадии с таким id не существует',
             'responsible_id.exists' => 'Пользователя с таким id не существует',
         ];
     }

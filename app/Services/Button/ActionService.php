@@ -46,7 +46,7 @@ class ActionService
         $action_comment = '';
 
         foreach ($actions as $action_name => $value) {
-            $action_name = ActionsEnum::findValue($action_name)?->value;
+            $action_name = ActionsEnum::fromName($action_name)?->value;
 
             if ($action_name === ActionsEnum::COMMENT->value) {
                 $comment['title'] = ActionsEnum::getMessageTemplate($action_name);
@@ -79,7 +79,7 @@ class ActionService
         $result = [];
 
         foreach ($actions as $action_name => $action) {
-            $sys_action = ActionsEnum::findValue($action_name)?->value;
+            $sys_action = ActionsEnum::fromName($action_name)?->value;
             $entity = ActionsEnum::getEntity($sys_action);
             $value = $action;
             if ($entity) {
@@ -102,7 +102,7 @@ class ActionService
                 continue;
             }
 
-            $this->actions[ActionsEnum::findValue($action_name)?->value] = [
+            $this->actions[ActionsEnum::fromName($action_name)?->value] = [
                 'new' => $value['name'] ?? $value
             ];
         }

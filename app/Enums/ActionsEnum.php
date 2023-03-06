@@ -14,20 +14,15 @@ enum ActionsEnum: string
     case CHANGE_START_TIME = 'change_start_time';
     case CHANGE_END_TIME = 'change_end_time';
 
-    public static function findValue($value): ?ActionsEnum
+    public static function fromName(string $name): ?self
     {
-        return match ($value) {
-            ActionsEnum::COMMENT->value => ActionsEnum::COMMENT,
-            ActionsEnum::CHANGE_PIPELINE->value => ActionsEnum::CHANGE_PIPELINE,
-            ActionsEnum::CHANGE_STAGE->value => ActionsEnum::CHANGE_STAGE,
-            ActionsEnum::CHANGE_TASK_STAGE->value => ActionsEnum::CHANGE_TASK_STAGE,
-            ActionsEnum::CHANGE_RESPONSIBLE->value => ActionsEnum::CHANGE_RESPONSIBLE,
-            ActionsEnum::CHANGE_MANAGER->value => ActionsEnum::CHANGE_MANAGER,
-            ActionsEnum::CHANGE_EXECUTOR->value => ActionsEnum::CHANGE_EXECUTOR,
-            ActionsEnum::CHANGE_START_TIME->value => ActionsEnum::CHANGE_START_TIME,
-            ActionsEnum::CHANGE_END_TIME->value => ActionsEnum::CHANGE_END_TIME,
-            default => null
-        };
+        foreach (self::cases() as $case) {
+            if( $name === $case->name ){
+                return $case;
+            }
+        }
+
+        return null;
     }
 
     public static function getEntity($value): ?string

@@ -7,7 +7,7 @@
     </a>
     <div class="b-settings__container">
         <div class="b-settings__header">
-            <div class="b-settings__stages">
+<!--            <div class="b-settings__stages">
                 <div class="stage__buttons">
                     <div
                         v-for="taskStage in allTaskStages" @click="selectStage(taskStage)"
@@ -19,7 +19,7 @@
                         <a>{{ taskStage.name }}</a>
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div>
         <div class="b-settings__body">
             <div class="b-settings__buttons">
@@ -300,10 +300,10 @@ export default {
         console.log(this.taskStages)
     },
     methods: {
-        selectStage(stage) {
+        /*selectStage(stage) {
             console.log(stage)
             this.currentTaskStage = stage;
-        },
+        },*/
         selectActionStage(stage_id) {
             if (!stage_id) {
                 this.currentActionStage = {};

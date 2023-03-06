@@ -397,6 +397,7 @@ export default {
             axios
                 .post('/admin/task/update',  formData)
                 .then((response) => {
+                    console.log(response.data.task);
                     this.thisTask = response.data.task;
                     this.allStages = response.data.stages;
                     this.users = response.data.users;

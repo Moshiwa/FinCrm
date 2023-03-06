@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\TaskStage;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -15,6 +16,14 @@ class DatabaseSeeder extends Seeder
         (new PipelineSeeder())->run();
         (new StagesSeeder())->run();
         (new SettingsSeeder())->run();
+
+        TaskStage::query()->firstOrcreate(['name' => 'Новая'], [
+            'name' => 'Новая'
+        ]);
+        TaskStage::query()->firstOrcreate(['name' => 'Завершена'], [
+            'name' => 'Завершена'
+        ]);
+
 
         (new TestSeeder())->run();
         (new FieldsSeeder())->run();
