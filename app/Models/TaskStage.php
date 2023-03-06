@@ -21,4 +21,20 @@ class TaskStage extends Model
     {
         return $this->hasMany(TaskButton::class);
     }
+
+    protected static function booted()
+    {
+        static::created(function (self $stage) {
+            $button = $stage->buttons()->create([
+                'name' => 'Комментировать',
+                'color' => 'green',
+                'icon' => 'comment',
+                'is_default' => true,
+            ]);
+
+            $button->action()->update([
+                'comment' => true
+            ]);
+        });
+    }
 }
