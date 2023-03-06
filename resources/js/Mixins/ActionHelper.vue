@@ -29,10 +29,6 @@ export default {
         actionFormData(action) {
             let formData = new FormData();
             if (!!action) {
-                if (!!action.id) {
-                    formData.append('action[id]', action.id ?? null);
-                }
-
                 if (!!this.action.pipeline_id) {
                     formData.append('action[change_pipeline]', this.action.pipeline_id ?? null);
                 }

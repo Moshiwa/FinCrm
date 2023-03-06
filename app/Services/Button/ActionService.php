@@ -46,8 +46,7 @@ class ActionService
         $action_comment = '';
 
         foreach ($actions as $action_name => $value) {
-            $action_name = ActionsEnum::fromName($action_name)?->value;
-
+            $action_name = ActionsEnum::fromValue($action_name)?->value;
             if ($action_name === ActionsEnum::COMMENT->value) {
                 $comment['title'] = ActionsEnum::getMessageTemplate($action_name);
                 $comment['type'] = DealComment::COMMENT;
@@ -79,11 +78,10 @@ class ActionService
         $result = [];
 
         foreach ($actions as $action_name => $action) {
-            $sys_action = ActionsEnum::fromName($action_name)?->value;
+            $sys_action = ActionsEnum::fromValue($action_name)?->value;
             $entity = ActionsEnum::getEntity($sys_action);
             $value = $action;
             if ($entity) {
-                $entity = "App\\Models\\" . $entity;
                 if (class_exists($entity)) {
                     $value = $entity::query()->select('id', 'name')->find($action)->toArray();
                 }
@@ -102,7 +100,7 @@ class ActionService
                 continue;
             }
 
-            $this->actions[ActionsEnum::fromName($action_name)?->value] = [
+            $this->actions[ActionsEnum::fromValue($action_name)?->value] = [
                 'new' => $value['name'] ?? $value
             ];
         }
@@ -110,7 +108,6 @@ class ActionService
 
     private function definitionOldAction(object $entity): void
     {
-        /*$entity = $this->entityLoadRelations($entity);*/
         foreach ($this->actions as $action_name => $action) {
             if (empty($action['new'])) {
                 continue;
@@ -130,19 +127,5 @@ class ActionService
                 }
             }
         }
-    }
-
-    private function entityLoadRelations($entity)
-    {
-        $load = [];
-        $load[] = $entity->pipeline?->exists() ? 'pipeline' : '';
-        $load[] = $entity->stage?->exists() ? 'stage' : '';
-        $load[] = $entity->responsible?->exists() ? 'responsible' : '';
-        $load[] = $entity->executor?->exists() ? 'executor' : '';
-        $load[] = $entity->manager?->exists() ? 'manager' : '';
-        $load = array_filter($load);
-        $entity->load($load);
-
-        return $entity;
     }
 }

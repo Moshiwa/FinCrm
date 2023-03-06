@@ -2,6 +2,11 @@
 
 namespace App\Enums;
 
+use App\Models\Pipeline;
+use App\Models\Stage;
+use App\Models\TaskStage;
+use App\Models\User;
+
 enum ActionsEnum: string
 {
     case COMMENT = 'comment';
@@ -14,10 +19,10 @@ enum ActionsEnum: string
     case CHANGE_START_TIME = 'change_start_time';
     case CHANGE_END_TIME = 'change_end_time';
 
-    public static function fromName(string $name): ?self
+    public static function fromValue(string $name): ?self
     {
         foreach (self::cases() as $case) {
-            if( $name === $case->name ){
+            if( $name === $case->value ){
                 return $case;
             }
         }
@@ -28,12 +33,12 @@ enum ActionsEnum: string
     public static function getEntity($value): ?string
     {
         return match ($value) {
-            ActionsEnum::CHANGE_PIPELINE->value => 'Pipeline',
-            ActionsEnum::CHANGE_STAGE->value => 'Stage',
-            ActionsEnum::CHANGE_TASK_STAGE->value => 'TaskStage',
+            ActionsEnum::CHANGE_PIPELINE->value => Pipeline::class,
+            ActionsEnum::CHANGE_STAGE->value => Stage::class,
+            ActionsEnum::CHANGE_TASK_STAGE->value => TaskStage::class,
             ActionsEnum::CHANGE_RESPONSIBLE->value,
             ActionsEnum::CHANGE_MANAGER->value,
-            ActionsEnum::CHANGE_EXECUTOR->value => 'User',
+            ActionsEnum::CHANGE_EXECUTOR->value => User::class,
             default => null
         };
     }
