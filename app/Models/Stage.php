@@ -39,11 +39,6 @@ class Stage extends Model
         return $this->belongsTo(Pipeline::class);
     }
 
-    public function getUrlSettingAttribute()
-    {
-        return "<a class='btn btn-outline-primary' href='/admin/stage/" . $this->id . "/edit'>Настройки</a>";
-    }
-
     protected static function booted()
     {
         static::created(function (self $stage) {

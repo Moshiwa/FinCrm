@@ -54,14 +54,6 @@ class PipelineCrudController extends CrudController
                         'class' => 'form-group col-md-6',
                     ],
                 ],
-                [
-                    'name' => 'url_setting',
-                    'type' => 'custom_html',
-                    'value' => '',
-                    'wrapper' => [
-                        'class' => 'form-group col-md-6',
-                    ],
-                ],
             ]
         );
     }

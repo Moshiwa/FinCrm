@@ -7,7 +7,7 @@
                     v-model="thisDeal.name"
                     @change="send"
                 />
-                <el-form-item label="Воронка">
+                <el-form-item label="Воронка/Стадия" class="select-container">
                     <el-select
                         v-model="thisDeal.pipeline"
                         value-key="id"
@@ -353,10 +353,11 @@ export default {
     display: flex;
     flex-direction: row;
     gap: 10px;
+    padding: 10px;
     width: calc(100% - 200px);
 }
 .card-left {
-    min-width: 55%;
+    min-width: 45%;
     padding: 8px;
 }
 .input-title {
@@ -368,7 +369,7 @@ export default {
     justify-content: flex-end;
 }
 .card-right {
-    width: inherit;
+    width: 100%;
 }
 .infinite-list {
     min-height: 700px;

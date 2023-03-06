@@ -83,7 +83,7 @@
                     </el-select>
                 </el-form-item>
 
-                <el-form-item label="Дата начала">
+                <el-form-item label="Даты начала/окончания" class="select-container">
                     <el-date-picker
                         v-model="thisTask.start"
                         type="datetime"
@@ -93,8 +93,6 @@
                         value-format="YYYY-MM-DD h:m:s"
                         @change="changeStartTime"
                     />
-                </el-form-item>
-                <el-form-item label="Дата окончания">
                     <el-date-picker
                         v-model="thisTask.end"
                         type="datetime"
@@ -421,6 +419,7 @@ export default {
     display: flex;
     flex-direction: row;
     gap: 10px;
+    padding: 10px;
     width: calc(100% - 200px);
 }
 .input-title {
@@ -429,14 +428,14 @@ export default {
     font-size: 30px;
 }
 .card-left {
-    min-width: 55%;
+    min-width: 45%;
     padding: 8px;
 }
 .card-body {
     justify-content: flex-end;
 }
 .card-right {
-    width: inherit;
+    width: 100%;
 }
 .infinite-list {
     min-height: 700px;
