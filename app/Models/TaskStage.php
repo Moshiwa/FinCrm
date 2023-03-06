@@ -32,6 +32,8 @@ class TaskStage extends Model
                 'is_default' => true,
             ]);
 
+            $button->visible()->attach($stage->id);
+
             $button->action()->update([
                 'comment' => true
             ]);

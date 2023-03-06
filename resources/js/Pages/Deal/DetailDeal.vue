@@ -64,6 +64,9 @@
                                 @send="send"
                             />
                         </el-form-item>
+                        <div>
+                            <a href="/admin/field/create?entity=deal">Добавить поле</a>
+                        </div>
                     </el-collapse-item>
                 </el-collapse>
 
@@ -85,6 +88,9 @@
                                 @send="send"
                             />
                         </el-form-item>
+                        <div>
+                            <a href="/admin/field/create?entity=client">Добавить поле</a>
+                        </div>
                     </el-collapse-item>
                 </el-collapse>
             </div>

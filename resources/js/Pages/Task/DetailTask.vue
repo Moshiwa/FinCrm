@@ -116,6 +116,9 @@
                                 @send="send"
                             />
                         </el-form-item>
+                        <div>
+                            <a href="/admin/field/create?entity=task">Добавить поле</a>
+                        </div>
                     </el-collapse-item>
                 </el-collapse>
             </div>

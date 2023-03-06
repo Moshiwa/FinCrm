@@ -14,6 +14,8 @@
 
     $task->load([
         'stage',
+        'stage.buttons.visible',
+        'stage.buttons.action',
         'fields.type',
         'comments' => function ($query) {
             $query->offset(0)->limit(10)->orderBy('created_at', 'desc');
