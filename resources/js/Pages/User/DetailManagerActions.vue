@@ -40,11 +40,11 @@
                     </div>
                 </div>
                 <div class="row-right__author">
-                    <div v-if="comment.task_id">
-                        <a :href="'/admin/task/' + comment.task_id + '/detail'">Задача</a>
+                    <div v-if="comment.commentable_type === 'App\\Models\\Task'">
+                        <a :href="'/admin/task/' + comment.commentable_id + '/detail'">Задача</a>
                     </div>
-                    <div v-else-if="comment.deal_id">
-                        <a :href="'/admin/deal/' + comment.deal_id + '/detail'">Сделка</a>
+                    <div v-else>
+                        <a :href="'/admin/deal/' + comment.commentable_id + '/detail'">Сделка</a>
                     </div>
                 </div>
             </div>
