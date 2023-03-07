@@ -70,12 +70,11 @@
                     </el-collapse-item>
                 </el-collapse>
 
-                <el-form-item label="Клиент">
-                    <el-input
-                        v-model="thisDeal.client.name"
-                        @change="send"
-                    />
-                </el-form-item>
+                <el-input
+                    class="input-subtitle hidden-border"
+                    v-model="thisDeal.client.name"
+                    @change="send"
+                />
                 <el-collapse v-model="active">
                     <el-collapse-item title="Данные о клиенте" name="2">
                         <el-form-item
@@ -370,6 +369,11 @@ export default {
     margin: 10px 0 10px 0;
     height: 40px;
     font-size: 30px;
+}
+.input-subtitle {
+    margin: 10px 0 10px 0;
+    height: 30px;
+    font-size: 20px;
 }
 .card-body {
     justify-content: flex-end;
