@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\CreateTask;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -55,6 +56,15 @@ class Task extends Model
     public function comments(): HasMany
     {
         return $this->hasMany(TaskComment::class);
+    }
+
+    protected static function booted()
+    {
+        static::created(function (self $task) {
+            event(new CreateTask($task));
+        });
+        static::updating(function (self $task) {
+        });
     }
 
 
