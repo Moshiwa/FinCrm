@@ -9,11 +9,6 @@ use Illuminate\Support\Carbon;
 
 class DealComment extends Model
 {
-
-    const COMMENT = 'comment';
-    const ACTION = 'action';
-    const DOCUMENT = 'document';
-
     protected $fillable = [
         'deal_id',
         'type',

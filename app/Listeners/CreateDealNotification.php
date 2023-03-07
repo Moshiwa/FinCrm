@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Enums\CommentTypeEnum;
 use App\Events\CreateDeal;
 use App\Models\DealComment;
 
@@ -16,13 +17,13 @@ class CreateDealNotification
     {
         if (backpack_user()?->id) {
             $event->deal->comments()->create([
-                'type' => DealComment::ACTION,
+                'type' => CommentTypeEnum::ACTION->value,
                 'title' => 'Сделка создана',
                 'author_id' => backpack_user()->id
             ]);
         } else {
             $event->deal->comments()->create([
-                'type' => DealComment::ACTION,
+                'type' => CommentTypeEnum::ACTION->value,
                 'title' => 'Сделка создана автоматически',
             ]);
         }

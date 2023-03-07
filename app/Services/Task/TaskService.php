@@ -2,6 +2,7 @@
 
 namespace App\Services\Task;
 
+use App\Enums\CommentTypeEnum;
 use App\Models\DealComment;
 use App\Models\File;
 use App\Models\TaskComment;
@@ -28,7 +29,7 @@ class TaskService
         if (empty($result['comment']['type'])) {
             if (! empty($result['files'])) {
                 $result['comment']['title'] = 'Документы';
-                $result['comment']['type'] = DealComment::DOCUMENT;
+                $result['comment']['type'] = CommentTypeEnum::DOCUMENT->value;
             }
         }
 
@@ -59,7 +60,7 @@ class TaskService
         if (! empty($data['delete_comment_id'])) {
             $model_comment = TaskComment::query()->find($data['delete_comment_id']);
             //Action нельзя удалять
-            if ($model_comment->type === DealComment::ACTION) {
+            if ($model_comment->type === CommentTypeEnum::ACTION->value) {
                 $model_comment->update(['content' => '']);
             } else {
                 foreach ($model_comment->files as $file) {
