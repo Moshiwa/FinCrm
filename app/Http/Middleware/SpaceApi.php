@@ -11,19 +11,19 @@ class SpaceApi
     public function handle(Request $request, Closure $next)
     {
         // Проверяем указан ли код организации
-        $spaceCode = $request->headers->get('X-Space');
-        if(!$spaceCode) {
+        $space_code = $request->headers->get('X-Space');
+        if(! $space_code) {
             abort(400, 'The organization is not specified');
         }
 
         // Проверяем существует ли организация с таким кодом
-        $spaces = $request->user()->spaces()->active()->pluck('name', 'code')->toArray();
-        if (!array_key_exists($spaceCode, $spaces)) {
+        $spaces = $request->user()->spaces()->pluck('name', 'code')->toArray();
+        if (! array_key_exists($space_code, $spaces)) {
             abort(403, 'Organization not found');
         }
 
         // Устанавливаем данную организацию по умолчанию
-        SpaceService::setCurrentSpaceCode($spaceCode);
+        SpaceService::setCurrentSpaceCode($space_code);
 
         // Проверяем есть ли разрешение на использование API
         /*if (!$request->user()->can('api')) {

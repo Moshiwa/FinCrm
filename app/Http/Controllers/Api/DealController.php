@@ -7,30 +7,19 @@ use App\Http\Requests\DealRequest;
 use App\Http\Resources\DealResource;
 use App\Models\Deal;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class DealController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $with = $request->get('with', 'fields');
-
-        $deals = Deal::query()
-            ->with($with)
-            ->get();
+        $deals = Deal::query()->get();
 
         return DealResource::collection($deals);
     }
 
-    public function show(Request $request, Deal $deal)
+    public function show(Request $request, Deal $deal): DealResource
     {
-        $with = $request->get('with', 'fields');
-        $deal->load($with);
-
         return DealResource::make($deal);
-    }
-
-    public function store(DealRequest $request, Deal $client)
-    {
-
     }
 }

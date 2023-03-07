@@ -7,30 +7,19 @@ use App\Http\Requests\PipelineRequest;
 use App\Http\Resources\PipelineResource;
 use App\Models\Pipeline;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class PipelineController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $with = $request->get('with', 'stages');
-
-        $pipelines = Pipeline::query()
-            ->with($with)
-            ->get();
+        $pipelines = Pipeline::query()->get();
 
         return PipelineResource::collection($pipelines);
     }
 
-    public function show(Request $request, Pipeline $pipeline)
+    public function show(Request $request, Pipeline $pipeline): PipelineResource
     {
-        $with = $request->get('with', 'stages');
-        $pipeline->load($with);
-
         return PipelineResource::make($pipeline);
-    }
-
-    public function store(PipelineRequest $request, Pipeline $pipeline)
-    {
-
     }
 }

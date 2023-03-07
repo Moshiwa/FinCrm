@@ -9,25 +9,19 @@ use App\Http\Resources\UserResource;
 use App\Models\Deal;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class UserController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $with = $request->get('with', []);
-
-        $users = User::query()
-            ->with($with)
-            ->get();
+        $users = User::query()->get();
 
         return UserResource::collection($users);
     }
 
-    public function show(Request $request, User $user)
+    public function show(Request $request, User $user): UserResource
     {
-        $with = $request->get('with', []);
-        $user->load($with);
-
         return UserResource::make($user);
     }
 }
