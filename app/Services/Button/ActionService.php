@@ -3,6 +3,7 @@
 namespace App\Services\Button;
 
 use App\Enums\ActionsEnum;
+use App\Enums\CommentTypeEnum;
 use App\Models\DealComment;
 use Illuminate\Support\Str;
 
@@ -49,7 +50,7 @@ class ActionService
             $action_name = ActionsEnum::fromValue($action_name)?->value;
             if ($action_name === ActionsEnum::COMMENT->value) {
                 $comment['title'] = ActionsEnum::getMessageTemplate($action_name);
-                $comment['type'] = DealComment::COMMENT;
+                $comment['type'] = CommentTypeEnum::COMMENT->value;
                 continue;
             }
 
@@ -58,7 +59,8 @@ class ActionService
             $value['new'] = $value['new'] ?? '';
             if ($value['old'] != $value['new']) {
                 $text = ActionsEnum::getMessageTemplate($action_name);
-                $text = Str::replaceArray('[ActionValue]', [$value['old'], $value['new']], $text);
+                $text .= empty($value['old']) ? '' :  ' с <i style="color: #0B90C4">' . $value['old'] . '</i>';
+                $text .= empty($value['new']) ? '' :  ' на <i style="color: #0B90C4">' . $value['new'] . '</i><br>';
             }
 
             $action_comment .= $text;
@@ -66,8 +68,7 @@ class ActionService
 
         if (!empty($action_comment)) {
             $comment['title'] = $action_comment;
-            //ToDo вынести константы в enum
-            $comment['type'] = DealComment::ACTION;
+            $comment['type'] = CommentTypeEnum::ACTION->value;
         }
 
         return $comment;

@@ -6,9 +6,12 @@ use App\Models\Pipeline;
 use App\Models\Stage;
 use App\Models\TaskStage;
 use App\Models\User;
+use App\Traits\EnumUpdateTrait;
 
 enum ActionsEnum: string
 {
+    use EnumUpdateTrait;
+
     case COMMENT = 'comment';
     case CHANGE_PIPELINE = 'change_pipeline';
     case CHANGE_STAGE = 'change_stage';
@@ -19,17 +22,7 @@ enum ActionsEnum: string
     case CHANGE_START_TIME = 'change_start_time';
     case CHANGE_END_TIME = 'change_end_time';
 
-    public static function fromValue(string $name): ?self
-    {
-        foreach (self::cases() as $case) {
-            if( $name === $case->value ){
-                return $case;
-            }
-        }
-
-        return null;
-    }
-
+    //Для получения наименования нового значения
     public static function getEntity($value): ?string
     {
         return match ($value) {
@@ -43,6 +36,7 @@ enum ActionsEnum: string
         };
     }
 
+    //Для получения старых значений
     public static function getRelation($value): ?string
     {
         return match ($value) {
@@ -57,18 +51,19 @@ enum ActionsEnum: string
         };
     }
 
+    //Определение сообщения
     public static function getMessageTemplate($value): string
     {
         return match ($value) {
             ActionsEnum::COMMENT->value => 'Комментарий',
-            ActionsEnum::CHANGE_PIPELINE->value => 'Смена воронки с <i style="color: #0B90C4">[ActionValue]</i> на <i style="color: #0B90C4">[ActionValue]</i><br>',
-            ActionsEnum::CHANGE_STAGE->value => 'Смена стадии с <i style="color: #0B90C4">[ActionValue]</i> на <i style="color: #0B90C4">[ActionValue]</i><br>',
-            ActionsEnum::CHANGE_TASK_STAGE->value => 'Смена статуса с <i style="color: #0B90C4">[ActionValue]</i> на <i style="color: #0B90C4">[ActionValue]</i><br>',
-            ActionsEnum::CHANGE_RESPONSIBLE->value => 'Смена ответственного с <i style="color: #0B90C4">[ActionValue]</i> на <i style="color: #0B90C4">[ActionValue]</i><br>',
-            ActionsEnum::CHANGE_MANAGER->value => 'Смена наблюдателя с <i style="color: #0B90C4">[ActionValue]</i> на <i style="color: #0B90C4">[ActionValue]</i><br>',
-            ActionsEnum::CHANGE_EXECUTOR->value => 'Смена исполнителя с <i style="color: #0B90C4">[ActionValue]</i> на <i style="color: #0B90C4">[ActionValue]</i><br>',
-            ActionsEnum::CHANGE_START_TIME->value => 'Смена даты старта задачи с <i style="color: #0B90C4">[ActionValue]</i> на <i style="color: #0B90C4">[ActionValue]</i><br>',
-            ActionsEnum::CHANGE_END_TIME->value => 'Смена даты окончания задачи с <i style="color: #0B90C4">[ActionValue]</i> на <i style="color: #0B90C4">[ActionValue]</i><br>',
+            ActionsEnum::CHANGE_PIPELINE->value => 'Смена воронки',
+            ActionsEnum::CHANGE_STAGE->value => 'Смена стадии',
+            ActionsEnum::CHANGE_TASK_STAGE->value => 'Смена статуса',
+            ActionsEnum::CHANGE_RESPONSIBLE->value => 'Смена ответственного',
+            ActionsEnum::CHANGE_MANAGER->value => 'Смена наблюдателя',
+            ActionsEnum::CHANGE_EXECUTOR->value => 'Смена исполнителя',
+            ActionsEnum::CHANGE_START_TIME->value => 'Смена даты старта задачи',
+            ActionsEnum::CHANGE_END_TIME->value => 'Смена даты окончания задачи',
             default => ''
         };
     }
