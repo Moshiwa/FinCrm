@@ -32,17 +32,12 @@ class ManagerCrudController extends CrudController
 
     public function loadComments(User $user, Request $request)
     {
-        $offset_deal = $request->get('offset_deal');
-        $offset_task = $request->get('offset_task');
+        $offset = $request->get('offset');
         $user->load([
-            'deal_comments' => function ($query) use ($offset_deal) {
-                $query->offset($offset_deal)->limit(5)->orderBy('created_at', 'desc');
+            'comments' => function ($query) use ($offset) {
+                $query->offset($offset)->limit(5)->orderBy('created_at', 'desc');
             },
-            'deal_comments.files',
-            'task_comments' => function ($query) use ($offset_task) {
-                $query->offset($offset_task)->limit(5)->orderBy('created_at', 'desc');
-            },
-            'task_comments.files'
+            'comments.files',
         ]);
 
         $user = $user->toArray();

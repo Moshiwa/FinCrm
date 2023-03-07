@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Deal extends Model
 {
@@ -54,9 +55,9 @@ class Deal extends Model
         return $this->belongsTo(Client::class);
     }
 
-    public function comments(): HasMany
+    public function comments(): morphMany
     {
-        return $this->hasMany(DealComment::class);
+        return $this->morphMany(Comment::class, 'commentable');
     }
 
     protected static function booted()

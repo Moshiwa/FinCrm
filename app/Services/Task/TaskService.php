@@ -3,7 +3,7 @@
 namespace App\Services\Task;
 
 use App\Enums\CommentTypeEnum;
-use App\Models\DealComment;
+use App\Models\Comment;
 use App\Models\File;
 use App\Models\TaskComment;
 use App\Services\Button\ActionService;

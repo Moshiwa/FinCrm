@@ -4,7 +4,7 @@ namespace App\Listeners;
 
 use App\Enums\CommentTypeEnum;
 use App\Events\ChangeStage;
-use App\Models\DealComment;
+use App\Models\Comment;
 
 class ChangeStageNotification
 {

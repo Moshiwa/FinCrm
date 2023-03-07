@@ -71,28 +71,15 @@ export default {
     },
     mounted() {
         console.log(this.user);
-        this.unionComments();
         $(document).on('scroll', this.loadMore);
     },
     data() {
         return {
-            comments: [],
-            dealComments: this.user.deal_comments ?? [],
-            taskComments: this.user.task_comments ?? [],
-
+            comments: this.user.comments,
             loading: false,
         }
     },
     methods: {
-        unionComments() {
-            let data = this.dealComments.concat(this.taskComments);
-            this.comments = data.sort((a, b) => this.timestamp(b.created_at) - this.timestamp(a.created_at));
-            this.loading = false;
-        },
-        timestamp(date) {
-            var datum = Date.parse(date);
-            return datum/1000;
-        },
         loadMore (e) {
             if (this.loading) {
                 return;
@@ -107,11 +94,10 @@ export default {
             if (can) {
                 this.loading = true;
                 axios.get(
-                    '/admin/user/' + this.user.id + '/load_comments?offset_deal=' + this.dealComments.length + '&offset_task=' + this.taskComments.length
+                    '/admin/user/' + this.user.id + '/load_comments?offset=' + this.comments.length
                 ).then((response) => {
-                    this.dealComments = this.dealComments.concat(response.data.deal_comments ?? []);
-                    this.taskComments = this.taskComments.concat(response.data.task_comments ?? []);
-                    this.unionComments();
+                    this.comments = this.comments.concat(response.data.comments ?? []);
+                    this.loading = false;
                 })
             }
         },

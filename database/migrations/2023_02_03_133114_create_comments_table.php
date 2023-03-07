@@ -9,22 +9,25 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('task_comments', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('task_id')
+            $table->morphs('commentable');
+            /*$table->foreignId('deal_id')
                 ->constrained()
-                ->cascadeOnDelete();
+                ->cascadeOnDelete();*/
             $table->string('type');
+            $table->string('action_name')->default('');
             $table->text('title')->default('');
             $table->text('content')->default('');
             $table->timestamps();
         });
 
-        SpaceService::addBaseModelForeignIdMigration('task_comments', 'author_id', 'users', 'cascade', true);
+        SpaceService::addBaseModelForeignIdMigration('comments', 'author_id', 'users', 'cascade', true);
+
     }
 
     public function down()
     {
-        Schema::dropIfExists('task_comments');
+        Schema::dropIfExists('comments');
     }
 };

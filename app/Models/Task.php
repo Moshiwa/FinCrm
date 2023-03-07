@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Task extends Model
 {
@@ -53,9 +54,9 @@ class Task extends Model
             ->withPivot('value');
     }
 
-    public function comments(): HasMany
+    public function comments(): morphMany
     {
-        return $this->hasMany(TaskComment::class);
+        return $this->morphMany(Comment::class, 'commentable');
     }
 
     protected static function booted()

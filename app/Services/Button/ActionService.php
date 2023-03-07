@@ -4,7 +4,7 @@ namespace App\Services\Button;
 
 use App\Enums\ActionsEnum;
 use App\Enums\CommentTypeEnum;
-use App\Models\DealComment;
+use App\Models\Comment;
 use Illuminate\Support\Str;
 
 class ActionService

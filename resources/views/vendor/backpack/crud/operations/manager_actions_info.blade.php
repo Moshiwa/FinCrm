@@ -13,14 +13,10 @@
     $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
     $crud = [];
     $user->load([
-        'deal_comments' => function ($query) {
-            $query->offset(0)->limit(5)->orderBy('created_at', 'desc');
+        'comments' => function ($query) {
+            $query->offset(0)->limit(10)->orderBy('created_at', 'desc');
         },
-        'deal_comments.files',
-        'task_comments' => function ($query) {
-            $query->offset(0)->limit(5)->orderBy('created_at', 'desc');
-        },
-        'task_comments.files'
+        'comments.files',
     ]);
 
 @endphp

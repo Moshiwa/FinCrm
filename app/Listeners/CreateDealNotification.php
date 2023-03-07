@@ -4,7 +4,7 @@ namespace App\Listeners;
 
 use App\Enums\CommentTypeEnum;
 use App\Events\CreateDeal;
-use App\Models\DealComment;
+use App\Models\Comment;
 
 class CreateDealNotification
 {

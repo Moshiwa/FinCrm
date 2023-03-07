@@ -7,14 +7,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 
-class DealComment extends Model
+class Comment extends Model
 {
     protected $fillable = [
         'deal_id',
         'type',
         'title',
         'content',
-        'author_id'
+        'author_id',
+        'action_name'
     ];
 
     protected $appends = [
@@ -25,8 +26,8 @@ class DealComment extends Model
     {
         return $this->belongsToMany(
             File::class,
-            'deal_comments_files',
-            'deal_comment_id',
+            'comments_files',
+            'comment_id',
             'file_id'
         );
     }

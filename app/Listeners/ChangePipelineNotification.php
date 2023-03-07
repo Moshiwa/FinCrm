@@ -5,7 +5,7 @@ namespace App\Listeners;
 use App\Enums\CommentTypeEnum;
 use App\Events\ChangePipeline;
 use App\Models\Deal;
-use App\Models\DealComment;
+use App\Models\Comment;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 

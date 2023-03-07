@@ -3,7 +3,7 @@
 namespace App\Services\Deal;
 
 use App\Enums\CommentTypeEnum;
-use App\Models\DealComment;
+use App\Models\Comment;
 use App\Models\File;
 use App\Services\Button\ActionService;
 use App\Services\Space\SpaceService;
@@ -66,7 +66,7 @@ class DealService
     private function deleteComments($deal, array $data)
     {
         if (! empty($data['delete_comment_id'])) {
-            $model_comment = DealComment::query()->find($data['delete_comment_id']);
+            $model_comment = Comment::query()->find($data['delete_comment_id']);
             //Action нельзя удалять
             if ($model_comment->type === CommentTypeEnum::ACTION->value) {
                 $model_comment->update(['content' => '']);

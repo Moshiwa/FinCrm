@@ -66,14 +66,9 @@ class User extends Authenticatable
             ->using(UserSpace::class);
     }
 
-    public function deal_comments(): HasMany
+    public function comments(): HasMany
     {
-        return $this->hasMany(DealComment::class, 'author_id');
-    }
-
-    public function task_comments(): HasMany
-    {
-        return $this->hasMany(TaskComment::class, 'author_id');
+        return $this->hasMany(Comment::class, 'author_id');
     }
 
     public function deals(): hasMany
