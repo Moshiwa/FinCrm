@@ -5,13 +5,13 @@
                 <el-input
                     class="input-title hidden-border"
                     v-model="thisTask.name"
-                    @change="send"
+                    @change="changeName"
                 />
                 <el-form-item label="Описание">
                     <el-input
                         type="textarea"
                         v-model="thisTask.description"
-                        @change="send"
+                        @change="changeDescription"
                     />
                 </el-form-item>
                 <el-form-item label="Статус">
@@ -254,6 +254,14 @@ export default {
     methods: {
         changeStage(item) {
             this.action = this.actionChangeTaskStage(item.id);
+            this.send();
+        },
+        changeName(item) {
+            this.action = this.actionChangeName(item);
+            this.send();
+        },
+        changeDescription(item) {
+            this.action = this.actionChangeDescription(item);
             this.send();
         },
         changeResponsible(item) {

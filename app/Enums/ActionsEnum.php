@@ -21,8 +21,10 @@ enum ActionsEnum: string
     case CHANGE_EXECUTOR = 'change_executor';
     case CHANGE_START_TIME = 'change_start_time';
     case CHANGE_END_TIME = 'change_end_time';
+    case CHANGE_NAME = 'change_name';
+    case CHANGE_DESCRIPTION = 'change_description';
 
-    //Для получения наименования нового значения
+    //Для получения наименования нового значения если передан id сущности
     public static function getEntity($value): ?string
     {
         return match ($value) {
@@ -47,6 +49,8 @@ enum ActionsEnum: string
             ActionsEnum::CHANGE_EXECUTOR->value => 'executor.name',
             ActionsEnum::CHANGE_START_TIME->value => 'start',
             ActionsEnum::CHANGE_END_TIME->value => 'end',
+            ActionsEnum::CHANGE_NAME->value => 'name',
+            ActionsEnum::CHANGE_DESCRIPTION->value => 'description',
             default => null
         };
     }
@@ -64,6 +68,8 @@ enum ActionsEnum: string
             ActionsEnum::CHANGE_EXECUTOR->value => 'Смена исполнителя',
             ActionsEnum::CHANGE_START_TIME->value => 'Смена даты старта задачи',
             ActionsEnum::CHANGE_END_TIME->value => 'Смена даты окончания задачи',
+            ActionsEnum::CHANGE_NAME->value => 'Смена наименования',
+            ActionsEnum::CHANGE_DESCRIPTION->value => 'Смена описания',
             default => ''
         };
     }

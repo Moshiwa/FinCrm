@@ -26,9 +26,23 @@ export default {
         actionChangeEndTime(value) {
             return { end_time: value }
         },
+        actionChangeName(value) {
+            return { name: value }
+        },
+        actionChangeDescription(value) {
+            return { description: value }
+        },
         actionFormData(action) {
             let formData = new FormData();
             if (!!action) {
+                if (!!this.action.name) {
+                    formData.append('action[change_name]', this.action.name ?? null);
+                }
+
+                if (!!this.action.description) {
+                    formData.append('action[change_description]', this.action.description ?? null);
+                }
+
                 if (!!this.action.pipeline_id) {
                     formData.append('action[change_pipeline]', this.action.pipeline_id ?? null);
                 }
