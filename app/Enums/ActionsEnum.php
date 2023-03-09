@@ -23,6 +23,25 @@ enum ActionsEnum: string
     case CHANGE_END_TIME = 'change_end_time';
     case CHANGE_NAME = 'change_name';
     case CHANGE_DESCRIPTION = 'change_description';
+    case CHANGE_CLIENT_NAME = 'change_client_name';
+
+    public static function definitionActionsByRequest(): ?array
+    {
+        return [
+            ActionsEnum::COMMENT->value => 'new_comment.content',
+            ActionsEnum::CHANGE_PIPELINE->value => 'pipeline_id',
+            ActionsEnum::CHANGE_STAGE->value => 'stage_id',
+            ActionsEnum::CHANGE_TASK_STAGE->value => 'task_stage_id',
+            ActionsEnum::CHANGE_RESPONSIBLE->value => 'responsible_id',
+            ActionsEnum::CHANGE_MANAGER->value => 'manager_id',
+            ActionsEnum::CHANGE_EXECUTOR->value => 'executor_id',
+            ActionsEnum::CHANGE_START_TIME->value => 'start',
+            ActionsEnum::CHANGE_END_TIME->value => 'end',
+            ActionsEnum::CHANGE_NAME->value => 'name',
+            ActionsEnum::CHANGE_DESCRIPTION->value => 'description',
+            ActionsEnum::CHANGE_CLIENT_NAME->value => 'client.name',
+        ];
+    }
 
     //Для получения наименования нового значения если передан id сущности
     public static function getEntity($value): ?string
@@ -51,6 +70,7 @@ enum ActionsEnum: string
             ActionsEnum::CHANGE_END_TIME->value => 'end',
             ActionsEnum::CHANGE_NAME->value => 'name',
             ActionsEnum::CHANGE_DESCRIPTION->value => 'description',
+            ActionsEnum::CHANGE_CLIENT_NAME->value => 'client.name',
             default => null
         };
     }
@@ -70,6 +90,7 @@ enum ActionsEnum: string
             ActionsEnum::CHANGE_END_TIME->value => 'Смена даты окончания задачи',
             ActionsEnum::CHANGE_NAME->value => 'Смена наименования',
             ActionsEnum::CHANGE_DESCRIPTION->value => 'Смена описания',
+            ActionsEnum::CHANGE_CLIENT_NAME->value => 'Смена имени клиента',
             default => ''
         };
     }

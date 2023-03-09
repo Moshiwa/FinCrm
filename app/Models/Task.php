@@ -27,6 +27,11 @@ class Task extends Model
         'executor_id',
     ];
 
+    public $casts = [
+        'start' => 'datetime:Y-m-d H:i:s',
+        'end' => 'datetime:Y-m-d H:i:s',
+    ];
+
     public function responsible(): BelongsTo
     {
         return $this->belongsTo(User::class);

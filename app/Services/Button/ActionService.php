@@ -5,6 +5,7 @@ namespace App\Services\Button;
 use App\Enums\ActionsEnum;
 use App\Enums\CommentTypeEnum;
 use App\Models\Comment;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class ActionService
@@ -21,22 +22,10 @@ class ActionService
         }
     }
 
-    public function definitionAction(array $action, object $entity): array
-    {
-        $action = $this->prepareAction($action);
-
-        $this->definitionNewAction($action);
-        $this->definitionOldAction($entity);
-
-        return array_filter($this->actions, function ($item) {
-            return !empty($item['new']) || !empty($item['old']);
-        });
-    }
-
-    public function getActionMessage(object $entity, array $action): array
+    public function getActionMessage(object $entity, array $save_data): array
     {
         $actionService = new ActionService();
-        $actions = $actionService->definitionAction($action, $entity);
+        $actions = $actionService->definitionAction($entity, $save_data);
 
         $comment = [
             'title' => '',
@@ -48,6 +37,7 @@ class ActionService
 
         foreach ($actions as $action_name => $value) {
             $action_name = ActionsEnum::fromValue($action_name)?->value;
+
             if ($action_name === ActionsEnum::COMMENT->value) {
                 $comment['title'] = ActionsEnum::getMessageTemplate($action_name);
                 $comment['type'] = CommentTypeEnum::COMMENT->value;
@@ -74,6 +64,39 @@ class ActionService
         return $comment;
     }
 
+    private function definitionAction(object $entity, array $save_data): array
+    {
+        $ready_action = [];
+        $actions = ActionsEnum::definitionActionsByRequest();
+        foreach ($actions as $action_name => $request_path) {
+            $paths = explode('.', $request_path);
+            $node = $save_data;
+            foreach ($paths as $path) {
+                if (isset($node[$path])) {
+                    $node = $node[$path];
+                } else {
+                    break;
+                }
+            }
+
+            $node = is_array($node) ? null : $node;
+
+            $ready_action[$action_name] = $node;
+            if ($action_name === ActionsEnum::COMMENT->value) {
+                $ready_action[$action_name] = !empty($node);
+            }
+        }
+
+        $action = $this->prepareAction($ready_action);
+
+        $this->definitionNewAction($action);
+        $this->definitionOldAction($entity);
+
+        return array_filter($this->actions, function ($item) {
+            return !empty($item['new']) || !empty($item['old']);
+        });
+    }
+
     private function prepareAction(array $actions): array
     {
         $result = [];
@@ -82,7 +105,7 @@ class ActionService
             $sys_action = ActionsEnum::fromValue($action_name)?->value;
             $entity = ActionsEnum::getEntity($sys_action);
             $value = $action;
-            if ($entity) {
+            if ($entity && is_numeric($action)) {
                 if (class_exists($entity)) {
                     $value = $entity::query()->select('id', 'name')->find($action)->toArray();
                 }
@@ -100,6 +123,9 @@ class ActionService
             if (empty($value)) {
                 continue;
             }
+
+            $value = $value['name'] ?? $value;
+            $value = strtotime($value) ? Carbon::make($value)->translatedFormat('j F Y H:i') : $value;
 
             $this->actions[ActionsEnum::fromValue($action_name)?->value] = [
                 'new' => $value['name'] ?? $value
@@ -122,10 +148,17 @@ class ActionService
             }
 
             if ($entity->{$relations[0]}) {
-                $this->actions[$action_name]['old'] = $entity->{$relations[0]};
+                $value = $entity->{$relations[0]};
+                $this->actions[$action_name]['old'] = $value;
                 if (isset($relations[1])) {
-                    $this->actions[$action_name]['old'] = $entity->{$relations[0]}->{$relations[1]};
+                    $value = $entity->{$relations[0]}->{$relations[1]};
+                    $this->actions[$action_name]['old'] = $value;
                 }
+
+                $this->actions[$action_name]['old'] = strtotime($this->actions[$action_name]['old'])
+                    ? Carbon::make($this->actions[$action_name]['old'])->translatedFormat('j F Y H:i')
+                    : $this->actions[$action_name]['old'];
+
             }
         }
     }

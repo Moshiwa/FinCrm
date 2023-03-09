@@ -18,8 +18,7 @@ class DealService
             'files' => []
         ];
 
-        $action = $data['action'] ?? [];
-        $result['comment'] += (new ActionService())->getActionMessage($deal, $action);
+        $result['comment'] += (new ActionService())->getActionMessage($deal, $data);
         $result['comment']['content'] = $data['new_comment']['content'] ?? '';
         $result['comment']['author_id'] = backpack_user()->id;
 

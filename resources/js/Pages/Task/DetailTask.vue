@@ -5,20 +5,20 @@
                 <el-input
                     class="input-title hidden-border"
                     v-model="thisTask.name"
-                    @change="changeName"
+                    @change="send"
                 />
                 <el-form-item label="Описание">
                     <el-input
                         type="textarea"
                         v-model="thisTask.description"
-                        @change="changeDescription"
+                        @change="send"
                     />
                 </el-form-item>
                 <el-form-item label="Статус">
                     <el-select
                         v-model="thisTask.stage"
                         value-key="id"
-                        @change="changeStage"
+                        @change="send"
                     >
                         <el-option
                             v-for="stage in allStages"
@@ -36,7 +36,7 @@
                         remote
                         reserve-keyword
                         placeholder="Please enter a keyword"
-                        @change="changeResponsible"
+                        @change="send"
                     >
                         <el-option
                             v-for="user in users"
@@ -54,7 +54,7 @@
                         remote
                         reserve-keyword
                         placeholder="Please enter a keyword"
-                        @change="changeManager"
+                        @change="send"
                     >
                         <el-option
                             v-for="user in users"
@@ -72,7 +72,7 @@
                         remote
                         reserve-keyword
                         placeholder="Please enter a keyword"
-                        @change="changeExecutor"
+                        @change="send"
                     >
                         <el-option
                             v-for="user in users"
@@ -89,18 +89,18 @@
                         type="datetime"
                         placeholder="Select date and time"
                         :shortcuts="shortcuts"
-                        format="YYYY/MM/DD hh:mm:ss"
-                        value-format="YYYY-MM-DD h:m:s"
-                        @change="changeStartTime"
+                        format="YYYY-MM-DD hh:mm:ss"
+                        value-format="YYYY-MM-DD hh:mm:ss"
+                        @change="send"
                     />
                     <el-date-picker
                         v-model="thisTask.end"
                         type="datetime"
                         placeholder="Select date and time"
                         :shortcuts="shortcuts"
-                        format="YYYY/MM/DD hh:mm:ss"
-                        value-format="YYYY-MM-DD h:m:s"
-                        @change="changeEndTime"
+                        format="YYYY-MM-DD hh:mm:ss"
+                        value-format="YYYY-MM-DD hh:mm:ss"
+                        @change="send"
                     />
                 </el-form-item>
 
@@ -252,38 +252,6 @@ export default {
         this.thisTask.fields = this.taskFields;
     },
     methods: {
-        changeStage(item) {
-            this.action = this.actionChangeTaskStage(item.id);
-            this.send();
-        },
-        changeName(item) {
-            this.action = this.actionChangeName(item);
-            this.send();
-        },
-        changeDescription(item) {
-            this.action = this.actionChangeDescription(item);
-            this.send();
-        },
-        changeResponsible(item) {
-            this.action = this.actionChangeResponsible(item.id);
-            this.send();
-        },
-        changeManager(item) {
-            this.action = this.actionChangeManager(item.id);
-            this.send();
-        },
-        changeExecutor(item) {
-            this.action = this.actionChangeExecutor(item.id);
-            this.send();
-        },
-        changeStartTime(item) {
-            this.action = this.actionChangeStartTime(item);
-            this.send();
-        },
-        changeEndTime(item) {
-            this.action = this.actionChangeEndTime(item);
-            this.send();
-        },
         loadMore (e) {
             if (this.loading) {
                 return;
@@ -396,11 +364,6 @@ export default {
                     })
                 }
             });
-
-            let actionFormData = this.actionFormData(this.action);
-            for (let pair of actionFormData.entries()) {
-                formData.append(pair[0], pair[1]);
-            }
 
             axios
                 .post('/admin/task/update',  formData)

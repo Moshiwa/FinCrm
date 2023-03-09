@@ -23,7 +23,7 @@
                     <el-select
                         v-model="thisDeal.stage"
                         value-key="id"
-                        @change="changeStage"
+                        @change="send"
                     >
                         <el-option
                             v-for="stage in allStages"
@@ -41,7 +41,7 @@
                         remote
                         reserve-keyword
                         placeholder="Please enter a keyword"
-                        @change="changeResponsible"
+                        @change="send"
                     >
                         <el-option
                             v-for="user in responsibles"
@@ -214,19 +214,10 @@ export default {
             axios
                 .get('/admin/deal/get_stages/' + item.id,)
                 .then((response) => {
-                    this.action = this.actionChangePipeline(item.id);
                     this.allStages = response.data;
                     this.thisDeal.stage = response.data[0] ?? {}
                     this.send();
                 });
-        },
-        changeStage(item) {
-            this.action = this.actionChangeStage(item.id);
-            this.send();
-        },
-        changeResponsible(item) {
-            this.action = this.actionChangeResponsible(item.id);
-            this.send();
         },
         loadMore (e) {
             if (this.loading) {
@@ -323,11 +314,6 @@ export default {
                     })
                 }
             });
-
-            let actionFormData = this.actionFormData(this.action);
-            for (let pair of actionFormData.entries()) {
-                formData.append(pair[0], pair[1]);
-            }
 
             axios
                 .post('/admin/deal/update',  formData)

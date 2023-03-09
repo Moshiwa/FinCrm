@@ -19,8 +19,7 @@ class TaskService
             'files' => []
         ];
 
-        $action = $data['action'] ?? [];
-        $result['comment'] += (new ActionService())->getActionMessage($task, $action);
+        $result['comment'] += (new ActionService())->getActionMessage($task, $data);
         $result['comment']['content'] = $data['new_comment']['content'] ?? '';
         $result['comment']['author_id'] = backpack_user()->id;
 
