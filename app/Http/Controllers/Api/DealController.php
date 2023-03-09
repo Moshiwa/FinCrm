@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\DealRequest;
+use App\Http\Requests\Api\DealRequest;
 use App\Http\Resources\DealResource;
+use App\Models\Client;
 use App\Models\Deal;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -25,9 +26,7 @@ class DealController extends Controller
 
     public function update(DealRequest $request, Deal $deal)
     {
-   /*     dd($deal);*/
-
-        /*$data = $request->validated();
+        $data = $request->validated();
         $deal->update([
             'name' => $data['name'],
             'pipeline_id' => $data['pipeline_id'],
@@ -47,7 +46,25 @@ class DealController extends Controller
             }
         }
 
-        return DealResource::make($deal);*/
+        if (isset($data['client'])) {
+            $client = Client::query()->find($data['client_id']);
+            $new_client_data = $data['client'];
+            $client->update([
+                'name' => $new_client_data['name']
+            ]);
+
+            if(isset($new_client_data['fields'])) {
+                $client->fields()->detach();
+                foreach ($new_client_data['fields'] as $field) {
+                    if (empty($field['id']) || empty($field['value'])) {
+                        continue;
+                    }
+                    $client->fields()->attach($field['id'], ['value' => $field['value']]);
+                }
+            }
+        }
+
+        return DealResource::make($deal);
     }
 
 }
