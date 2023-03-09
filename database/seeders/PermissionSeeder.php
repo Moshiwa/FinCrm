@@ -94,8 +94,7 @@ class PermissionSeeder extends Seeder
         $permissionsDB = Permission::all();
 
         foreach ($permissionsDB as $permission) {
-            //ToDo при создании новой организации ошибка
-            //$role->givePermissionTo($permission->name);
+            $role->givePermissionTo($permission->name);
         }
     }
 }
