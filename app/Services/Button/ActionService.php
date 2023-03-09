@@ -12,6 +12,9 @@ class ActionService
 {
     protected array $actions = [];
 
+    protected string $new_data_color = '#0B90C4';
+    protected string $old_data_color = '#0B90C4';
+
     public function __construct()
     {
         foreach (ActionsEnum::cases() as $case) {
@@ -49,8 +52,8 @@ class ActionService
             $value['new'] = $value['new'] ?? '';
             if ($value['old'] != $value['new']) {
                 $text = ActionsEnum::getMessageTemplate($action_name);
-                $text .= empty($value['old']) ? '' :  ' с <i style="color: #0B90C4">' . $value['old'] . '</i>';
-                $text .= empty($value['new']) ? '' :  ' на <i style="color: #0B90C4">' . $value['new'] . '</i><br>';
+                $text .= empty($value['old']) ? '' :  ' с <i style="color: ' . $this->new_data_color . '">' . $value['old'] . '</i>';
+                $text .= empty($value['new']) ? '' :  ' на <i style="color: ' . $this->old_data_color . '">' . $value['new'] . '</i><br>';
             }
 
             $action_comment .= $text;
