@@ -7,6 +7,7 @@ use App\Http\Requests\Api\DealRequest;
 use App\Http\Resources\DealResource;
 use App\Models\Client;
 use App\Models\Deal;
+use App\Services\Deal\DealService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -27,6 +28,8 @@ class DealController extends Controller
     public function update(DealRequest $request, Deal $deal)
     {
         $data = $request->validated();
+        $service = new DealService();
+        $comment_data = $service->prepareCommentData($deal, $data);
         $deal->update([
             'name' => $data['name'],
             'pipeline_id' => $data['pipeline_id'],
@@ -35,6 +38,8 @@ class DealController extends Controller
             'from_api' => true,
             'responsible_id' => backpack_user()->id
         ]);
+
+        $service->createNewMessage($deal, $comment_data);
 
         if (isset($data['fields'])) {
             $deal->fields()->detach();
