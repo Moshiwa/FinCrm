@@ -26,4 +26,18 @@ class Client extends Model
     {
         return $this->hasMany(Deal::class);
     }
+
+    protected static function booted()
+    {
+        /*static::creating(function (self $client) {
+            if (! backpack_user()->can('clients.create')) {
+                abort(403, 'У вас недостаточно прав');
+            }
+        });
+        static::updating(function (self $client) {
+            if (! backpack_user()->can('clients.edit')) {
+                abort(403, 'У вас недостаточно прав');
+            }
+        });*/
+    }
 }

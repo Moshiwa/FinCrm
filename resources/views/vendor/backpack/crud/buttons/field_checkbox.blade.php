@@ -1,6 +1,3 @@
-<?php
-
-?>
 <input
     type="checkbox"
     data-id="{{ $entry->getKey() }}"

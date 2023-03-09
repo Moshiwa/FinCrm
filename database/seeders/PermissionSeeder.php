@@ -26,16 +26,24 @@ class PermissionSeeder extends Seeder
                 $item->name => [null]
             ];
         })->toArray(), [
+            PermissionsEnum::deals->name => [
+                'create',
+                'edit',
+                'delete'
+            ],
+            PermissionsEnum::tasks->name     => [
+                'create',
+                'edit',
+                'delete'
+            ],
             PermissionsEnum::clients->name   => [
                 'create',
+                'edit',
                 'delete'
             ],
             PermissionsEnum::fields->name     => [
                 'create',
-                'delete'
-            ],
-            PermissionsEnum::deals->name => [
-                'create',
+                'edit',
                 'delete'
             ],
         ]);
@@ -74,11 +82,11 @@ class PermissionSeeder extends Seeder
             }
         }
 
-        $role = Role::query()->where('name', 'Суперадмин')->first();
+        $role = Role::query()->where('name', 'admin')->first();
 
         if (!$role) {
             $role = Role::create([
-                'name'       => 'Суперадмин',
+                'name'       => 'admin',
                 'guard_name' => config('backpack.base.guard')
             ]);
         }

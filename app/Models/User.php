@@ -2,34 +2,35 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Services\Space\SpaceService;
 use App\Traits\ModelBaseConnectionTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
+use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\PermissionRegistrar;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use
-        HasApiTokens,
-        HasFactory,
-        Notifiable,
-        CrudTrait,
-        HasRoles,
-        ModelBaseConnectionTrait;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, CrudTrait;
+    use TwoFactorAuthenticatable;
+    use ModelBaseConnectionTrait;
 
     protected $table = 'users';
     protected $connection = 'pgsql';
     protected $spaceAccessTmp;
 
+    public function getTable()
+    {
+        return 'users';
+    }
+
+    protected $appends = ['permission_names'];
     /**
      * The attributes that are mass assignable.
      *
@@ -39,6 +40,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'two_factor_recovery_codes',
+        'two_factor_secret',
+        'two_factor_confirmed_at',
+        'spaceAccess'
     ];
 
     /**
@@ -49,6 +54,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_recovery_codes',
+        'two_factor_secret',
     ];
 
     /**
@@ -57,28 +64,43 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
+        'spaceAccess' => 'boolean',
         'email_verified_at' => 'datetime',
+        'two_factor_confirmed_at' => 'datetime',
     ];
 
-    public function spaces(): BelongsToMany
+    public function getAllPermissionsAttribute(): Collection
+    {
+        $permissions = collect($this->permissions()->get());
+        $roles = $this->roles()->with('permissions')->get();
+        foreach ($roles as $role) {
+            $permissions = $permissions->concat($role->permissions);
+        }
+        return $permissions;
+    }
+
+    public function getPermissionNamesAttribute()
+    {
+        return $this->getAllPermissionsAttribute()->pluck('name');
+    }
+
+    public function spaces()
     {
         return $this->belongsToMany(Space::class, 'user_spaces')
             ->using(UserSpace::class);
     }
 
-    public function comments(): HasMany
-    {
-        return $this->hasMany(Comment::class, 'author_id');
+    public function getSpaceAccessAttribute() {
+        if($this->isFirstUser()) return true;
+        return $this->spaces()->where('code', SpaceService::getCurrentSpaceCode())->count() > 0;
     }
 
-    public function deals(): hasMany
-    {
-        return $this->hasMany(Deal::class, 'responsible_id');
+    public function setSpaceAccessAttribute($value) {
+        $this->spaceAccessTmp = $value;
     }
 
-    public function tasks(): hasMany
-    {
-        return $this->hasMany(Deal::class, 'responsible_id');
+    public function isFirstUser() {
+        return $this->id === User::query()->select('id')->orderBy('id','asc')->first()->id;
     }
 
     public function availableSpaces(): Collection
@@ -91,8 +113,32 @@ class User extends Authenticatable
             ->get();
     }
 
-    public function isFirstUser() {
-        return $this->id === User::query()->select('id')->orderBy('id','asc')->first()->id;
+    public function canAccessCurrentSpace(): bool
+    {
+        return $this->availableSpaces()
+                ->where('code', SpaceService::getCurrentSpaceCode())
+                ->count() > 0;
+    }
+
+    public function permissions(): BelongsToMany
+    {
+        $space = SpaceService::getCurrentSpaceModel();
+
+        $relation = $this->morphToMany(
+            config('permission.models.permission'),
+            'model',
+            config('permission.table_names.model_has_permissions'),
+            config('permission.column_names.model_morph_key'),
+            PermissionRegistrar::$pivotPermission
+        )
+            ->wherePivot('space_id', $space->id)
+            ->using(UserPermission::class);
+
+        if (! PermissionRegistrar::$teams) {
+            return $relation;
+        }
+
+        return $relation->wherePivot(PermissionRegistrar::$teamsKey, getPermissionsTeamId());
     }
 
     protected static function booted()

@@ -40,17 +40,7 @@ class TaskCrudController extends CrudController
 
         $task = Task::query()->find($data['id']);
         $comment_data = $service->prepareCommentData($task, $data);
-
-        $task->name = $data['name'];
-        $task->task_stage_id = $data['task_stage_id'];
-        $task->description = $data['description'] ?? '';
-        $task->start = empty($data['start']) ? null : Carbon::make($data['start']);
-        $task->end = empty($data['end']) ? null : Carbon::make($data['end']);
-        $task->responsible_id = $data['responsible_id'] ?? backpack_user()->id;
-        $task->manager_id = $data['manager_id'] ?? null;
-        $task->executor_id = $data['executor_id'] ?? null;
-        $task->save();
-
+        $task = $service->updateTask($task, $data);
         $service->createNewMessage($task, $comment_data);
         $task->fields()->sync($data['fields'] ?? []);
         $service->updateComments($task, $data);

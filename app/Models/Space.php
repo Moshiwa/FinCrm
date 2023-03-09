@@ -16,6 +16,10 @@ class Space extends Model
     protected $table = 'spaces';
     protected $guarded = ['id'];
 
+    public function scopeActive($query) {
+        return $query->where('active', true);
+    }
+
     protected static function booted()
     {
         static::created(function (self $space) {

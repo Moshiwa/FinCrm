@@ -8,10 +8,26 @@ use App\Models\File;
 use App\Models\TaskComment;
 use App\Services\Button\ActionService;
 use App\Services\Space\SpaceService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 class TaskService
 {
+    public function updateTask($task, $data)
+    {
+        $task->name = $data['name'];
+        $task->task_stage_id = $data['task_stage_id'];
+        $task->description = $data['description'] ?? '';
+        $task->start = empty($data['start']) ? null : Carbon::make($data['start']);
+        $task->end = empty($data['end']) ? null : Carbon::make($data['end']);
+        $task->responsible_id = $data['responsible_id'] ?? backpack_user()->id;
+        $task->manager_id = $data['manager_id'] ?? null;
+        $task->executor_id = $data['executor_id'] ?? null;
+        $task->save();
+
+        return $task;
+    }
+
     public function prepareCommentData($task, $data): array
     {
         $result = [

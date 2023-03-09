@@ -10,10 +10,12 @@ class UsersSeeder extends Seeder
 {
     public function run()
     {
-        User::query()->firstOrCreate([ 'email' => 'admin@mail.ru' ], [
+        $user = User::query()->firstOrCreate([ 'email' => 'admin@mail.ru' ], [
             'name' => 'admin',
             'email' => 'admin@mail.ru',
             'password' => bcrypt('itpolice')
         ]);
+
+        $user->roles()->sync(1);
     }
 }

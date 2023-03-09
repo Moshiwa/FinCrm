@@ -10,12 +10,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         (new FieldTypesSeeder())->run();
-        (new UsersSeeder())->run();
         (new SpacesSeeder())->run();
         (new PermissionSeeder())->run();
         (new PipelineSeeder())->run();
         (new StagesSeeder())->run();
         (new SettingsSeeder())->run();
+        (new UsersSeeder())->run();
 
         TaskStage::query()->firstOrcreate(['name' => 'Новая'], [
             'name' => 'Новая'
