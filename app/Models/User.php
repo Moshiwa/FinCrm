@@ -90,6 +90,11 @@ class User extends Authenticatable
             ->using(UserSpace::class);
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'author_id');
+    }
+
     public function getSpaceAccessAttribute() {
         if($this->isFirstUser()) return true;
         return $this->spaces()->where('code', SpaceService::getCurrentSpaceCode())->count() > 0;
