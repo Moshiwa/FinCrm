@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('client_id')
                 ->constrained();
             $table->foreignId('stage_id')->constrained();
-            $table->boolean('from_api')->default(false);
             $table->timestamps();
         });
 

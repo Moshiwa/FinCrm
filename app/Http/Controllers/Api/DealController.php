@@ -35,7 +35,6 @@ class DealController extends Controller
             'pipeline_id' => $data['pipeline_id'],
             'client_id' => $data['client_id'],
             'stage_id' => $data['stage_id'],
-            'from_api' => true,
             'responsible_id' => backpack_user()->id
         ]);
 

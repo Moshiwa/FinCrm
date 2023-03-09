@@ -24,7 +24,6 @@ class Deal extends Model
         'name',
         'pipeline_id',
         'stage_id',
-        'from_api',
         'responsible_id',
     ];
 
