@@ -7,6 +7,7 @@ use App\Traits\ModelBaseConnectionTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
@@ -90,9 +91,29 @@ class User extends Authenticatable
             ->using(UserSpace::class);
     }
 
-    public function comments()
+    public function comments(): hasMany
     {
         return $this->hasMany(Comment::class, 'author_id');
+    }
+
+    public function execute_tasks(): hasMany
+    {
+        return $this->hasMany(Task::class, 'executor_id');
+    }
+
+    public function manage_tasks(): hasMany
+    {
+        return $this->hasMany(Task::class, 'executor_id');
+    }
+
+    public function responsible_tasks(): hasMany
+    {
+        return $this->hasMany(Task::class, 'responsible_id');
+    }
+
+    public function deals(): hasMany
+    {
+        return $this->hasMany(Deal::class, 'responsible_id');
     }
 
     public function getSpaceAccessAttribute() {

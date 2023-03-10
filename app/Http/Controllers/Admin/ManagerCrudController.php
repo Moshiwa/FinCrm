@@ -28,6 +28,29 @@ class ManagerCrudController extends CrudController
 
         CRUD::column('name');
         CRUD::column('email');
+        CRUD::column('Сделки')
+            ->type('custom_html')
+            ->value(function ($entry) {
+                return '<a href="/admin/deal?responsible='.$entry->id.'">' . $entry->deals->count() . '</a>';
+            });
+
+        CRUD::column('Выполняемые задачи')
+            ->type('custom_html')
+            ->value(function ($entry) {
+                return '<a href="/admin/task?executor='.$entry->id.'">' . $entry->execute_tasks->count() . '</a>';
+            });
+
+        CRUD::column('Отслеживаемые задач')
+            ->type('custom_html')
+            ->value(function ($entry) {
+                return '<a href="/admin/task?manager='.$entry->id.'">' . $entry->manage_tasks->count() . '</a>';
+            });
+
+        CRUD::column('Поставленные задач')
+            ->type('custom_html')
+            ->value(function ($entry) {
+                return '<a href="/admin/task?responsible='.$entry->id.'">' . $entry->responsible_tasks->count() . '</a>';
+            });
     }
 
     public function loadComments(User $user, Request $request)

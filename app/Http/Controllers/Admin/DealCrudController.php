@@ -37,10 +37,9 @@ class DealCrudController extends CrudController
         CRUD::column('stage_id');
         CRUD::column('created_at');
 
-        $request_entity = $this->crud->getRequest()->get('client');
-        if ($request_entity) {
-            $this->crud->addClause('where', 'client_id', $request_entity);
-        }
+        $this->hiddenClientFilter();
+        $this->hiddenResponsibleFilter();
+
 
 
         $pipelines = Pipeline::query()->select('id', 'name')->get()->toArray();
@@ -62,6 +61,22 @@ class DealCrudController extends CrudController
         ], $stages, function($value) { // if the filter is active (the GET parameter "draft" exits)
             $this->crud->addClause('where', 'stage_id', $value);
         });
+    }
+
+    private function hiddenClientFilter()
+    {
+        $request_entity = $this->crud->getRequest()->get('client');
+        if ($request_entity) {
+            $this->crud->addClause('where', 'client_id', $request_entity);
+        }
+    }
+
+    private function hiddenResponsibleFilter()
+    {
+        $request_entity = $this->crud->getRequest()->get('responsible');
+        if ($request_entity) {
+            $this->crud->addClause('where', 'responsible_id', $request_entity);
+        }
     }
 
     public function update(DealRequest $request)

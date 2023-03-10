@@ -27,10 +27,38 @@ class TaskCrudController extends CrudController
 
     protected function setupListOperation()
     {
+        $this->hiddenExecutorFilter();
+        $this->hiddenManagerFilter();
+        $this->hiddenResponsibleFilter();
+
         CRUD::addButton('top', 'task_create', 'view', 'crud::buttons.task_create');
 
         CRUD::column('name');
         CRUD::column('start');
+    }
+
+    private function hiddenExecutorFilter()
+    {
+        $request_entity = $this->crud->getRequest()->get('executor');
+        if ($request_entity) {
+            $this->crud->addClause('where', 'executor_id', $request_entity);
+        }
+    }
+
+    private function hiddenManagerFilter()
+    {
+        $request_entity = $this->crud->getRequest()->get('manager');
+        if ($request_entity) {
+            $this->crud->addClause('where', 'manager_id', $request_entity);
+        }
+    }
+
+    private function hiddenResponsibleFilter()
+    {
+        $request_entity = $this->crud->getRequest()->get('responsible');
+        if ($request_entity) {
+            $this->crud->addClause('where', 'responsible_id', $request_entity);
+        }
     }
 
     public function update(TaskRequest $request)
