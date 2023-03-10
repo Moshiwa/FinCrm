@@ -6,28 +6,28 @@
         </th>
     </tr>
     <tr>
-        <th style="text-align: center;  vertical-align: middle; width: 200px; background: #d5d5d5">
+        <th style="text-align: center;  vertical-align: middle; width: 150px; background: #d5d5d5">
             <i>Наименование</i>
         </th>
-        <th style="text-align: center;  vertical-align: middle; width: 200px; background: #d5d5d5">
+        <th style="text-align: center;  vertical-align: middle; width: 100px; background: #d5d5d5">
             <i>Воронка</i>
         </th>
-        <th style="text-align: center;  vertical-align: middle; width: 200px; background: #d5d5d5">
+        <th style="text-align: center;  vertical-align: middle; width: 100px; background: #d5d5d5">
             <i>Стадия</i>
         </th>
-        <th style="text-align: center;  vertical-align: middle; width: 200px; background: #d5d5d5">
+        <th style="text-align: center;  vertical-align: middle; width: 150px; background: #d5d5d5">
             <i>Ответственный</i>
         </th>
-        <th style="text-align: center;  vertical-align: middle; width: 200px; background: #d5d5d5">
+        <th style="text-align: center;  vertical-align: middle; width: 150px; background: #d5d5d5">
             <i>Клиент</i>
         </th>
-        <th style="text-align: center;  vertical-align: middle; width: 200px; background: #d5d5d5">
+        <th style="text-align: center;  vertical-align: middle; width: 150px; background: #d5d5d5">
             <i>Дата создания</i>
         </th>
-        <th style="text-align: center;  vertical-align: middle; width: 200px; background: #d5d5d5">
+        <th style="text-align: center;  vertical-align: middle; width: 150px; background: #d5d5d5">
             <i>Поля</i>
         </th>
-        <th style="text-align: center;  vertical-align: middle; width: 200px; background: #d5d5d5">
+        <th style="text-align: center;  vertical-align: middle; width: 150px; background: #d5d5d5">
             <i>Значение поля</i>
         </th>
     </tr>
