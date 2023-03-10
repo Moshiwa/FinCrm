@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ClientCrudController;
 use App\Http\Controllers\Admin\DealCrudController;
 use App\Http\Controllers\Admin\FieldCrudController;
 use App\Http\Controllers\Admin\ManagerCrudController;
+use App\Http\Controllers\Admin\ReportCrudController;
 use App\Http\Controllers\Admin\StageCrudController;
 use App\Http\Controllers\Admin\TaskButtonCrudController;
 use App\Http\Controllers\Admin\TaskCrudController;
@@ -35,6 +36,10 @@ Route::group([
     Route::crud('stage', 'StageCrudController');
     Route::crud('button', 'ButtonCrudController');
     Route::crud('task', 'TaskCrudController');
+    Route::crud('task-stage', 'TaskStageCrudController');
+    Route::crud('task-button', 'TaskButtonCrudController');
+    Route::crud('manager', 'ManagerCrudController');
+    Route::crud('report', 'ReportCrudController');
 
     Route::get('space-change/{code}', [SpaceCrudController::class, 'spaceChange'])->name('space.change');
 
@@ -71,7 +76,8 @@ Route::group([
         Route::post('/save', [ButtonCrudController::class, 'save'])->name('save');
         Route::delete('/{button}', [ButtonCrudController::class, 'delete'])->name('delete');
     });
-    Route::crud('task-stage', 'TaskStageCrudController');
-    Route::crud('task-button', 'TaskButtonCrudController');
-    Route::crud('manager', 'ManagerCrudController');
+
+    Route::prefix('report')->name('report.')->group(function () {
+        Route::get('/generate', [ReportCrudController::class, 'reportGenerate'])->name('generate');
+    });
 });

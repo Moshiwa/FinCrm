@@ -41,6 +41,10 @@
     box-shadow: none;
 }
 
+.reports-container .el-date-editor {
+    width: auto!important;
+}
+
 .error > .el-input__wrapper {
     box-shadow:  0 0 0 1px var(--el-color-danger,var(--el-color-danger)) inset;
 }
