@@ -20,4 +20,4 @@
     </ul>
 </li>
 
-<li class="nav-item"><a class="nav-link" href="{{ backpack_url('report') }}"><i class="nav-icon la la-question"></i> Reports</a></li>
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('report') }}"><i class="nav-icon la la-archive"></i> {{ __('sidebar.reports') }} </a></li>

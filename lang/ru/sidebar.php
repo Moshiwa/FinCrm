@@ -14,5 +14,6 @@ return [
     'task_buttons' => 'Кнопки задач',
     'task_stages' => 'Статусы задач',
     'tasks' => 'Задачи',
-    'managers' => 'Менеджеры'
+    'managers' => 'Менеджеры',
+    'reports' => 'Отчеты',
 ];

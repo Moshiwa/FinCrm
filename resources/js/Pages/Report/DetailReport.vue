@@ -46,9 +46,19 @@ export default {
             url += !!start ? '&start=' + start : '';
             url += !!end ? '&end=' + end : '';
 
-            axios.get(url)
+            axios.get(url, {
+                responseType: 'blob',
+            })
             .then((response) => {
-                console.log(response)
+                const href = URL.createObjectURL(response.data);
+                const link = document.createElement('a');
+                link.href = href;
+                link.setAttribute('download', 'file.xlsx'); //or any other extension
+                document.body.appendChild(link);
+                link.click();
+
+                document.body.removeChild(link);
+                URL.revokeObjectURL(href);
             });
         }
     }
