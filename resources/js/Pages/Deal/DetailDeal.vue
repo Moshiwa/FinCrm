@@ -103,6 +103,7 @@
                             :auth="auth"
                             @commentSend="prepareCommentDataSend($event)"
                         />
+                        <div v-loading="loading"></div>
                     </el-timeline>
                 </div>
             </div>

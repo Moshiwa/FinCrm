@@ -53,6 +53,7 @@
     <div v-else style="margin: 10px">
         Нет действий
     </div>
+    <div v-loading="loading"></div>
 </template>
 
 <script>
