@@ -125,7 +125,7 @@
 
             <div class="card-right">
                 <div class="card-body row">
-                    <el-button @click="visibleFileUploadForm = true">Прикрепить документ</el-button>
+                    <i class="las la-file-upload" @click="visibleFileUploadForm = true"></i>
                     <el-timeline class="infinite-list">
                         <comments
                             :comments="thisTask.comments"
@@ -299,6 +299,7 @@ export default {
                 this.deleteCommentId = event;
             }
             this.send();
+            this.deleteCommentId = null;
         },
         changeData(options) {
             this.prepareDataByButtonOptions(options);
@@ -344,7 +345,9 @@ export default {
             }
 
             formData.append('comment_count', this.thisTask.comments.length ?? 0);
-            formData.append('delete_comment_id', this.deleteCommentId);
+            if (!!this.deleteCommentId) {
+                formData.append('delete_comment_id', this.deleteCommentId);
+            }
 
             this.thisTask.fields = this.thisTask.fields ?? [];
             this.thisTask?.fields.forEach((field, fieldIndex) => {

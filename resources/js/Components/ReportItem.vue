@@ -8,8 +8,8 @@
                 <el-date-picker
                     v-model="datetime"
                     type="datetimerange"
-                    start-placeholder="Start Date"
-                    end-placeholder="End Date"
+                    start-placeholder="Дата начала"
+                    end-placeholder="Дата окончания"
                     :default-time="defaultTime"
                 />
             </div>

@@ -1,5 +1,5 @@
 <template>
-    <div v-for="comment in comments">
+    <div v-if="comments.length > 0" v-for="comment in comments">
         <el-card style="margin: 10px">
             <div class="row-right">
                 <div class="row-right__upper">
@@ -49,6 +49,9 @@
                 </div>
             </div>
         </el-card>
+    </div>
+    <div v-else style="margin: 10px">
+        Нет действий
     </div>
 </template>
 
