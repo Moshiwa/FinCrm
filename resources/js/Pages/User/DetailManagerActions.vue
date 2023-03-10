@@ -76,6 +76,7 @@ export default {
     data() {
         return {
             comments: this.user.comments,
+            filter: {},
             loading: false,
         }
     },
