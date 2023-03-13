@@ -73,7 +73,7 @@ class TaskService
     private function deleteComments(array $data)
     {
         if (! empty($data['delete_comment_id'])) {
-            $model_comment = TaskComment::query()->find($data['delete_comment_id']);
+            $model_comment = Comment::query()->find($data['delete_comment_id']);
             //Action нельзя удалять
             if ($model_comment->type === CommentTypeEnum::ACTION->value) {
                 $model_comment->update(['content' => '']);
