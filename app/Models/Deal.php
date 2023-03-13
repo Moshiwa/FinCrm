@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Collection;
 
 class Deal extends Model
 {
@@ -27,11 +28,33 @@ class Deal extends Model
         'responsible_id',
     ];
 
+    protected $appends = [
+        'all_fields'
+    ];
+
     public function fields()
     {
         return $this->belongsToMany(Field::class, 'deal_fields')
             ->where('entity', 'deal')
             ->withPivot('value');
+    }
+
+    public function getAllFieldsAttribute(): Collection
+    {
+        $fields = $this->fields()->get();
+        $all_fields = Field::includedDeal()->get();
+
+        foreach ($all_fields as $field) {
+            foreach ($fields as $filled_field) {
+                if ($filled_field->id === $field->id) {
+                    continue(2);
+                }
+            }
+
+            $fields->push($field);
+        }
+
+        return $fields;
     }
 
     public function pipeline(): BelongsTo

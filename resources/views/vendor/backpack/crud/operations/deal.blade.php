@@ -32,7 +32,6 @@
             'responsible',
             'client',
             'fields.type',
-            'client.fields',
             'comments' => function ($query) use ($type, $sort) {
                 $query->when($type, function ($query, $type) {
                      $query->where('type', $type);
@@ -48,27 +47,6 @@
     $pipelines = Pipeline::query()->select('id', 'name')->get();
     $stages = $deal->pipeline->stages;
     $buttons = DealButton::query()->with(['visible', 'action'])->where('pipeline_id', $deal->pipeline->id)->get();
-
-    $all_fields = \App\Models\Field::includedDeal()->get();
-    foreach ($all_fields as $field) {
-        foreach ($deal->fields as $filled_field) {
-            if ($filled_field->id === $field->id) {
-                continue(2);
-            }
-        }
-        $deal->fields->push($field);
-    }
-
-    $all_fields = \App\Models\Field::includedClient()->get();
-    foreach ($all_fields as $field) {
-        foreach ($deal->client->fields as $filled_field) {
-            if ($filled_field->id === $field->id) {
-                continue(2);
-            }
-        }
-        $deal->client->fields->push($field);
-    }
-
     $users = User::query()->select(['id', 'name'])->get();
 @endphp
 

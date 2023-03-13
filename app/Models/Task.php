@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Collection;
 
 class Task extends Model
 {
@@ -25,6 +26,10 @@ class Task extends Model
         'responsible_id',
         'manager_id',
         'executor_id',
+    ];
+
+    protected $appends = [
+        'all_fields'
     ];
 
     public $casts = [
@@ -57,6 +62,24 @@ class Task extends Model
         return $this->belongsToMany(Field::class, 'task_fields')
             ->where('entity', 'task')
             ->withPivot('value');
+    }
+
+    public function getAllFieldsAttribute(): Collection
+    {
+        $fields = $this->fields()->get();
+        $all_fields = Field::includedTask()->get();
+
+        foreach ($all_fields as $field) {
+            foreach ($fields as $filled_field) {
+                if ($filled_field->id === $field->id) {
+                    continue(2);
+                }
+            }
+
+            $fields->push($field);
+        }
+
+        return $fields;
     }
 
     public function comments(): morphMany

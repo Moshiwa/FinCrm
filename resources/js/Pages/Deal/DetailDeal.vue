@@ -55,7 +55,7 @@
                 <el-collapse v-model="active">
                     <el-collapse-item title="Дополнительные поля" name="1">
                         <el-form-item
-                            v-for="field in thisDeal.fields"
+                            v-for="field in thisDeal.all_fields"
                             :label="field.name"
                             :required="field.is_required"
                         >
@@ -78,7 +78,7 @@
                 <el-collapse v-model="active">
                     <el-collapse-item title="Данные о клиенте" name="2">
                         <el-form-item
-                            v-for="field in thisDeal.client.fields"
+                            v-for="field in thisDeal.client.all_fields"
                             :label="field.name"
                             :required="field.is_required"
                         >
@@ -115,7 +115,7 @@
         <action-buttons
             :buttons="stageButtons"
             :stage="thisDeal.stage"
-            :is-delete="true"
+            :is-delete="permissions.can_delete"
             @commentSend="sendComment($event)"
             @changeData="changeData($event)"
             @deleteAction="deleteDeal"
@@ -202,12 +202,17 @@ export default {
             action: {},
 
             newComment: { id: '', type: 'comment', content: '', author_id: null, files: [] },
+
+            permissions: {
+                can_delete: this.auth.permission_names.find((item) => item === 'deals.delete'),
+            }
         }
     },
     beforeMount() {
+        console.log(this.thisDeal);
         $(document).on('scroll', this.loadMore);
-        this.thisDeal.fields = this.castFieldValue(this.thisDeal.fields);
-        this.thisDeal.client.fields = this.castFieldValue(this.thisDeal.client.fields);
+        this.thisDeal.all_fields = this.castFieldValue(this.thisDeal.all_fields);
+        this.thisDeal.client.all_fields = this.castFieldValue(this.thisDeal.client.all_fields);
     },
     methods: {
         changePipeline(item) {
@@ -330,15 +335,15 @@ export default {
                 formData.append('delete_comment_id', this.deleteCommentId);
             }
 
-            this.thisDeal.fields = this.thisDeal.fields ?? [];
-            this.thisDeal?.fields.forEach((field, fieldIndex) => {
+            this.thisDeal.all_fields = this.thisDeal.all_fields ?? [];
+            this.thisDeal?.all_fields.forEach((field, fieldIndex) => {
                 formData.append('fields[' + field.id + '][value]', field.pivot?.value ?? '');
             });
 
             this.thisDeal.client = this.thisDeal.client ?? [];
             formData.append('client[name]', this.thisDeal.client?.name);
-            this.thisDeal.client.fields = this.thisDeal.client?.fields ?? [];
-            this.thisDeal.client?.fields.forEach((field, fieldIndex) => {
+            this.thisDeal.client.all_fields = this.thisDeal.client?.all_fields ?? [];
+            this.thisDeal.client?.all_fields.forEach((field, fieldIndex) => {
                 formData.append('client[fields][' + field.id + '][value]', field.pivot?.value ?? '');
             });
 

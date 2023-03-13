@@ -107,7 +107,7 @@
                 <el-collapse v-model="active">
                     <el-collapse-item title="Дополнительные поля" name="1">
                         <el-form-item
-                            v-for="field in thisTask.fields"
+                            v-for="field in thisTask.all_fields"
                             :label="field.name"
                             :required="field.is_required"
                         >
@@ -142,7 +142,7 @@
         <action-buttons
             :buttons="stageButtons"
             :stage="thisTask.stage"
-            :is-delete="true"
+            :is-delete="permissions.can_delete"
             @commentSend="sendComment($event)"
             @changeData="changeData($event)"
             @deleteAction="deleteTask"
@@ -249,11 +249,17 @@ export default {
             action: {},
 
             newComment: { id: '', type: 'comment', content: '', author_id: null, files: [] },
+
+            permissions: {
+                can_delete: this.auth.permission_names.find((item) => item === 'tasks.delete'),
+            }
         }
     },
     beforeMount() {
+        console.log(this.auth);
+        console.log(this.thisTask);
         $(document).on('scroll', this.loadMore);
-        this.thisTask.fields = this.castFieldValue(this.thisTask.fields);
+        this.thisTask.all_fields = this.castFieldValue(this.thisTask.all_fields);
     },
     methods: {
         loadMore (e) {
@@ -390,8 +396,8 @@ export default {
                 formData.append('delete_comment_id', this.deleteCommentId);
             }
 
-            this.thisTask.fields = this.thisTask.fields ?? [];
-            this.thisTask?.fields.forEach((field, fieldIndex) => {
+            this.thisTask.all_fields = this.thisTask.all_fields ?? [];
+            this.thisTask?.all_fields.forEach((field, fieldIndex) => {
                 formData.append('fields[' + field.id + '][value]', field.pivot?.value ?? '');
             });
 
