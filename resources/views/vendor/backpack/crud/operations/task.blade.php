@@ -27,6 +27,17 @@
         'executor',
     ]);
 
+    $all_fields = \App\Models\Field::includedTask()->get();
+    foreach ($all_fields as $field) {
+        foreach ($task->fields as $filled_field) {
+            if ($filled_field->id === $field->id) {
+                continue(2);
+            }
+        }
+
+        $task->fields->push($field);
+    }
+
     $stages = \App\Models\TaskStage::query()->get();
     $users = User::query()->select(['id', 'name'])->get();
     $buttons = TaskButton::query()->with(['visible', 'action'])->get();

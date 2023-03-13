@@ -198,7 +198,7 @@ export default {
             newComment: { id: '', type: 'comment', content: '', author_id: null, files: [] },
         }
     },
-    mounted() {
+    beforeMount() {
         $(document).on('scroll', this.loadMore);
         this.thisDeal.fields = this.castFieldValue(this.thisDeal.fields);
         this.thisDeal.client.fields = this.castFieldValue(this.thisDeal.client.fields);

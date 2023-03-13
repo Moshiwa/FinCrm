@@ -66,16 +66,6 @@ class Task extends Model
 
     protected static function booted()
     {
-        /*static::creating(function (self $task) {
-            if (! backpack_user()->can('tasks.create')) {
-                abort(403, 'У вас недостаточно прав');
-            }
-        });
-        static::updating(function (self $task) {
-            if (! backpack_user()->can('tasks.edit')) {
-                abort(403, 'У вас недостаточно прав');
-            }
-        });*/
         static::created(function (self $task) {
             event(new CreateTask($task));
         });

@@ -244,9 +244,8 @@ export default {
             newComment: { id: '', type: 'comment', content: '', author_id: null, files: [] },
         }
     },
-    mounted() {
+    beforeMount() {
         $(document).on('scroll', this.loadMore);
-        console.log(this.thisTask);
         this.thisTask.fields = this.castFieldValue(this.thisTask.fields);
     },
     methods: {

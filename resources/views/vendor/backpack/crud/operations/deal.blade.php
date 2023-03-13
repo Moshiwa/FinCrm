@@ -33,6 +33,27 @@
     $stages = $deal->pipeline->stages;
     $buttons = DealButton::query()->with(['visible', 'action'])->where('pipeline_id', $deal->pipeline->id)->get();
 
+    $all_fields = \App\Models\Field::includedDeal()->get();
+    foreach ($all_fields as $field) {
+        foreach ($deal->fields as $filled_field) {
+            if ($filled_field->id === $field->id) {
+                continue(2);
+            }
+        }
+        $deal->fields->push($field);
+    }
+
+    $all_fields = \App\Models\Field::includedClient()->get();
+    foreach ($all_fields as $field) {
+        foreach ($deal->client->fields as $filled_field) {
+            if ($filled_field->id === $field->id) {
+                continue(2);
+            }
+        }
+        $deal->client->fields->push($field);
+    }
+
+
     /*$deal_fields = $service->getDealFields($deal);
     $client_fields = $service->getClientFields($deal->client);*/
 
