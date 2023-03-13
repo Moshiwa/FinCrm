@@ -271,7 +271,7 @@ export default {
             if (can) {
                 this.loading = true;
 
-                let url = '/admin/task/' + this.thisTask.id + '/load_comments';
+                let url = '/admin/task/' + this.thisTask.id + '/load_comments?';
                 url += window.location.search
                 if (this.thisTask.comments?.length > 0) {
                     url+= '&offset=' +  this.thisTask.comments.length;

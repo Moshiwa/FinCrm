@@ -14,11 +14,19 @@
     $request = $crud->getRequest();
     $type = $request->get('type');
     $sort = $request->get('date_sort', 'desc');
+    $start = $request->get('start');
+    $end = $request->get('end');
 
     $user->load([
-        'comments' => function ($query) use ($type, $sort) {
+        'comments' => function ($query) use ($type, $sort, $start, $end) {
             $query->when($type, function ($query, $type) {
                  $query->where('type', $type);
+            })
+             ->when($start, function ($query, $start) {
+                        $query->where('created_at', '>=', \Carbon\Carbon::createFromTimestamp($start));
+                    })
+            ->when($end, function ($query, $end) {
+                $query->where('created_at', '<=', \Carbon\Carbon::createFromTimestamp($end));
             })
             ->offset(0)->limit(10)->orderBy('created_at', $sort);
         },

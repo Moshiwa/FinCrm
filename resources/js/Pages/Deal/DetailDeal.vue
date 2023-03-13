@@ -238,7 +238,7 @@ export default {
             if (can) {
                 this.loading = true;
 
-                let url = '/admin/deal/' + this.thisDeal.id + '/load_comments';
+                let url = '/admin/deal/' + this.thisDeal.id + '/load_comments?';
                 url += window.location.search
                 if (this.thisDeal.comments?.length > 0) {
                     url+= '&offset=' +  this.thisDeal.comments.length;

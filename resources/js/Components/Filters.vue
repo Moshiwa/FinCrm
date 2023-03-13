@@ -24,6 +24,15 @@
                 :value="item.type"
             />
         </el-select>
+        <el-date-picker
+            v-if="daterangeFilter"
+            v-model="datetime"
+            type="datetimerange"
+            start-placeholder="Дата создания (с)"
+            end-placeholder="Дата создания (до)"
+            :default-time="defaultTime"
+            @change="appendQuery"
+        />
     </div>
 </template>
 
@@ -34,6 +43,10 @@ export default {
         filter: {
             type: Object,
             required: true
+        },
+        daterangeFilter: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -65,19 +78,37 @@ export default {
                     type: 'desc'
                 },
             ],
+            datetime: '',
+            defaultTime: [
+                new Date(2000, 1, 1, 12, 0, 0),
+                new Date(2000, 2, 1, 8, 0, 0),
+            ]
         }
     },
     methods: {
         appendQuery() {
-            let url = window.location.pathname + "?";
-
-            if (this.filterByType) {
-                url += "&type=" + this.filterByType;
+            let result = [];
+            if (this.datetime.length > 0) {
+                this.datetime.forEach((date) => {
+                    result.push((date.getTime() / 1000));
+                });
             }
 
-            console.log(this.sortByDate);
-            if (this.sortByDate) {
+            let start = result[0] ?? '';
+            let end = result[1] ?? '';
+            let url = window.location.pathname + "?";
+
+            if (!!this.filterByType) {
+                url += "&type=" + this.filterByType;
+            }
+            if (!!this.sortByDate) {
                 url += "&date_sort=" + this.sortByDate;
+            }
+            if (!!start) {
+                url += "&start=" + start;
+            }
+            if (!!end) {
+                url += "&end=" + end;
             }
 
             window.location = url;

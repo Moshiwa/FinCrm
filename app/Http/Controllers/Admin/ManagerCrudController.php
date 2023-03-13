@@ -7,6 +7,7 @@ use App\Http\Requests\ManagerRequest;
 use App\Models\User;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ManagerCrudController extends CrudController
@@ -58,12 +59,20 @@ class ManagerCrudController extends CrudController
         $offset = $request->get('offset');
         $type = $request->get('type');
         $sort = $request->get('date_sort', 'desc');
+        $start = $request->get('start');
+        $end = $request->get('end');
 
         $user->load([
-            'comments' => function ($query) use ($offset, $type, $sort) {
+            'comments' => function ($query) use ($offset, $type, $sort, $start, $end) {
                 $query
                     ->when($type, function ($query, $type) {
                         $query->where('type', $type);
+                    })
+                    ->when($start, function ($query, $start) {
+                        $query->where('created_at', '>=', Carbon::createFromTimestamp($start));
+                    })
+                    ->when($end, function ($query, $end) {
+                        $query->where('created_at', '<=', Carbon::createFromTimestamp($end));
                     })
                     ->offset($offset)
                     ->limit(5)

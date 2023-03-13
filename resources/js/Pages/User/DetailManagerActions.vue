@@ -1,5 +1,5 @@
 <template>
-    <filters :filter="filter"/>
+    <filters :filter="filter" :daterange-filter="true"/>
 
     <div v-if="comments.length > 0" v-for="comment in comments">
         <el-card style="margin: 10px">
@@ -105,7 +105,7 @@ export default {
             if (can) {
                 this.loading = true;
 
-                let url = '/admin/user/' + this.user.id + '/load_comments';
+                let url = '/admin/user/' + this.user.id + '/load_comments?';
                 url += window.location.search
                 if (this.comments?.length > 0) {
                     url+= '&offset=' +  this.comments.length;
