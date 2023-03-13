@@ -126,7 +126,6 @@
             <div class="card-right">
                 <filters :filter="filter" />
                 <div class="card-body row">
-                    <i class="las la-file-upload" @click="visibleFileUploadForm = true"></i>
                     <el-timeline class="infinite-list">
                         <comments
                             :comments="thisTask.comments"
@@ -143,18 +142,14 @@
             :buttons="stageButtons"
             :stage="thisTask.stage"
             :is-delete="permissions.can_delete"
+            :is-upload="true"
             @commentSend="sendComment($event)"
+            @filesSend="sendFiles($event)"
             @changeData="changeData($event)"
             @deleteAction="deleteTask"
         />
     </div>
 
-    <el-drawer v-model="visibleFileUploadForm" :show-close="false">
-        <template #header="{ close, titleId, titleClass }">
-            <h4 :id="titleId" :class="titleClass">Выберите файлы</h4>
-        </template>
-        <file-upload @send="sendFiles($event)"/>
-    </el-drawer>
 </template>
 
 <script>
@@ -278,8 +273,8 @@ export default {
 
                 let url = '/admin/task/' + this.thisTask.id + '/load_comments';
                 url += window.location.search
-                if (this.comments.length > 0) {
-                    url+= '&offset=' +  this.comments.length;
+                if (this.thisTask.comments?.length > 0) {
+                    url+= '&offset=' +  this.thisTask.comments.length;
                 }
 
                 axios.get(url).then((response) => {
@@ -415,8 +410,11 @@ export default {
                 }
             });
 
+            let url = '/admin/task/update';
+            url += window.location.search
+
             axios
-                .post('/admin/task/update',  formData)
+                .post(url,  formData)
                 .then((response) => {
                     console.log(response.data.task);
                     this.thisTask = response.data.task;

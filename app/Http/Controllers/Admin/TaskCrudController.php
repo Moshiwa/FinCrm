@@ -74,6 +74,8 @@ class TaskCrudController extends CrudController
         $service->updateComments($task, $data);
 
         $comment_count = $data['comment_count'] ?? 10;
+        $type = $request->get('type');
+        $sort = $request->get('date_sort', 'desc');
 
         $task->load([
             'stage',
@@ -89,8 +91,10 @@ class TaskCrudController extends CrudController
                 $query->select('id', 'name');
             },
             'fields',
-            'comments' => function ($query) use ($comment_count) {
-                $query->orderBy('created_at', 'desc')->offset(0)->limit($comment_count);
+            'comments' => function ($query) use ($type, $sort, $comment_count) {
+                $query->when($type, function ($query, $type) {
+                    $query->where('type', $type);
+                })->offset(0)->limit($comment_count)->orderBy('created_at', $sort);
             },
             'comments.files',
             'comments.author' => function ($query) {
@@ -108,9 +112,17 @@ class TaskCrudController extends CrudController
     public function loadComments(Task $task, Request $request)
     {
         $offset = $request->get('offset');
+        $type = $request->get('type');
+        $sort = $request->get('date_sort', 'desc');
         $task->load([
-            'comments' => function ($query) use ($offset) {
-                $query->offset($offset)->limit(5)->orderBy('created_at', 'desc');
+            'comments' => function ($query) use ($offset, $type, $sort) {
+                $query
+                    ->when($type, function ($query, $type) {
+                        $query->where('type', $type);
+                    })
+                    ->offset($offset)
+                    ->limit(5)
+                    ->orderBy('created_at', $sort);
             },
             'comments.files',
             'comments.author' => function ($query) {

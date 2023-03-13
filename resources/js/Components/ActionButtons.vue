@@ -19,8 +19,24 @@
                 Удалить
             </a>
         </div>
+
+        <div v-if="isUpload">
+            <a
+                class="btn btn-sm btn-link text-capitalize"
+                @click="visibleFileUploadForm = true"
+            >
+                <i class="la la-file-upload" />
+                Загрузить
+            </a>
+        </div>
     </div>
 
+    <el-drawer v-model="visibleFileUploadForm" :show-close="false">
+        <template #header="{ close, titleId, titleClass }">
+            <h4 :id="titleId" :class="titleClass">Выберите файлы</h4>
+        </template>
+        <file-upload @send="filesSend($event)"/>
+    </el-drawer>
 
     <el-drawer v-model="visibleCommentForm" :show-close="false">
         <template #header="{ close, titleId, titleClass }">
@@ -45,11 +61,13 @@
 
 import ActionButton from "./ActionButton.vue";
 import {ElNotification} from "element-plus";
+import FileUpload from "../Components/FileUpload.vue";
+
 export default {
     name: 'ActionButtons',
     emits: ['changeData', 'commentSend'],
     components: {
-        ActionButton
+        ActionButton, FileUpload
     },
     props: {
         buttons: {
@@ -61,6 +79,10 @@ export default {
             default: {}
         },
         isDelete: {
+            type: Boolean,
+            default: false
+        },
+        isUpload: {
             type: Boolean,
             default: false
         }
@@ -76,6 +98,7 @@ export default {
     data() {
         return {
             visibleCommentForm: false,
+            visibleFileUploadForm: false,
             errorMessage: false,
             comment: '',
 
@@ -112,6 +135,10 @@ export default {
                     position: 'bottom-right',
                 });
             }
+        },
+        filesSend(e) {
+            this.$emit('filesSend', e);
+            this.visibleFileUploadForm = false;
         },
         change(button) {
             this.$emit('changeData', button);

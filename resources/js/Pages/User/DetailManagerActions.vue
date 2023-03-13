@@ -107,7 +107,7 @@ export default {
 
                 let url = '/admin/user/' + this.user.id + '/load_comments';
                 url += window.location.search
-                if (this.comments.length > 0) {
+                if (this.comments?.length > 0) {
                     url+= '&offset=' +  this.comments.length;
                 }
 

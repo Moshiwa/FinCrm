@@ -55,14 +55,6 @@
     box-shadow:  0 0 0 1px var(--el-color-danger,var(--el-color-danger)) inset;
 }
 
-.la-file-upload {
-    font-size: 35px;
-    cursor: pointer;
-}
-.la-file-upload:hover {
-    color: var(--el-color-primary)
-}
-
 .el-form-item__label {
     width: 150px;
     height: fit-content!important;

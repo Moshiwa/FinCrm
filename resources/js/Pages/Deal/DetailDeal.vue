@@ -240,8 +240,8 @@ export default {
 
                 let url = '/admin/deal/' + this.thisDeal.id + '/load_comments';
                 url += window.location.search
-                if (this.comments.length > 0) {
-                    url+= '&offset=' +  this.comments.length;
+                if (this.thisDeal.comments?.length > 0) {
+                    url+= '&offset=' +  this.thisDeal.comments.length;
                 }
 
                 axios.get(url).then((response) => {
@@ -361,8 +361,11 @@ export default {
                 }
             });
 
+            let url = '/admin/deal/update';
+            url += window.location.search
+
             axios
-                .post('/admin/deal/update',  formData)
+                .post(url,  formData)
                 .then((response) => {
                     this.thisDeal = response.data.deal;
                     this.allStages = response.data.stages;
