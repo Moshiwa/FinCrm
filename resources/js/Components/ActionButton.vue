@@ -31,7 +31,7 @@ export default {
 <style scoped>
 .button-setting {
     cursor: pointer;
-    max-width: 200px;
+    width: 160px;
     border-radius: 2px;
     font-size: 1rem;
     font-weight: 400;
