@@ -124,6 +124,7 @@
             </div>
 
             <div class="card-right">
+                <filters :filter="filter" />
                 <div class="card-body row">
                     <i class="las la-file-upload" @click="visibleFileUploadForm = true"></i>
                     <el-timeline class="infinite-list">
@@ -165,6 +166,7 @@ import ActionButtons from "../../Components/ActionButtons.vue";
 import Helper from "../../Mixins/Helper.vue";
 import Comments from "../../Components/Comments.vue";
 import Field from "../../Components/Field.vue";
+import Filters from "../../Components/Filters.vue";
 
 export default {
     name: 'DetailTask',
@@ -173,7 +175,8 @@ export default {
         FileUpload,
         ActionButtons,
         Field,
-        Comments
+        Comments,
+        Filters
     },
     mixins: [
         Helper,
@@ -202,6 +205,10 @@ export default {
         buttons: {
             type: Array,
             default: []
+        },
+        filter: {
+            type: Array,
+            required: false,
         }
     },
     data() {
@@ -262,7 +269,14 @@ export default {
 
             if (can) {
                 this.loading = true;
-                axios.get('/admin/task/' + this.thisTask.id + '/load_comments?offset=' + this.thisTask.comments.length).then((response) => {
+
+                let url = '/admin/task/' + this.thisTask.id + '/load_comments';
+                url += window.location.search
+                if (this.comments.length > 0) {
+                    url+= '&offset=' +  this.comments.length;
+                }
+
+                axios.get(url).then((response) => {
                     this.thisTask.comments = this.thisTask.comments.concat(response.data.comments)
                     this.loading = false;
                 })

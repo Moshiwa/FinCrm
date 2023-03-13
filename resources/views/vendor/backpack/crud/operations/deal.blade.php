@@ -13,6 +13,19 @@
 
     $service = new FieldService();
 
+    $filter = [];
+    $request = $crud->getRequest();
+    $type = $request->get('type');
+    $sort = $request->get('date_sort', 'desc');
+
+    if($type) {
+        $filter['type'] = $type;
+    }
+
+    if($sort) {
+        $filter['sort'] = $sort;
+    }
+
     $deal->load([
             'stage',
             'pipeline',
@@ -20,8 +33,11 @@
             'client',
             'fields.type',
             'client.fields',
-            'comments' => function ($query) {
-                $query->offset(0)->limit(10)->orderBy('created_at', 'desc');
+            'comments' => function ($query) use ($type, $sort) {
+                $query->when($type, function ($query, $type) {
+                     $query->where('type', $type);
+                })
+                ->offset(0)->limit(10)->orderBy('created_at', $sort);
             },
             'comments.files',
             'comments.author' => function ($query) {
@@ -53,10 +69,6 @@
         $deal->client->fields->push($field);
     }
 
-
-    /*$deal_fields = $service->getDealFields($deal);
-    $client_fields = $service->getClientFields($deal->client);*/
-
     $users = User::query()->select(['id', 'name'])->get();
 @endphp
 
@@ -77,7 +89,7 @@
             :deal="{{ $deal }}"
             :pipelines="{{ $pipelines }}"
             :stages="{{ $stages }}"
-
+            :filter="{{ json_encode($filter) }}"
             :users="{{$users}}"
             :buttons="{{$buttons}}"
         />

@@ -9,15 +9,29 @@
       trans('backpack::crud.add') => false,
     ];
 
-    // if breadcrumbs aren't defined in the CrudController, use the default breadcrumbs
     $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
-    $crud = [];
+
+    $request = $crud->getRequest();
+    $type = $request->get('type');
+    $sort = $request->get('date_sort', 'desc');
+
     $user->load([
-        'comments' => function ($query) {
-            $query->offset(0)->limit(10)->orderBy('created_at', 'desc');
+        'comments' => function ($query) use ($type, $sort) {
+            $query->when($type, function ($query, $type) {
+                 $query->where('type', $type);
+            })
+            ->offset(0)->limit(10)->orderBy('created_at', $sort);
         },
         'comments.files',
     ]);
+
+    $filter = [];
+    if($type) {
+        $filter['type'] = $type;
+    }
+    if($sort) {
+        $filter['sort'] = $sort;
+    }
 
 @endphp
 
@@ -36,6 +50,7 @@
             <detail-manager-actions
                 :user="{{ $user }}"
                 :auth="{{ backpack_user() }}"
+                :filter="{{ json_encode($filter) }}"
             />
         </div>
     </div>

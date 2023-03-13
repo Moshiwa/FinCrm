@@ -1,4 +1,6 @@
 <template>
+    <filters :filter="filter"/>
+
     <div v-if="comments.length > 0" v-for="comment in comments">
         <el-card style="margin: 10px">
             <div class="row-right">
@@ -58,10 +60,11 @@
 
 <script>
 import Comments from "../../Components/Comments.vue";
+import Filters  from "../../Components/Filters.vue";
 export default {
     name: 'DetailManagerActions',
     components: {
-        Comments
+        Comments, Filters
     },
     props: {
         user: {
@@ -71,6 +74,10 @@ export default {
         auth: {
             type: Object,
             required: true,
+        },
+        filter: {
+            type: Array,
+            required: false,
         }
     },
     mounted() {
@@ -80,7 +87,6 @@ export default {
     data() {
         return {
             comments: this.user.comments,
-            filter: {},
             loading: false,
         }
     },
@@ -98,9 +104,14 @@ export default {
 
             if (can) {
                 this.loading = true;
-                axios.get(
-                    '/admin/user/' + this.user.id + '/load_comments?offset=' + this.comments.length
-                ).then((response) => {
+
+                let url = '/admin/user/' + this.user.id + '/load_comments';
+                url += window.location.search
+                if (this.comments.length > 0) {
+                    url+= '&offset=' +  this.comments.length;
+                }
+
+                axios.get(url).then((response) => {
                     this.comments = this.comments.concat(response.data.comments ?? []);
                     this.loading = false;
                 })

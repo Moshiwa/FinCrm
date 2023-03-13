@@ -56,9 +56,18 @@ class ManagerCrudController extends CrudController
     public function loadComments(User $user, Request $request)
     {
         $offset = $request->get('offset');
+        $type = $request->get('type');
+        $sort = $request->get('date_sort', 'desc');
+
         $user->load([
-            'comments' => function ($query) use ($offset) {
-                $query->offset($offset)->limit(5)->orderBy('created_at', 'desc');
+            'comments' => function ($query) use ($offset, $type, $sort) {
+                $query
+                    ->when($type, function ($query, $type) {
+                        $query->where('type', $type);
+                    })
+                    ->offset($offset)
+                    ->limit(5)
+                    ->orderBy('created_at', $sort);
             },
             'comments.files',
         ]);

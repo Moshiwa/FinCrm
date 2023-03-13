@@ -95,6 +95,9 @@
             </div>
 
             <div class="card-right">
+                <filters
+                    :filter="filter"
+                />
                 <div class="card-body row">
                     <i class="las la-file-upload" @click="visibleFileUploadForm = true"></i>
                     <el-timeline class="infinite-list">
@@ -137,6 +140,7 @@ import ActionButtons from "../../Components/ActionButtons.vue";
 import Comments from "../../Components/Comments.vue";
 import Field from "../../Components/Field.vue";
 import Helper from "../../Mixins/Helper.vue";
+import Filters from "../../Components/Filters.vue";
 
 export default {
     name: 'DetailDeal',
@@ -145,7 +149,8 @@ export default {
         FileUpload,
         ActionButtons,
         Field,
-        Comments
+        Comments,
+        Filters
     },
     mixins: [
         Helper
@@ -174,6 +179,10 @@ export default {
         buttons: {
             type: Array,
             default: []
+        },
+        filter: {
+            type: Array,
+            required: false,
         }
     },
     data() {
@@ -191,9 +200,6 @@ export default {
 
             deleteCommentId: 0,
             action: {},
-            /*allFiles: this.deal?.comments?.reduce((acc, item) => {
-                return [...acc,...item.files];
-            }, []),*/
 
             newComment: { id: '', type: 'comment', content: '', author_id: null, files: [] },
         }
@@ -226,7 +232,14 @@ export default {
 
             if (can) {
                 this.loading = true;
-                axios.get('/admin/deal/' + this.thisDeal.id + '/load_comments?offset=' + this.thisDeal.comments.length).then((response) => {
+
+                let url = '/admin/deal/' + this.thisDeal.id + '/load_comments';
+                url += window.location.search
+                if (this.comments.length > 0) {
+                    url+= '&offset=' +  this.comments.length;
+                }
+
+                axios.get(url).then((response) => {
                     this.thisDeal.comments = this.thisDeal.comments.concat(response.data.comments)
                     this.loading = false;
                 })
