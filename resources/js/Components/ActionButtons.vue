@@ -7,6 +7,18 @@
                 @click="buttonClick(button)"
             />
         </div>
+
+        <el-divider />
+
+        <div v-if="isDelete">
+            <a
+                class="btn btn-sm btn-link text-capitalize"
+                @click="deleteAction"
+            >
+                <i class="la la-trash" />
+                Удалить
+            </a>
+        </div>
     </div>
 
 
@@ -47,6 +59,10 @@ export default {
         stage: {
             type: Object,
             default: {}
+        },
+        isDelete: {
+            type: Boolean,
+            default: false
         }
     },
     computed: {
@@ -97,9 +113,11 @@ export default {
                 });
             }
         },
-
         change(button) {
             this.$emit('changeData', button);
+        },
+        deleteAction() {
+            this.$emit('deleteAction');
         }
     }
 }
@@ -109,6 +127,7 @@ export default {
 .flex-column {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 10px;
     width: 200px;
 }

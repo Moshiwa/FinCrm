@@ -10,8 +10,6 @@
     // if breadcrumbs aren't defined in the CrudController, use the default breadcrumbs
     $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
 
-    $service = new FieldService();
-
     $task->load([
         'stage',
         'stage.buttons.visible',
@@ -29,7 +27,6 @@
         'executor',
     ]);
 
-    $task_fields = $service->getTaskFields($task);
     $stages = \App\Models\TaskStage::query()->get();
     $users = User::query()->select(['id', 'name'])->get();
     $buttons = TaskButton::query()->with(['visible', 'action'])->get();
@@ -53,7 +50,6 @@
                 :stages="{{ $stages }}"
                 :users="{{ $users }}"
                 :buttons="{{ $buttons }}"
-                :task-fields="{{ json_encode($task_fields) }}"
             />
         </div>
     </div>

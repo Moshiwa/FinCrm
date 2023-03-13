@@ -140,4 +140,23 @@ class TaskCrudController extends CrudController
 
         return redirect('/admin/task/' . $task->id . '/detail');
     }
+
+    public function delete(Task $task, Request $request)
+    {
+        if (backpack_user()->can('tasks.delete')) {
+            $task->delete();
+
+            return response()->json([
+                'success' => true,
+                'errors' => [],
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'errors' => [
+                'У вас недостаточно прав'
+            ],
+        ], 403);
+    }
 }

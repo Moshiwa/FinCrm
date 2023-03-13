@@ -63,6 +63,7 @@ class ButtonCrudController extends CrudController
         $pipeline = (new ButtonService)->mergeDealButtonsSettings($pipeline);
 
         return response()->json([
+            'success' => true,
             'data' => [
                 'pipeline' => $pipeline
             ],

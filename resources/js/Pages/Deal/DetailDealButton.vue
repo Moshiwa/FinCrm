@@ -295,14 +295,14 @@ export default {
             data.color = this.currentColor ?? 'default';
             data.icon = this.currentIcon ?? 'angle-double-right';
 
-            axios.post('/admin/button/save', data)
+            axios.post('/admin/deal/button/save', data)
                 .then((response) => {
                     this.currentPipeline = response.data.data.pipeline ?? [];
                     this.visibleDrawer = false;
                 });
         },
         remove() {
-            axios.delete('/admin/button/' + this.currentButton.id)
+            axios.delete('/admin/deal/button/' + this.currentButton.id)
                 .then((response) => {
                     this.currentPipeline.buttons.forEach((button, index) => {
                         if(button.id === this.currentButton.id) {

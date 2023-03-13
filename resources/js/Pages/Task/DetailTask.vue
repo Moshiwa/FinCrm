@@ -141,10 +141,11 @@
         <action-buttons
             :buttons="stageButtons"
             :stage="thisTask.stage"
+            :is-delete="true"
             @commentSend="sendComment($event)"
             @changeData="changeData($event)"
+            @deleteAction="deleteTask"
         />
-
     </div>
 
     <el-drawer v-model="visibleFileUploadForm" :show-close="false">
@@ -156,12 +157,12 @@
 </template>
 
 <script>
-import { ElInput } from 'element-plus';
+import {ElInput, ElMessageBox} from 'element-plus';
 import Contenteditable from "../../Components/Contenteditable.vue";
 import FileUpload from "../../Components/FileUpload.vue";
 import { ElNotification } from 'element-plus'
 import ActionButtons from "../../Components/ActionButtons.vue";
-import ActionHelper from "../../Mixins/ActionHelper.vue";
+import Helper from "../../Mixins/Helper.vue";
 import Comments from "../../Components/Comments.vue";
 import Field from "../../Components/Field.vue";
 
@@ -175,7 +176,7 @@ export default {
         Comments
     },
     mixins: [
-        ActionHelper,
+        Helper,
     ],
     props: {
         auth: {
@@ -191,10 +192,6 @@ export default {
             default: [{}]
         },
         stages: {
-            type: Array,
-            default: [{}]
-        },
-        taskFields: {
             type: Array,
             default: [{}]
         },
@@ -250,7 +247,7 @@ export default {
     mounted() {
         $(document).on('scroll', this.loadMore);
         console.log(this.thisTask);
-        this.thisTask.fields = this.taskFields;
+        this.thisTask.fields = this.castFieldValue(this.thisTask.fields);
     },
     methods: {
         loadMore (e) {
@@ -315,6 +312,36 @@ export default {
             this.thisTask.start = !!action.start_time ? action.start_time : this.thisTask.start;
             this.thisTask.end = !!action.end_time ? action.end_time : this.thisTask.end;
         },
+        deleteTask() {
+            ElMessageBox.confirm(
+                'Вы уверены?',
+                'Удалить задачу',
+                {
+                    confirmButtonText: 'Хорошо',
+                    cancelButtonText: 'Отмена',
+                    type: 'warning',
+                }
+            )
+            .then(() => {
+                axios
+                    .delete('/admin/task/' + this.thisTask.id)
+                    .then((response) => {
+                        location.href = '/admin/task/';
+                    })
+                    .catch((response) => {
+                        if (!!response.response?.data?.errors) {
+                            response.response.data.errors.forEach((error) => {
+                                ElNotification({
+                                    title: error,
+                                    type: 'error',
+                                    position: 'bottom-right',
+                                });
+                            });
+                        }
+                    });
+                }
+            );
+        },
         send() {
             const formData = new FormData();
             if (!!this.thisTask.id) {
@@ -378,6 +405,9 @@ export default {
                     this.users = response.data.users;
                     this.stageButtons = response.data.task.stage.buttons;
                     this.action = null;
+
+                    this.thisTask.fields = this.castFieldValue(this.thisTask.fields);
+
                     ElNotification({
                         title: 'Сохранено',
                         type: 'success',

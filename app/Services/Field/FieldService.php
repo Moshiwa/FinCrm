@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class FieldService
 {
-    public function getClientFields($client): array
+    /*public function getClientFields($client): array
     {
         $included_fields = Field::includedClient()->get();
         $filled_client_fields = $client->fields->toArray();
@@ -69,7 +69,7 @@ class FieldService
         }
 
         return $fields;
-    }
+    }*/
 
     public static function getEntityFromRequest($request): FieldsEntitiesEnum
     {
@@ -92,7 +92,7 @@ class FieldService
         return empty($entity) ? FieldsEntitiesEnum::deal : $entity;
     }
 
-    private function castFieldValue($field)
+    /*private function castFieldValue($field)
     {
         $result = $field['pivot']['value'];
 
@@ -101,5 +101,5 @@ class FieldService
             'number' => (int) $result,
             default => $result,
         };
-    }
+    }*/
 }

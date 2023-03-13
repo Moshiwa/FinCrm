@@ -1,11 +1,19 @@
 <template>
-    <div
-        class="button-setting"
-        :class="'btn-custom__' + button.color"
+    <el-tooltip
+        class="box-item"
+        effect="dark"
+        :content="button.name"
+        placement="top-start"
     >
-        <i :class="'las la-' + button.icon"></i>
-        {{ button.name }}
-    </div>
+        <div
+            class="button-setting"
+            :class="'btn-custom__' + button.color"
+            @click="this.$emit('click')"
+        >
+            <i :class="'las la-' + button.icon"></i>
+            {{ button.name }}
+        </div>
+    </el-tooltip>
 </template>
 
 <script>
@@ -23,13 +31,17 @@ export default {
 <style scoped>
 .button-setting {
     cursor: pointer;
-    width: 200px;
+    max-width: 200px;
     border-radius: 2px;
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
-    padding: 0.375rem 0.75rem;
+    padding: 0.5rem 0.5rem;
     text-align: center;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 .button-setting:hover {
     border-radius: 2px;

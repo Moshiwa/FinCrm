@@ -52,7 +52,7 @@ class ClientController extends Controller
 
         if (empty($data['name'])) {
             return response()->json([
-                'error' => 'Не указано имя'
+                'errors' => ['Не указано имя']
             ]);
         }
 

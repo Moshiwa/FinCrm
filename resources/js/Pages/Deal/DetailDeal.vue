@@ -112,8 +112,10 @@
         <action-buttons
             :buttons="stageButtons"
             :stage="thisDeal.stage"
+            :is-delete="true"
             @commentSend="sendComment($event)"
             @changeData="changeData($event)"
+            @deleteAction="deleteDeal"
         />
 
     </div>
@@ -127,14 +129,14 @@
 </template>
 
 <script>
-import { ElInput } from 'element-plus';
+import {ElInput, ElMessageBox} from 'element-plus';
 import Contenteditable from "../../Components/Contenteditable.vue";
 import FileUpload from "../../Components/FileUpload.vue";
 import { ElNotification } from 'element-plus'
 import ActionButtons from "../../Components/ActionButtons.vue";
 import Comments from "../../Components/Comments.vue";
 import Field from "../../Components/Field.vue";
-import ActionHelper from "../../Mixins/ActionHelper.vue";
+import Helper from "../../Mixins/Helper.vue";
 
 export default {
     name: 'DetailDeal',
@@ -146,7 +148,7 @@ export default {
         Comments
     },
     mixins: [
-        ActionHelper
+        Helper
     ],
     props: {
         auth: {
@@ -162,14 +164,6 @@ export default {
             default: [{}]
         },
         stages: {
-            type: Array,
-            default: [{}]
-        },
-        dealFields: {
-            type: Array,
-            default: [{}]
-        },
-        clientFields: {
             type: Array,
             default: [{}]
         },
@@ -206,9 +200,8 @@ export default {
     },
     mounted() {
         $(document).on('scroll', this.loadMore);
-        console.log(this.thisDeal);
-        this.thisDeal.fields = this.dealFields;
-        this.thisDeal.client.fields = this.clientFields;
+        this.thisDeal.fields = this.castFieldValue(this.thisDeal.fields);
+        this.thisDeal.client.fields = this.castFieldValue(this.thisDeal.client.fields);
     },
     methods: {
         changePipeline(item) {
@@ -279,6 +272,36 @@ export default {
             this.thisDeal.stage.id = !!action.stage_id ? action.stage_id : this.thisDeal.stage.id;
             this.thisDeal.responsible.id = !!action.responsible_id ? action.responsible_id : this.thisDeal.responsible.id;
         },
+        deleteDeal() {
+            ElMessageBox.confirm(
+                'Вы уверены?',
+                'Удалить сделку',
+                {
+                    confirmButtonText: 'Хорошо',
+                    cancelButtonText: 'Отмена',
+                    type: 'warning',
+                }
+            )
+                .then(() => {
+                    axios
+                        .delete('/admin/deal/' + this.thisDeal.id)
+                        .then((response) => {
+                            location.href = '/admin/deal/';
+                        })
+                        .catch((response) => {
+                            if (!!response.response?.data?.errors) {
+                                response.response.data.errors.forEach((error) => {
+                                    ElNotification({
+                                        title: error,
+                                        type: 'error',
+                                        position: 'bottom-right',
+                                    });
+                                });
+                            }
+                        });
+                    }
+                );
+        },
         send() {
             const formData = new FormData();
             formData.append('id', this.thisDeal.id);
@@ -329,6 +352,10 @@ export default {
                     this.responsibles = response.data.users;
                     this.stageButtons = response.data.deal.pipeline.buttons;
                     this.action = null;
+
+                    this.thisDeal.fields = this.castFieldValue(this.thisDeal.fields);
+                    this.thisDeal.client.fields = this.castFieldValue(this.thisDeal.client.fields);
+
                     ElNotification({
                         title: 'Сохранено',
                         type: 'success',

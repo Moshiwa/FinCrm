@@ -9,6 +9,7 @@ use App\Models\Pipeline;
 use App\Models\Stage;
 use App\Models\User;
 use App\Services\Deal\DealService;
+use App\Services\Field\FieldService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Http\Request;
@@ -168,6 +169,25 @@ class DealCrudController extends CrudController
         ]);
 
         return redirect('/admin/deal/' . $deal->id . '/detail');
+    }
+
+    public function delete(Deal $deal, Request $request)
+    {
+        if (backpack_user()->can('deals.delete')) {
+            $deal->delete();
+
+            return response()->json([
+                'success' => true,
+                'errors' => [],
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'errors' => [
+                'У вас недостаточно прав'
+            ],
+        ], 403);
     }
 
 }

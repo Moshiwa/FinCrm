@@ -33,8 +33,8 @@
     $stages = $deal->pipeline->stages;
     $buttons = DealButton::query()->with(['visible', 'action'])->where('pipeline_id', $deal->pipeline->id)->get();
 
-    $deal_fields = $service->getDealFields($deal);
-    $client_fields = $service->getClientFields($deal->client);
+    /*$deal_fields = $service->getDealFields($deal);
+    $client_fields = $service->getClientFields($deal->client);*/
 
     $users = User::query()->select(['id', 'name'])->get();
 @endphp
@@ -56,8 +56,7 @@
             :deal="{{ $deal }}"
             :pipelines="{{ $pipelines }}"
             :stages="{{ $stages }}"
-            :deal-fields="{{ json_encode($deal_fields) }}"
-            :client-fields="{{ json_encode($client_fields) }}"
+
             :users="{{$users}}"
             :buttons="{{$buttons}}"
         />
