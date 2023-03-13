@@ -11,7 +11,7 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Support\Arr;
 
-class ButtonCrudController extends CrudController
+class DealButtonCrudController extends CrudController
 {
     use ButtonOperation;
 
@@ -73,7 +73,21 @@ class ButtonCrudController extends CrudController
 
     public function delete(DealButton $button)
     {
-        $button->delete();
+        if (backpack_user()->can('deal_buttons.delete')) {
+            $button->delete();
+
+            return response()->json([
+                'success' => true,
+                'errors' => [],
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'errors' => [
+                'У вас недостаточно прав'
+            ],
+        ], 403);
     }
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Admin\ButtonCrudController;
+use App\Http\Controllers\Admin\DealButtonCrudController;
 use App\Http\Controllers\Admin\ClientCrudController;
 use App\Http\Controllers\Admin\DealCrudController;
 use App\Http\Controllers\Admin\FieldCrudController;
@@ -50,8 +50,8 @@ Route::group([
         Route::post('/{deal}/change_pipeline', [DealCrudController::class, 'changePipeline'])->name('changePipeline');
         Route::get('/{deal}/load_comments', [DealCrudController::class, 'loadComments'])->name('loadComments');
         Route::get('/client/{id}', [DealCrudController::class, 'dealCreate'])->name('deal.deal-create');
-        Route::post('/button/save', [ButtonCrudController::class, 'save'])->name('save');
-        Route::delete('/button/{button}', [ButtonCrudController::class, 'delete'])->name('delete');
+        Route::post('/button/save', [DealButtonCrudController::class, 'save'])->name('save');
+        Route::delete('/button/{button}', [DealButtonCrudController::class, 'delete'])->name('delete');
     });
 
     Route::prefix('task')->name('task.')->group(function () {

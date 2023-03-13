@@ -46,6 +46,11 @@ class PermissionSeeder extends Seeder
                 'edit',
                 'delete'
             ],
+            PermissionsEnum::deal_buttons->name   => [
+                'create',
+                'edit',
+                'delete'
+            ],
         ]);
     }
 
