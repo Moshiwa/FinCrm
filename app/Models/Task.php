@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\FieldsEntitiesEnum;
 use App\Events\CreateTask;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -60,7 +61,7 @@ class Task extends Model
     public function fields(): BelongsToMany
     {
         return $this->belongsToMany(Field::class, 'task_fields')
-            ->where('entity', 'task')
+            ->where('entity', FieldsEntitiesEnum::task->value)
             ->withPivot('value');
     }
 

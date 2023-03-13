@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\FieldsEntitiesEnum;
 use App\Traits\FieldsTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,7 +25,7 @@ class Client extends Model
     public function fields(): BelongsToMany
     {
         return $this->belongsToMany(Field::class, 'client_fields')
-            ->where('entity', 'client')
+            ->where('entity', FieldsEntitiesEnum::client->value)
             ->withPivot('value');
     }
 

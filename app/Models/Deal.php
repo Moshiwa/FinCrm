@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\FieldsEntitiesEnum;
 use App\Events\ChangePipeline;
 use App\Events\ChangeResponsible;
 use App\Events\ChangeStage;
@@ -35,7 +36,7 @@ class Deal extends Model
     public function fields()
     {
         return $this->belongsToMany(Field::class, 'deal_fields')
-            ->where('entity', 'deal')
+            ->where('entity', FieldsEntitiesEnum::deal->value)
             ->withPivot('value');
     }
 
