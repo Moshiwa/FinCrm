@@ -34,7 +34,7 @@ Route::group([
     Route::crud('settings', 'SettingsCrudController');
     Route::crud('client', 'ClientCrudController');
     Route::crud('stage', 'StageCrudController');
-    Route::crud('button', 'ButtonCrudController');
+    Route::crud('button', 'DealButtonCrudController');
     Route::crud('task', 'TaskCrudController');
     Route::crud('task-stage', 'TaskStageCrudController');
     Route::crud('task-button', 'TaskButtonCrudController');
