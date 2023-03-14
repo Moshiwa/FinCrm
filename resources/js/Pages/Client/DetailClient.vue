@@ -29,11 +29,15 @@
 
 <script>
 import Field from "../../Components/Field.vue";
+import Helper from "../../Mixins/Helper.vue";
 export default {
     name: 'DetailClient.vue',
     components: {
         Field,
     },
+    mixins: [
+        Helper
+    ],
     props: {
         fields: {
             type: Array,
@@ -50,9 +54,7 @@ export default {
         }
     },
     mounted() {
-        this.client.fields = this.fields;
-    },
-    methods: {
+        this.client.fields = this.castFieldValue(this.fields);
     }
 }
 </script>

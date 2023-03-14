@@ -8,7 +8,7 @@
         $entry = new Client();
     }
 
-    $fields = $service->getClientFields($entry);
+
     $included_fields = Field::includedClient()->get();
 @endphp
 
@@ -18,7 +18,7 @@
 <div id="vue-app">
     <detail-client
         :entry="{{json_encode($entry)}}"
-        :fields="{{json_encode($fields)}}"
+        :fields="{{json_encode($entry->all_fields)}}"
         :user="{{backpack_user()}}"
     />
 </div>
