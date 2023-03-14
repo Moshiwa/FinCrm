@@ -6,8 +6,8 @@ use Exception;
 
 class DadataClient
 {
-    private $clean_url = "https://cleaner.dadata.ru/api/v1/clean";
-    private $suggest_url = "https://suggestions.dadata.ru/suggestions/api/4_1/rs";
+    private string $clean_url = "https://cleaner.dadata.ru/api/v1/clean";
+    private string $suggest_url = "https://suggestions.dadata.ru/suggestions/api/4_1/rs";
     private string $token;
     private string $secret;
     private $handle;
