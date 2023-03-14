@@ -18,7 +18,7 @@
                 <div class="row-right__content">
                     <div
                         v-if="comment.type === 'document'"
-                        class="flex-inline"
+                        class="row common-gap"
                     >
                         <div
                             v-for="file in comment.files"
@@ -56,7 +56,7 @@
                         />
                     </div>
                 </div>
-                <div class="row-right__author">
+                <div class="row-right__author common-gap row">
                     <a :href="'/admin/user/' + comment.author?.id"> {{ comment.author?.name }} </a>
                 </div>
             </div>
@@ -155,44 +155,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-.row-right__upper {
-    display: inline-flex;
-    justify-content: space-between;
-    width: 100%;
-}
-.row-right__content {
-    padding-left: 10px;
-}
-.row-right__content .la-trash-alt {
-    cursor: pointer;
-    font-size: 20px;
-    color: red;
-}
-.row-right__content i:hover {
-    filter: brightness(80%);
-}
-.row-right__upper > span {
-    font-size: 15px;
-    font-weight: 600;
-    opacity: 0.5;
-}
-.row-right__content {
-    display: flex;
-    justify-content: space-between;
-}
-.row-right__author {
-    display: flex;
-    flex-direction: row;
-    justify-content: end;
-    gap: 10px;
-    padding: 5px;
-}
-.flex-inline {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-</style>

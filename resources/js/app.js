@@ -1,5 +1,8 @@
 import './bootstrap';
 import '../css/app.css';
+import '../css/elplus_update.css';
+import '../css/scroll.css';
+import '../css/action_button.css';
 
 import {createApp} from 'vue/dist/vue.esm-bundler.js';
 import ElementPlus from 'element-plus'

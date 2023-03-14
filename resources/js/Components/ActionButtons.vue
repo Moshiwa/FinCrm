@@ -1,5 +1,5 @@
 <template>
-    <div class="card-body flex-column">
+    <div class="card-body flex-column common-gap">
         <div v-for="button in stageButtons">
             <action-button
                 v-if="button.visible.some(item => item.id === thisStage.id)"
@@ -12,7 +12,7 @@
 
         <div v-if="isDelete">
             <a
-                class="btn btn-sm btn-link text-capitalize"
+                class="btn btn-sm btn-link text-capitalize sys-button"
                 @click="deleteAction"
             >
                 <i class="la la-trash" />
@@ -22,7 +22,7 @@
 
         <div v-if="isUpload">
             <a
-                class="btn btn-sm btn-link text-capitalize"
+                class="btn btn-sm btn-link text-capitalize sys-button"
                 @click="visibleFileUploadForm = true"
             >
                 <i class="la la-file-upload" />
@@ -31,13 +31,14 @@
         </div>
     </div>
 
+<!--Окно загрузки файлов-->
     <el-drawer v-model="visibleFileUploadForm" :show-close="false">
         <template #header="{ close, titleId, titleClass }">
             <h4 :id="titleId" :class="titleClass">Выберите файлы</h4>
         </template>
         <file-upload @send="filesSend($event)"/>
     </el-drawer>
-
+<!--Окно для текста комменатрия-->
     <el-drawer v-model="visibleCommentForm" :show-close="false">
         <template #header="{ close, titleId, titleClass }">
             <h4 :id="titleId" :class="titleClass">Оставте комментарий</h4>
@@ -55,6 +56,7 @@
             Отправить
         </el-button>
     </el-drawer>
+
 </template>
 
 <script>
@@ -151,11 +153,5 @@ export default {
 </script>
 
 <style scoped>
-.flex-column {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    width: 200px;
-}
+
 </style>

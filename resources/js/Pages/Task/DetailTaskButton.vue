@@ -381,34 +381,6 @@ export default {
 .b-settings__header {
     padding: 10px 0 10px 0;
 }
-.b-settings__stages {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    background: #f1f4f8;
-    border-radius: 2px;
-}
-.stage__item {
-    cursor: pointer;
-    padding: 10px;
-    background: #f1f4f8;
-    color: #495057;
-}
-.stage__item:hover {
-    color: var(--indigo);
-    border-radius: 2px;
-    filter: brightness(97%);
-}
-.stage__item.active {
-    color: var(--indigo);
-    border-radius: 2px;
-    filter: brightness(97%);
-}
-.stage__buttons {
-    display: flex;
-    flex-direction: row;
-}
 
 .b-settings__body {
     display: flex;
@@ -457,7 +429,6 @@ export default {
 .color-item.active {
     outline: 3px solid #dddddd;
 }
-
 .icon__container {
     display: flex;
     flex-direction: row;

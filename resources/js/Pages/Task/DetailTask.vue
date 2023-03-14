@@ -1,6 +1,6 @@
 <template>
-    <div class="wrap">
-        <div class="card">
+    <div class="row">
+        <div class="card row common-gap">
             <div class="card-left">
                 <el-input
                     class="input-title hidden-border"
@@ -437,37 +437,4 @@ export default {
 }
 </script>
 <style scoped>
-.wrap {
-    display:flex;
-    flex-direction: row;
-}
-.card {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    padding: 10px;
-    width: calc(100% - 200px);
-}
-.input-title {
-    margin: 10px 0 10px 0;
-    height: 40px;
-    font-size: 30px;
-}
-.card-left {
-    min-width: 45%;
-    padding: 8px;
-}
-.card-body {
-    justify-content: flex-end;
-}
-.card-right {
-    width: 100%;
-}
-.infinite-list {
-    min-height: 700px;
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-}
 </style>

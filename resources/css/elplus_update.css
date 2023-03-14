@@ -1,0 +1,56 @@
+/*Vue style update*/
+.el-form-item__label {
+    width: 150px;
+    height: fit-content!important;
+    justify-content: flex-start !important;
+}
+
+.deal-comment-item .el-timeline-item__node--large {
+    width: 32px !important;
+    height: 32px !important;
+}
+.deal-comment-item .el-timeline {
+    padding: 0 !important;
+}
+.deal-comment-item .el-timeline-item__wrapper {
+    padding-left: 54px !important;
+}
+.deal-comment-item  .el-timeline-item__tail {
+    display: block !important;
+    position: absolute;
+    left: 13px;
+    height: 100%;
+    border-left: 2px solid #ecf5ff;
+}
+
+.card-left .el-select {
+    width: 100%;
+}
+.card-left .el-input {
+    width: 100% !important;
+}
+.card-left .el-form-item__content>div {
+    width: 100% !important;
+}
+.select-container .el-form-item__content {
+    justify-content: space-between;
+    gap: 5px;
+}
+
+.hidden-border > .el-input__wrapper {
+    box-shadow: none;
+}
+
+.reports-container .el-date-editor {
+    width: auto!important;
+}
+
+.error > .el-input__wrapper {
+    box-shadow:  0 0 0 1px var(--el-color-danger,var(--el-color-danger)) inset;
+}
+.error > .el-input__wrapper.is-focus {
+    box-shadow:  0 0 0 1px var(--el-color-danger,var(--el-color-danger)) inset;
+}
+.error > .el-input__wrapper:hover {
+    box-shadow:  0 0 0 1px var(--el-color-danger,var(--el-color-danger)) inset;
+}
