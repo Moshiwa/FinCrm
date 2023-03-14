@@ -6,6 +6,7 @@ use App\Enums\FieldsEntitiesEnum;
 use App\Http\Requests\FieldRequest;
 use App\Models\Field;
 use App\Models\FieldType;
+use App\Services\Dadata\DadataService;
 use App\Services\Field\FieldService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -79,6 +80,25 @@ class FieldCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    public function findAddress(Request $request)
+    {
+        $search = $request->get('search');
+        if (strlen($search) >= 3) {
+            $dadata = new DadataService();
+            $dadata->setCount(20);
+            $addresses = $dadata->findAddress($search);
+            return response()->json([
+                'data' => $addresses,
+                'errors' => [],
+            ]);
+        }
+
+        return response()->json([
+            'data' => [],
+            'errors' => ['Должно быть больше 3х символов'],
+        ]);
     }
 
     public function toggleActivity(Request $request, Field $field)

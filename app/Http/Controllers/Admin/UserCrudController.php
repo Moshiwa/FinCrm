@@ -43,7 +43,7 @@ class UserCrudController extends CrudController
 
     public function findUsers(Request $request)
     {
-        $search = $request->get('user_name');
+        $search = $request->get('search');
         if (strlen($search) >= 3) {
             $users = User::query()->where('name', 'like', $search . '%')->get();
 

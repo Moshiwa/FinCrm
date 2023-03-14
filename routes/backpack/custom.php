@@ -74,6 +74,7 @@ Route::group([
 
     Route::prefix('field')->name('field.')->group(function () {
         Route::get('/{field}/toggle-activity', [FieldCrudController::class, 'toggleActivity'])->name('toggleActivity');
+        Route::get('/find-address', [FieldCrudController::class, 'findAddress'])->name('findAddress');
     });
 
     Route::prefix('report')->name('report.')->group(function () {

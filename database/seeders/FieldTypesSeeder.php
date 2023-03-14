@@ -11,7 +11,7 @@ class FieldTypesSeeder extends Seeder
     {
         $types = [
             'phone', 'email', 'number',
-            'select', 'checkbox', 'date'
+            'select', 'checkbox', 'date', 'address'
         ];
 
         foreach ($types as $type) {

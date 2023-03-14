@@ -55,6 +55,26 @@
             @focus="check"
         />
     </div>
+    <div v-else-if="field.type.name === 'address'">
+        <el-select
+            v-model="field.pivot.value"
+            :name="'fields['+ fieldIndex +'][value]'"
+            filterable
+            remote
+            allow-create
+            reserve-keyword
+            @change="send"
+            :remote-method="findAddress"
+            @focus="check"
+        >
+            <el-option
+                v-for="(option, index) in addresses"
+                :key="index"
+                :label="option.value"
+                :value="option.value"
+            />
+        </el-select>
+    </div>
 </template>
 
 <script>
@@ -76,9 +96,21 @@ export default {
     data() {
         return {
             error: false,
+            addresses: [],
+            timer: false,
         }
     },
     methods: {
+        findAddress(query) {
+            query = !!query ? query : this.field.pivot.value;
+            clearTimeout(this.timer);
+            this.timer = setTimeout(() => {
+                axios.get('/admin/field/find-address?search=' + query)
+                    .then((response) => {
+                        this.addresses = response.data.data.suggestions
+                    })
+            }, 1000)
+        },
         check() {
             let field = this.field;
             this.error = false;

@@ -8,7 +8,8 @@ return [
         'select' => 'Выборка',
         'checkbox' => 'Чекбокс',
         'radio' => 'Радио выборка',
-        'date' => 'Дата'
+        'date' => 'Дата',
+        'address' => 'Адрес'
     ],
     'crud_titles' => [
         'many' => [
