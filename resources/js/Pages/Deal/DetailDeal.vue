@@ -99,7 +99,6 @@
                     :filter="filter"
                 />
                 <div class="card-body row">
-                    <i class="las la-file-upload" @click="visibleFileUploadForm = true"></i>
                     <el-timeline class="infinite-list">
                         <comments
                             :comments="thisDeal.comments"
@@ -116,19 +115,14 @@
             :buttons="stageButtons"
             :stage="thisDeal.stage"
             :is-delete="permissions.can_delete"
+            :is-upload="true"
             @commentSend="sendComment($event)"
+            @filesSend="sendFiles($event)"
             @changeData="changeData($event)"
             @deleteAction="deleteDeal"
         />
 
     </div>
-
-    <el-drawer v-model="visibleFileUploadForm" :show-close="false">
-        <template #header="{ close, titleId, titleClass }">
-            <h4 :id="titleId" :class="titleClass">Выберите файлы</h4>
-        </template>
-        <file-upload @send="sendFiles($event)"/>
-    </el-drawer>
 </template>
 
 <script>
