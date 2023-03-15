@@ -15,7 +15,11 @@ class TestSeeder extends Seeder
             ['name' => 'Aleks Fider',],
             ['name' => 'Aleks Fider',]
         );
-       //$client->fields()->sync([1, ['value' => '+79875227611']]);
+
+        Client::query()->firstOrCreate(
+            ['name' => 'Арбыз Хузялябов',],
+            ['name' => 'Арбыз Хузялябов',]
+        );
 
 
         Deal::query()->firstOrcreate(['name' => 'deal 1', 'pipeline_id' => 1,], [
@@ -23,6 +27,14 @@ class TestSeeder extends Seeder
             'pipeline_id' => 1,
             'responsible_id' => 1,
             'client_id' => 1,
+            'stage_id' => 1
+        ]);
+
+        Deal::query()->firstOrcreate(['name' => 'deal 1', 'pipeline_id' => 1,], [
+            'name' => 'deal 2',
+            'pipeline_id' => 1,
+            'responsible_id' => 1,
+            'client_id' => 2,
             'stage_id' => 1
         ]);
 
