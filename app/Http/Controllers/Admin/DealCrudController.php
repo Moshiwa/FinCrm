@@ -12,6 +12,7 @@ use App\Services\Deal\DealService;
 use App\Services\Field\FieldService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\CRUD\app\Library\Widget;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
@@ -40,20 +41,11 @@ class DealCrudController extends CrudController
 
         $this->hiddenClientFilter();
         $this->hiddenResponsibleFilter();
+        $this->hiddenPipelineFilter();
 
-
-
-        $pipelines = Pipeline::query()->select('id', 'name')->get()->toArray();
-        $pipelines = Arr::pluck($pipelines, 'name', 'id');
-        CRUD::addFilter([
-            'type'  => 'dropdown',
-            'name'  => 'pipeline',
-            'label' => 'Воронка'
-        ], $pipelines, function($value) { // if the filter is active (the GET parameter "draft" exits)
-            $this->crud->addClause('where', 'pipeline_id', $value);
-        });
-
-        $stages = Stage::query()->select('id', 'name')->get()->toArray();
+        CRUD::addButton('top', 'pipelines', 'view', 'crud::buttons.pipelines');
+        $pipeline_id = CRUD::getRequest()->get('pipeline', Pipeline::query()->first()->id);
+        $stages = Stage::query()->select('id', 'name')->where('pipeline_id', $pipeline_id)->get()->toArray();
         $stages = Arr::pluck($stages, 'name', 'id');
         CRUD::addFilter([
             'type'  => 'dropdown',
@@ -77,6 +69,14 @@ class DealCrudController extends CrudController
         $request_entity = $this->crud->getRequest()->get('responsible');
         if ($request_entity) {
             $this->crud->addClause('where', 'responsible_id', $request_entity);
+        }
+    }
+
+    private function hiddenPipelineFilter()
+    {
+        $request_entity = $this->crud->getRequest()->get('pipeline', Pipeline::query()->first()->id);
+        if ($request_entity) {
+            $this->crud->addClause('where', 'pipeline_id', $request_entity);
         }
     }
 
