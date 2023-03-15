@@ -2,6 +2,7 @@
     <div class="row">
         <div class="card row common-gap">
             <div class="card-left">
+                <el-divider content-position="center">СДЕЛКА</el-divider>
                 <el-input
                     class="input-title hidden-border"
                     v-model="thisDeal.name"
@@ -52,46 +53,42 @@
                     </el-select>
                 </el-form-item>
 
-                <el-collapse v-model="active">
-                    <el-collapse-item title="Дополнительные поля" name="1">
-                        <el-form-item
-                            v-for="field in thisDeal.all_fields"
-                            :label="field.name"
-                            :required="field.is_required"
-                        >
-                            <field
-                                :field="field"
-                                @send="send"
-                            />
-                        </el-form-item>
-                        <div>
-                            <a href="/admin/field/create?entity=deal">Добавить поле</a>
-                        </div>
-                    </el-collapse-item>
-                </el-collapse>
+                <el-divider content-position="left">Дополнительные поля</el-divider>
+                <el-form-item
+                    v-for="field in thisDeal.all_fields"
+                    :label="field.name"
+                    :required="field.is_required"
+                >
+                    <field
+                        :field="field"
+                        @send="send"
+                    />
+                </el-form-item>
+                <div>
+                    <a href="/admin/field/create?entity=deal">Добавить поле</a>
+                </div>
+
+                <el-divider content-position="center">КЛИЕНТ</el-divider>
 
                 <el-input
                     class="input-subtitle hidden-border"
                     v-model="thisDeal.client.name"
                     @change="send"
                 />
-                <el-collapse v-model="active">
-                    <el-collapse-item title="Данные о клиенте" name="2">
-                        <el-form-item
-                            v-for="field in thisDeal.client.all_fields"
-                            :label="field.name"
-                            :required="field.is_required"
-                        >
-                            <field
-                                :field="field"
-                                @send="send"
-                            />
-                        </el-form-item>
-                        <div>
-                            <a href="/admin/field/create?entity=client">Добавить поле</a>
-                        </div>
-                    </el-collapse-item>
-                </el-collapse>
+                <el-divider content-position="left">Дополнительные поля</el-divider>
+                <el-form-item
+                    v-for="field in thisDeal.client.all_fields"
+                    :label="field.name"
+                    :required="field.is_required"
+                >
+                    <field
+                        :field="field"
+                        @send="send"
+                    />
+                </el-form-item>
+                <div>
+                    <a href="/admin/field/create?entity=client">Добавить поле</a>
+                </div>
             </div>
 
             <div class="card-right">
@@ -182,7 +179,6 @@ export default {
     data() {
         return {
             loading: false,
-            active: ['1'],
             visibleCommentForm: false,
             visibleFileUploadForm: false,
 

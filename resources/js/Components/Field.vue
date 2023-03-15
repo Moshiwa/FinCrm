@@ -23,6 +23,14 @@
         />
     </div>
 
+    <div v-else-if="field.type.name === 'number'">
+        <el-input-number
+            v-model="field.pivot.value"
+            :name="'fields['+ fieldIndex +'][value]'"
+            @change="send"
+        />
+    </div>
+
     <div v-else-if="field.type.name === 'checkbox'">
         <el-checkbox
             v-model="field.pivot.value"
@@ -53,7 +61,9 @@
             @change="send"
             @input="check"
             @focus="check"
-        />
+        >
+
+        </el-input>
     </div>
     <div v-else-if="field.type.name === 'address'">
         <el-select

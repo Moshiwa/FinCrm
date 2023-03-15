@@ -1,11 +1,12 @@
 <template>
-    <div>
+    <div class="client-container">
         <el-form-item label="Имя" prop="client.name">
             <el-input
                 name="name"
                 v-model="client.name"
             />
         </el-form-item>
+        <el-divider content-position="left">Дополнительные поля</el-divider>
         <div v-for="(field, fieldIndex) in client.fields">
             <el-form-item
                 :label="field.name"

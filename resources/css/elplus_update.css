@@ -26,12 +26,29 @@
 .card-left .el-select {
     width: 100%;
 }
+.card-left .el-input-number {
+    width: 100%;
+}
 .card-left .el-input {
     width: 100% !important;
 }
 .card-left .el-form-item__content>div {
     width: 100% !important;
 }
+
+.client-container .el-select {
+    width: 100%;
+}
+.client-container .el-input-number {
+    width: 100%;
+}
+.client-container .el-input {
+    width: 100% !important;
+}
+.client-container .el-form-item__content>div {
+    width: 100% !important;
+}
+
 .select-container .el-form-item__content {
     justify-content: space-between;
     gap: 5px;

@@ -2,6 +2,7 @@
     <div class="row">
         <div class="card row common-gap">
             <div class="card-left">
+                <el-divider content-position="center">ЗАДАЧА</el-divider>
                 <el-input
                     class="input-title hidden-border"
                     v-model="thisTask.name"
@@ -85,42 +86,29 @@
 
                 <el-form-item label="Даты начала/окончания" class="select-container">
                     <el-date-picker
-                        v-model="thisTask.start"
-                        type="datetime"
-                        placeholder="Select date and time"
+                        v-model="datetime"
+                        type="datetimerange"
+                        format="YYYY-MM-DD hh:mm"
+                        value-format="YYYY-MM-DD hh:mm"
                         :shortcuts="shortcuts"
-                        format="YYYY-MM-DD hh:mm:ss"
-                        value-format="YYYY-MM-DD hh:mm:ss"
-                        @change="send"
-                    />
-                    <el-date-picker
-                        v-model="thisTask.end"
-                        type="datetime"
-                        placeholder="Select date and time"
-                        :shortcuts="shortcuts"
-                        format="YYYY-MM-DD hh:mm:ss"
-                        value-format="YYYY-MM-DD hh:mm:ss"
-                        @change="send"
+                        @change="changeDateTime"
                     />
                 </el-form-item>
 
-                <el-collapse v-model="active">
-                    <el-collapse-item title="Дополнительные поля" name="1">
-                        <el-form-item
-                            v-for="field in thisTask.all_fields"
-                            :label="field.name"
-                            :required="field.is_required"
-                        >
-                            <field
-                                :field="field"
-                                @send="send"
-                            />
-                        </el-form-item>
-                        <div>
-                            <a href="/admin/field/create?entity=task">Добавить поле</a>
-                        </div>
-                    </el-collapse-item>
-                </el-collapse>
+                <el-divider content-position="left">Дополнительные поля</el-divider>
+                <el-form-item
+                    v-for="field in thisTask.all_fields"
+                    :label="field.name"
+                    :required="field.is_required"
+                >
+                    <field
+                        :field="field"
+                        @send="send"
+                    />
+                </el-form-item>
+                <div>
+                    <a href="/admin/field/create?entity=task">Добавить поле</a>
+                </div>
             </div>
 
             <div class="card-right">
@@ -209,7 +197,6 @@ export default {
     data() {
         return {
             loading: false,
-            active: ['1'],
             visibleCommentForm: false,
             visibleFileUploadForm: false,
             shortcuts: [
@@ -235,6 +222,7 @@ export default {
                 },
             ],
             thisTask: this.task,
+            datetime: [ this.task.start, this.task.end ],
 
             allStages: this.stages ?? [],
             stageButtons: this.buttons ?? [],
@@ -315,6 +303,18 @@ export default {
         },
         changeData(options) {
             this.prepareDataByButtonOptions(options);
+            this.send();
+        },
+        changeDateTime() {
+            let times = [];
+            if (this.datetime?.length > 0) {
+                this.datetime.forEach((date) => {
+                    times.push(date);
+                });
+            }
+
+            this.thisTask.start = times[0] ?? this.thisTask.start;
+            this.thisTask.end = times[1] ?? this.thisTask.end;
             this.send();
         },
         prepareDataByButtonOptions(action) {
