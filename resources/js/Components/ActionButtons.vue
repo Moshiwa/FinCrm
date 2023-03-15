@@ -13,7 +13,7 @@
         <div v-if="isDelete">
             <a
                 class="btn btn-sm btn-link text-capitalize sys-button"
-                @click="deleteAction"
+                @click="deleteEntityAction"
             >
                 <i class="la la-trash" />
                 Удалить
@@ -145,7 +145,7 @@ export default {
         change(button) {
             this.$emit('changeData', button);
         },
-        deleteAction() {
+        deleteEntityAction() {
             this.$emit('deleteAction');
         }
     }
