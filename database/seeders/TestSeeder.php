@@ -30,7 +30,7 @@ class TestSeeder extends Seeder
             'stage_id' => 1
         ]);
 
-        Deal::query()->firstOrcreate(['name' => 'deal 1', 'pipeline_id' => 1,], [
+        Deal::query()->firstOrcreate(['name' => 'deal 2', 'pipeline_id' => 1,], [
             'name' => 'deal 2',
             'pipeline_id' => 1,
             'responsible_id' => 1,
