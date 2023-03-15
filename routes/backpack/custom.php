@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DealCrudController;
 use App\Http\Controllers\Admin\FieldCrudController;
 use App\Http\Controllers\Admin\ManagerCrudController;
 use App\Http\Controllers\Admin\ReportCrudController;
+use App\Http\Controllers\Admin\SenderController;
 use App\Http\Controllers\Admin\StageCrudController;
 use App\Http\Controllers\Admin\TaskButtonCrudController;
 use App\Http\Controllers\Admin\TaskCrudController;
@@ -79,5 +80,9 @@ Route::group([
 
     Route::prefix('report')->name('report.')->group(function () {
         Route::get('/generate', [ReportCrudController::class, 'reportGenerate'])->name('generate');
+    });
+
+    Route::prefix('sender')->name('sender.')->group(function () {
+        Route::post('/send', [SenderController::class, 'send'])->name('send');
     });
 });

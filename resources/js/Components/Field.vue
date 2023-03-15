@@ -62,7 +62,12 @@
             @input="check"
             @focus="check"
         >
-
+            <template #append>
+                <div class="phone-action row common-gap">
+                    <i class="la la-comment" @click="popupVisible = true"></i>
+                    <i class="la la-phone" @click="popupVisible = true"></i>
+                </div>
+            </template>
         </el-input>
     </div>
     <div v-else-if="field.type.name === 'address'">
@@ -85,6 +90,33 @@
             />
         </el-select>
     </div>
+
+
+
+<!--    Смс-->
+    <el-dialog v-model="popupVisible" :title="'Отправить смс на номер ' + field.pivot.value">
+        <div>
+            <el-checkbox
+                v-for="integration in integrations"
+                v-model="integration.value"
+                :label="integration.title"
+            />
+        </div>
+        <el-input
+            v-model="message"
+            rows="5"
+            type="textarea"
+        />
+        <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="popupVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="sendMessage">
+          Confirm
+        </el-button>
+      </span>
+        </template>
+    </el-dialog>
+
 </template>
 
 <script>
@@ -108,6 +140,21 @@ export default {
             error: false,
             addresses: [],
             timer: false,
+
+            popupVisible: false,
+            integrations: [
+                {
+                    name: 'sms_center',
+                    title: 'smsCenter',
+                    value: false,
+                },
+                {
+                    name: 'telegram',
+                    title: 'Телеграм',
+                    value: false,
+                }
+            ],
+            message: '',
         }
     },
     methods: {
@@ -121,14 +168,60 @@ export default {
                     })
             }, 1000)
         },
-        check() {
+        check(e) {
             let field = this.field;
+
+            this.checkPhone(field);
+
+
             this.error = false;
             if (field.is_required) {
                 if (!field.pivot.value) {
                     this.error = true;
                 }
             }
+        },
+        checkPhone(field) {
+            if (field.type.name === 'phone') {
+                this.field.pivot.value = field.pivot.value.replace(/[^0-9^+-]/g,'');
+            }
+        },
+        sendMessage() {
+            axios.post('/admin/sender/send', {
+                'integrations': this.integrations,
+                'message': this.message,
+                'recipient': this.field.pivot.value
+            }).then((response) => {
+                this.popupVisible = false;
+                this.message = '';
+
+                if (!!response.data.errors) {
+                    response.data.errors.forEach((error) => {
+                        if (!!error) {
+                            setTimeout(() => {
+                                ElNotification({
+                                    duration: 8000,
+                                    title: 'Ошибка',
+                                    message: error,
+                                    type: 'error',
+                                })
+                            }, 100);
+                        }
+                    })
+                }
+
+                if (!!response.data.messages) {
+                    response.data.messages.forEach((message) => {
+                        setTimeout(() => {
+                            ElNotification({
+                                title: 'Доставлено',
+                                message: message,
+                                type: 'success',
+                            })
+                        }, 100);
+                    })
+                }
+            });
         },
         send() {
             if (this.error) {
@@ -147,4 +240,10 @@ export default {
 </script>
 
 <style scoped>
+.phone-action > i {
+    cursor: pointer;
+}
+.phone-action > i:hover {
+    filter: brightness(0.4);
+}
 </style>
