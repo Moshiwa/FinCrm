@@ -53,7 +53,7 @@
         </el-card>
     </div>
     <div v-else style="margin: 10px">
-        Нет действий
+        <el-empty description="Менеджер не совершал каких-либо действий" />
     </div>
     <div v-loading="loading"></div>
 </template>
