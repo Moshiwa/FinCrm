@@ -9,6 +9,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run()
     {
+        (new IntegrationsSeeder())->run();
         (new FieldTypesSeeder())->run();
         (new SpacesSeeder())->run();
         (new PermissionSeeder())->run();

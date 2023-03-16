@@ -85,4 +85,5 @@ Route::group([
     Route::prefix('sender')->name('sender.')->group(function () {
         Route::post('/send', [SenderController::class, 'send'])->name('send');
     });
+    Route::crud('integration', 'IntegrationCrudController');
 });

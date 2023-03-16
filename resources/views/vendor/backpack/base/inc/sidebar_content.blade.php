@@ -21,3 +21,5 @@
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('task-button') }}"><i class="nav-icon la la-icons"></i> {{ __('sidebar.task_buttons') }} </a></li>
     </ul>
 </li>
+
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('integration') }}"><i class="nav-icon la la-question"></i> Integrations</a></li>
