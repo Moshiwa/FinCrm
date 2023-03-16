@@ -9,7 +9,7 @@
         :color="definitionCommentColor(comment)"
         placement="top"
     >
-        <el-card>
+
         <div class="row-right">
             <div class="row-right__upper">
                 <span v-html="comment.title"></span>
@@ -61,7 +61,7 @@
                 </div>
             </div>
         </div>
-    </el-card>
+    <el-divider/>
     </el-timeline-item>
 </template>
 

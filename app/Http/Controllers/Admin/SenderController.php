@@ -27,6 +27,7 @@ class SenderController extends Controller
 
             if (empty($service->getError())) {
                 $messages[] = $service->getTitle() . ' сообщение доставлено.';
+
             }
 
             $errors[] = $service->getError();

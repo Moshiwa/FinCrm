@@ -83,6 +83,7 @@
                 >
                     <field
                         :field="field"
+                        :is-sender-prefix="true"
                         @send="send"
                     />
                 </el-form-item>

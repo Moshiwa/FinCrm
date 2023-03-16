@@ -62,7 +62,7 @@
             @input="check"
             @focus="check"
         >
-            <template #append>
+            <template #append v-if="isSenderPrefix">
                 <div class="phone-action row common-gap">
                     <i class="la la-comment" @click="popupVisible = true"></i>
                     <i class="la la-phone" @click="popupVisible = true"></i>
@@ -133,7 +133,11 @@ export default {
         fieldIndex: {
             type: Number,
             default: 0
-        }
+        },
+        isSenderPrefix: {
+            type: Boolean,
+            default: false
+        },
     },
     data() {
         return {
@@ -142,6 +146,7 @@ export default {
             timer: false,
 
             popupVisible: false,
+
             integrations: [
                 {
                     name: 'sms_center',
