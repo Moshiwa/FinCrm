@@ -1,4 +1,4 @@
-<a href="{{ url('/admin/manager/manager-actions-info/'.$entry->getKey()) }}" class="btn btn-sm btn-link">
+<a href="{{ url('/admin/manager/'.$entry->getKey()).'/show' }}" class="btn btn-sm btn-link">
     <i class="fa fa-list"></i>
     Что делал?
 </a>

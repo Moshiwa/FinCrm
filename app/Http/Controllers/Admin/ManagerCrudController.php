@@ -13,19 +13,20 @@ use Illuminate\Http\Request;
 class ManagerCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use ManagerActionsInfoOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 
     public function setup()
     {
         CRUD::setModel(\App\Models\User::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/manager');
         CRUD::setEntityNameStrings('manager', 'managers');
-        CRUD::denyAccess(['show', 'delete', 'update']);
     }
 
     protected function setupListOperation()
     {
+        CRUD::removeButton('show');
         CRUD::addButton('line', 'manager-actions', 'view', 'crud::buttons.manager_actions');
+
 
         CRUD::column('name');
         CRUD::column('email');
@@ -52,6 +53,28 @@ class ManagerCrudController extends CrudController
             ->value(function ($entry) {
                 return '<a href="/admin/task?responsible='.$entry->id.'">' . $entry->responsible_tasks->count() . '</a>';
             });
+    }
+
+    public function show($id)
+    {
+        $this->crud->hasAccessOrFail('show');
+
+        // get entry ID from Request (makes sure its the last ID for nested resources)
+        $id = $this->crud->getCurrentEntryId() ?? $id;
+
+        // get the info for that entry (include softDeleted items if the trait is used)
+        if ($this->crud->get('show.softDeletes') && in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses($this->crud->model))) {
+            $this->data['entry'] = $this->crud->getModel()->withTrashed()->findOrFail($id);
+        } else {
+            $this->data['entry'] = $this->crud->getEntryWithLocale($id);
+        }
+
+        $this->data['crud'] = $this->crud;
+        $this->data['user'] = $this->data['entry'];
+        $this->data['title'] = $this->crud->getTitle() ?? trans('backpack::crud.preview').' '.$this->crud->entity_name;
+
+        // load the view from /resources/views/vendor/backpack/crud/ if it exists, otherwise load the one in the package
+        return view('crud::detail_manager', $this->data);
     }
 
     public function loadComments(User $user, Request $request)

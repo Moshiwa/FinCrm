@@ -32,7 +32,6 @@ Route::group([
     Route::crud('pipeline', 'PipelineCrudController');
     Route::crud('space', 'SpaceCrudController');
     Route::crud('deal', 'DealCrudController');
-    Route::crud('settings', 'SettingsCrudController');
     Route::crud('client', 'ClientCrudController');
     Route::crud('stage', 'StageCrudController');
     Route::crud('button', 'DealButtonCrudController');
