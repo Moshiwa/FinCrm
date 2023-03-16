@@ -61,7 +61,7 @@
                 </div>
             </div>
         </div>
-    <el-divider/>
+        <el-divider/>
     </el-timeline-item>
 </template>
 

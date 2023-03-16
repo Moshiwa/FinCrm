@@ -23,6 +23,10 @@
     border-left: 2px solid #ecf5ff;
 }
 
+.deal-comment-item .el-divider {
+    margin: 10px 0;
+}
+
 .card-left .el-select {
     width: 100%;
 }
