@@ -352,7 +352,6 @@ export default {
             this.currentButton.action.start_time = this.actionChangeStart ? this.currentButton.action.start_time : '';
             this.currentButton.action.end_time = this.actionChangeEnd ? this.currentButton.action.end_time : '';
             this.currentButton.action.comment = !!this.actionLeaveComment;
-            console.log( this.actionChangeExecutor );
         },
         remove() {
             axios.delete('/admin/task/buttons/' + this.currentButton.id)
@@ -363,7 +362,8 @@ export default {
                             this.allButtons.splice(index, 1);
                         }
                     })
-                });
+                }
+            );
         },
     }
 }
