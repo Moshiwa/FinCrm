@@ -36,7 +36,6 @@ class IntegrationCrudController extends CrudController
 
     }
 
-
     public function show($id)
     {
         $this->crud->hasAccessOrFail('show');

@@ -14,12 +14,23 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ReportCrudController extends CrudController
 {
-    use ReportOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
 
     public function setup()
     {
         CRUD::setRoute(config('backpack.base.route_prefix') . '/report');
         CRUD::setEntityNameStrings('report', 'reports');
+    }
+
+    public function index()
+    {
+        $this->crud->hasAccessOrFail('list');
+
+        $this->data['crud'] = $this->crud;
+        $this->data['title'] = $this->crud->getTitle() ?? mb_ucfirst($this->crud->entity_name_plural);
+
+        // load the view from /resources/views/vendor/backpack/crud/ if it exists, otherwise load the one in the package
+        return view('crud::detail_report', $this->data);
     }
 
     public function reportGenerate(Request $request)
