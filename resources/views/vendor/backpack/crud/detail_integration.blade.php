@@ -11,9 +11,6 @@
     // if breadcrumbs aren't defined in the CrudController, use the default breadcrumbs
     $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
 
-
-
-
 @endphp
 
 @section('content')
@@ -28,9 +25,9 @@
                 @endif
             </section>
 
-<!--            <detail-deal
-
-            />-->
+            <detail-integration
+                :integration="{{ $integration }}"
+            />
         </div>
     </div>
 

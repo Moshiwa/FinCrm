@@ -51,6 +51,7 @@ class IntegrationCrudController extends CrudController
         }
 
         $this->data['crud'] = $this->crud;
+        $this->data['integration'] = $this->crud->getCurrentEntry();
         $this->data['title'] = $this->crud->getTitle() ?? trans('backpack::crud.preview').' '.$this->crud->entity_name;
 
         return view('crud::detail_integration', $this->data);

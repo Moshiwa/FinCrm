@@ -13,6 +13,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('title')->default('');
             $table->string('access_token')->default('');
+            $table->string('login')->default('');
+            $table->string('password')->default('');
             $table->boolean('active')->default(false);
         });
     }
