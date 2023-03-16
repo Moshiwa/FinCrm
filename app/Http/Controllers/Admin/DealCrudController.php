@@ -24,7 +24,7 @@ use Illuminate\Support\Arr;
 class DealCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \App\Http\Controllers\Admin\Operations\DealOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 
     public function setup()
     {
@@ -54,6 +54,28 @@ class DealCrudController extends CrudController
         ], $stages, function($value) { // if the filter is active (the GET parameter "draft" exits)
             $this->crud->addClause('where', 'stage_id', $value);
         });
+    }
+
+    public function show($id)
+    {
+        $this->crud->hasAccessOrFail('show');
+
+        // get entry ID from Request (makes sure its the last ID for nested resources)
+        $id = $this->crud->getCurrentEntryId() ?? $id;
+
+        // get the info for that entry (include softDeleted items if the trait is used)
+        if ($this->crud->get('show.softDeletes') && in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses($this->crud->model))) {
+            $this->data['entry'] = $this->crud->getModel()->withTrashed()->findOrFail($id);
+        } else {
+            $this->data['entry'] = $this->crud->getEntryWithLocale($id);
+        }
+
+        $this->data['crud'] = $this->crud;
+        $this->data['deal'] = $this->data['entry'];
+        $this->data['title'] = $this->crud->getTitle() ?? trans('backpack::crud.preview').' '.$this->crud->entity_name;
+
+        // load the view from /resources/views/vendor/backpack/crud/ if it exists, otherwise load the one in the package
+        return view('crud::detail_deal', $this->data);
     }
 
     private function hiddenClientFilter()
@@ -180,7 +202,7 @@ class DealCrudController extends CrudController
             'responsible_id' => backpack_user()->id,
         ]);
 
-        return redirect('/admin/deal/' . $deal->id . '/detail');
+        return redirect('/admin/deal/' . $deal->id . '/show');
     }
 
     public function delete(Deal $deal, Request $request)
