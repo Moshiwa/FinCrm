@@ -337,7 +337,7 @@ export default {
             data.color = this.currentColor ?? 'default';
             data.icon = this.currentIcon ?? 'angle-double-right';
 
-            axios.post('/admin/task/buttons/save', data)
+            axios.post('/admin/task/button/save', data)
                 .then((response) => {
                     this.allButtons = response.data.data.buttons ?? [];
                     this.allTaskStages = response.data.data.task_stages ?? [];

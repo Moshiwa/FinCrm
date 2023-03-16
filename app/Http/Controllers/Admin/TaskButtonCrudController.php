@@ -13,13 +13,24 @@ use Illuminate\Support\Arr;
 
 class TaskButtonCrudController extends CrudController
 {
-    use TaskButtonOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
 
     public function setup()
     {
         CRUD::setModel(\App\Models\DealButton::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/button');
         CRUD::setEntityNameStrings('button', 'buttons');
+    }
+
+    public function index()
+    {
+        $this->crud->hasAccessOrFail('list');
+
+        $this->data['crud'] = $this->crud;
+        $this->data['title'] = $this->crud->getTitle() ?? mb_ucfirst($this->crud->entity_name_plural);
+
+        // load the view from /resources/views/vendor/backpack/crud/ if it exists, otherwise load the one in the package
+        return view('crud::detail_task_button', $this->data);
     }
 
     public function save(TaskButtonRequest $request)
