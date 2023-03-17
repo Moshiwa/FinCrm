@@ -2,15 +2,51 @@
 
 namespace App\Services\Telephony\Uiscom;
 
+use App\Services\Dadata\DadataService;
 use GuzzleHttp\Client;
-//ToDo Дописать
+//ToDo Дописать Необходимо использовать softphone uis
 class UiscomService
 {
     private UiscomClient $client;
+    protected string $error = '';
 
     public function __construct()
     {
         $this->client = new UiscomClient();
+    }
+
+    public function getError(): string
+    {
+        return $this->error;
+    }
+
+    public function cleanPhone($phone)
+    {
+        $phone = preg_replace('/\D/', '', $phone);
+
+        if (empty($phone) || strlen($phone) != 11) {
+            $this->error = 'Неверный формат номера телефона';
+            return '';
+        }
+
+        return $phone;
+    }
+
+    public function authManager()
+    {
+        $params = [
+            "login" => "",
+            "password" => ""
+        ];
+        $client = new Client();
+        $response = $client->post('https://my.uiscom.ru/sup/auth/login', [
+            'body' => json_encode($params)
+        ]);
+
+        $response = $response->getBody()->getContents();
+        $data = json_decode($response, true);
+
+        return $data['data']['employee_id'] ?? '';
     }
 
     public function login()
@@ -27,16 +63,15 @@ class UiscomService
         }
 
         dd($result);
-
     }
 
-    public function call()
+    public function call($phone)
     {
         $params = [
             'access_token' => '8l1vxvi61873i2r2i3kozovb55dft846ejsnld7e',
             "first_call" => "employee",
             "virtual_phone_number" => "78452338065",
-            "contact" => '79022007017',
+            "contact" => $phone,
             "employee" => [
                 'id' => 3950243
             ]

@@ -65,7 +65,7 @@
             <template #append v-if="isSenderPrefix">
                 <div class="phone-action row common-gap">
                     <i class="la la-comment" @click="popupVisible = true"></i>
-                    <i class="la la-phone" @click="popupVisible = true"></i>
+                    <i class="la la-phone" @click="call"></i>
                 </div>
             </template>
         </el-input>
@@ -120,7 +120,7 @@
 </template>
 
 <script>
-import {ElNotification} from "element-plus";
+import {ElMessageBox, ElNotification} from "element-plus";
 
 export default {
     name: 'Fields',
@@ -227,6 +227,23 @@ export default {
                     })
                 }
             });
+        },
+        call() {
+            ElMessageBox.confirm(
+                'Вы уверены?',
+                'Позвонить',
+                {
+                    confirmButtonText: 'Хорошо',
+                    cancelButtonText: 'Отмена',
+                    type: 'warning',
+                }
+            )
+            .then(() => {
+                    axios.post('/admin/telephony/call', {
+                        phone: this.field.pivot.value
+                    });
+                }
+            );
         },
         send() {
             if (this.error) {

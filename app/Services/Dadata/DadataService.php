@@ -46,7 +46,7 @@ class DadataService
         $this->division = $division;
     }
 
-    public function cleanFio($name)
+    public function cleanFio(string $name)
     {
         $this->client->init();
         $result = $this->client->clean('name', $name);
@@ -55,7 +55,7 @@ class DadataService
         return $result;
     }
 
-    public function cleanAddress($address)
+    public function cleanAddress(string $address)
     {
         $this->client->init();
         $result = $this->client->clean('address', $address);
@@ -64,10 +64,19 @@ class DadataService
         return $result;
     }
 
-    public function cleanEmail($email)
+    public function cleanEmail(string $email)
     {
         $this->client->init();
         $result = $this->client->clean('email', $email);
+        $this->client->close();
+
+        return $result;
+    }
+
+    public function cleanPhone(string $phone)
+    {
+        $this->client->init();
+        $result = $this->client->clean('phone', $phone);
         $this->client->close();
 
         return $result;

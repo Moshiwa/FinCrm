@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\SenderController;
 use App\Http\Controllers\Admin\StageCrudController;
 use App\Http\Controllers\Admin\TaskButtonCrudController;
 use App\Http\Controllers\Admin\TaskCrudController;
+use App\Http\Controllers\Admin\TelephonyController;
 use App\Http\Controllers\Admin\UserCrudController;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -87,5 +88,10 @@ Route::group([
     Route::prefix('sender')->name('sender.')->group(function () {
         Route::post('/send', [SenderController::class, 'send'])->name('send');
     });
+
+    Route::prefix('telephony')->name('telephony.')->group(function () {
+        Route::post('/call', [TelephonyController::class, 'call'])->name('call');
+    });
+
     Route::crud('integration', 'IntegrationCrudController');
 });
