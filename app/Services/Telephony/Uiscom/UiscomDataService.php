@@ -31,10 +31,38 @@ class UiscomDataService
     public function getAccountInfo()
     {
         $params = [
-            'access_token' => '2fRN4g21cab3a550ba882e012a022f77fa4f27f7a6541455efcfe0dbdddd8b97d16c6f7e',
+            'access_token' => '8l1vxvi61873i2r2i3kozovb55dft846ejsnld7e',
 
         ];
         $result = $this->client->post('get.account', $params, false);
+
+        if (isset($result['error'])) {
+
+        }
+        dd($result);
+    }
+
+    public function getVN()
+    {
+        $params = [
+            'access_token' => '8l1vxvi61873i2r2i3kozovb55dft846ejsnld7e',
+
+        ];
+        $result = $this->client->post('get.available_virtual_numbers', $params, false);
+
+        if (isset($result['error'])) {
+
+        }
+        dd($result);
+    }
+
+    public function getSipLines()
+    {
+        $params = [
+            'access_token' => '8l1vxvi61873i2r2i3kozovb55dft846ejsnld7e',
+
+        ];
+        $result = $this->client->post('get.sip_lines', $params, false);
 
         if (isset($result['error'])) {
 

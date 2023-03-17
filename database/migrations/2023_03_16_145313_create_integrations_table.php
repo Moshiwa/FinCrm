@@ -12,9 +12,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('title')->default('');
-            $table->string('access_token')->default('');
-            $table->string('login')->default('');
-            $table->string('password')->default('');
+            $table->string('access_token')->nullable();
+            $table->string('login')->nullable();
+            $table->string('password')->nullable();
             $table->boolean('active')->default(false);
         });
     }

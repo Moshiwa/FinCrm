@@ -12,4 +12,10 @@ class Integration extends Model
     use HasFactory;
 
     public $timestamps = false;
+
+    protected $fillable = [
+        'login',
+        'password',
+        'access_token'
+    ];
 }

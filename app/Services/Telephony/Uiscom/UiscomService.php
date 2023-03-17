@@ -26,24 +26,61 @@ class UiscomService
 
         }
 
+        dd($result);
+
     }
 
     public function call()
     {
         $params = [
-            'access_token' => '2fRN4g21c10614f0570001c38c9273486226edabd5a3e487914f42a8a1cad2f576cd85ca',
-            "first_call" => "operator",
-            "switch_at_once" => true,
-            "show_virtual_phone_number" => false,
-            "virtual_phone_number" => "78452398880",
-            "external_id" => "334otr01",
-            "dtmf_string" => ".1.2.3",
-            "contact" => "79875227633",
-            "operator" => "79262444491",
-
+            'access_token' => '8l1vxvi61873i2r2i3kozovb55dft846ejsnld7e',
+            "first_call" => "employee",
+            "virtual_phone_number" => "78452338065",
+            "contact" => '79022007017',
+            "employee" => [
+                'id' => 3950243
+            ]
         ];
-        $result = $this->client->post('start.simple_call', $params);
 
+        $result = $this->client->post('start.employee_call', $params);
+
+        $call_session_id = $result['result']['data']['call_session_id'] ?? '';
+dd($result);
+    }
+
+    //Завершение звонка
+    public function releaseCall()
+    {
+        $params = [
+            'access_token' => '8l1vxvi61873i2r2i3kozovb55dft846ejsnld7e',
+            "call_session_id" => "",
+        ];
+
+        $result = $this->client->post('release.call', $params);
+        dd($result);
+    }
+
+    //Удержание звонка
+    public function holdCall()
+    {
+        $params = [
+            'access_token' => '8l1vxvi61873i2r2i3kozovb55dft846ejsnld7e',
+            "call_session_id" => "",
+        ];
+
+        $result = $this->client->post('hold.call', $params);
+        dd($result);
+    }
+    //Снять с удержания звонка
+    public function unholdCall()
+    {
+        $params = [
+            'access_token' => '8l1vxvi61873i2r2i3kozovb55dft846ejsnld7e',
+            "call_session_id" => "",
+        ];
+
+        $result = $this->client->post('unhold.call', $params);
+        dd($result);
     }
 
     private function errorsList($code, $type)

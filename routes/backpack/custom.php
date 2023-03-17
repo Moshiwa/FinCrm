@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\DealButtonCrudController;
 use App\Http\Controllers\Admin\ClientCrudController;
 use App\Http\Controllers\Admin\DealCrudController;
 use App\Http\Controllers\Admin\FieldCrudController;
+use App\Http\Controllers\Admin\IntegrationCrudController;
 use App\Http\Controllers\Admin\ManagerCrudController;
 use App\Http\Controllers\Admin\ReportCrudController;
 use App\Http\Controllers\Admin\SenderController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\Admin\StageCrudController;
 use App\Http\Controllers\Admin\TaskButtonCrudController;
 use App\Http\Controllers\Admin\TaskCrudController;
 use App\Http\Controllers\Admin\UserCrudController;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SpaceCrudController;
 // --------------------------
@@ -40,6 +42,7 @@ Route::group([
     Route::crud('task-button', 'TaskButtonCrudController');
     Route::crud('manager', 'ManagerCrudController');
     Route::crud('report', 'ReportCrudController');
+    Route::crud('integration', 'IntegrationCrudController');
 
     Route::get('space-change/{code}', [SpaceCrudController::class, 'spaceChange'])->name('space.change');
 

@@ -1,13 +1,20 @@
 <template>
     <el-form-item label="Логин">
-        <el-input />
+        <el-input
+            v-model="thisIntegration.login"
+            autocomplete="off"
+        />
     </el-form-item>
 
     <el-form-item label="Пароль">
-        <el-input type="password"/>
+        <el-input
+            v-model="thisIntegration.password"
+            autocomplete="off"
+            type="password"
+        />
     </el-form-item>
 
-    <el-button type="success">Сохранить</el-button>
+    <el-button type="success" @click="save">Сохранить</el-button>
 
     <el-divider content-position="center">Инструкция</el-divider>
     1. Используйте ваш логин
@@ -23,6 +30,16 @@ export default {
         integration: {
             type: Object,
             required: true
+        }
+    },
+    data() {
+        return {
+            thisIntegration: this.integration ?? {}
+        }
+    },
+    methods: {
+        save() {
+            axios.post('/admin/integration/save/', this.thisIntegration)
         }
     }
 }

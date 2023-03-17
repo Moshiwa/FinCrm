@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\IntegrationRequest;
+use App\Models\Integration;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -55,5 +56,20 @@ class IntegrationCrudController extends CrudController
         $this->data['title'] = $this->crud->getTitle() ?? trans('backpack::crud.preview').' '.$this->crud->entity_name;
 
         return view('crud::detail_integration', $this->data);
+    }
+
+    public function save(IntegrationRequest $request)
+    {
+        $data = $request->validated();
+
+        $integration = Integration::query()->find($data['id']);
+
+        $integration->update([
+            'login' => $data['login'],
+            'password' => $data['password'],
+            'access_token' => $data['access_token']
+        ]);
+
+        //По возможности тест
     }
 }
