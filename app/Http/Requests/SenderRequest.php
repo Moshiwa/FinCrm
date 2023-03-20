@@ -15,10 +15,10 @@ class SenderRequest extends FormRequest
     public function rules()
     {
         return [
-            'integrations.*' => 'exclude_unless:integrations.*.value,true',
+            'integration' => 'required|max:255',
             'client_id' => 'required|exists:clients,id',
             'deal_id' => 'required|exists:deals,id',
-            'message' => 'required|max:255',
+            'message' => 'required|max:1000',
             'recipient' => 'required|max:255',
         ];
     }

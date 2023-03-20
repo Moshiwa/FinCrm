@@ -50,7 +50,13 @@
             @change="send"
             @input="check"
             @focus="check"
-        />
+        >
+            <template #append v-if="isSenderPrefix">
+                <div class="phone-action row common-gap">
+                    <i class="la la-comment" @click="popupVisible = true"></i>
+                </div>
+            </template>
+        </el-input>
     </div>
     <div v-else-if="field.type.name === 'phone'">
         <el-input
@@ -93,15 +99,8 @@
 
 
 
-<!--    Смс-->
-    <el-dialog v-model="popupVisible" :title="'Отправить смс на номер ' + field.pivot.value">
-        <div>
-            <el-checkbox
-                v-for="integration in integrations"
-                v-model="integration.value"
-                :label="integration.title"
-            />
-        </div>
+<!--    Сообщение клиенту-->
+    <el-dialog v-model="popupVisible" :title="'Отправить сообщение на ' + field.pivot.value">
         <el-input
             v-model="message"
             rows="5"
@@ -146,19 +145,6 @@ export default {
             timer: false,
 
             popupVisible: false,
-
-            integrations: [
-                {
-                    name: 'sms_center',
-                    title: 'smsCenter',
-                    value: false,
-                },
-                {
-                    name: 'telegram',
-                    title: 'Телеграм',
-                    value: false,
-                }
-            ],
             message: '',
         }
     },
@@ -191,11 +177,21 @@ export default {
                 this.field.pivot.value = field.pivot.value.replace(/[^0-9^+-]/g,'');
             }
         },
+        definitionIntegration() {
+            switch (this.field.type.name) {
+                case 'email':
+                    return 'sms_center_email';
+                case 'phone':
+                    return 'sms_center';
+                default:
+                    return '';
+            }
+        },
         sendMessage() {
             let data = {
                 field: this.field,
                 message: this.message,
-                integrations: this.integrations
+                integration: this.definitionIntegration()
             }
             this.$emit('sendMessage', data);
             this.popupVisible = false;

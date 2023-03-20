@@ -285,7 +285,7 @@ export default {
         },
         sendRemoteMessage(event) {
             axios.post('/admin/sender/send', {
-                'integrations': event.integrations,
+                'integration': event.integration,
                 'message': event.message,
                 'recipient': event.field.pivot.value,
                 'client_id': this.thisDeal.client.id,
@@ -306,16 +306,14 @@ export default {
                     })
                 }
 
-                if (!!response.data.messages) {
-                    response.data.messages.forEach((message) => {
-                        setTimeout(() => {
-                            ElNotification({
-                                title: 'Доставлено',
-                                message: message,
-                                type: 'success',
-                            })
-                        }, 100);
-                    });
+                if (!!response.data.message) {
+                    setTimeout(() => {
+                        ElNotification({
+                            title: 'Доставлено',
+                            message: response.data.message,
+                            type: 'success',
+                        })
+                    }, 100);
 
                     this.thisDeal = response.data.data ?? [];
                 }

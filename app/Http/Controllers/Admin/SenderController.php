@@ -16,39 +16,26 @@ class SenderController extends Controller
     {
         $data = $request->validated();
 
-        $errors = [];
-        $messages = [];
-
         $client = Client::query()->find($data['client_id']);
         $deal = Deal::query()->with(['comments'])->find($data['deal_id']);
 
+        $service = SenderService::factory($data['integration']);
+        $response = $service->send($data['message'], $data['recipient']);
 
+        if (empty($service->getError())) {
+            $deal->comments()->create([
+                'type' => CommentTypeEnum::REMOTE->value,
+                'title' => 'Сообщение на ' . $data['recipient'],
+                'content' => $data['message'],
+                'author_id' => backpack_user()->id
+            ]);
 
-        foreach ($data['integrations'] as $integration) {
-            $service = SenderService::factory($integration['name']);
-            if (empty($service)) {
-                $errors[] = "Интеграция {$integration['name']} не настроена.";
-                continue;
-            }
-
-            $response = $service->send($data['message'], $data['recipient']);
-
-            if (empty($service->getError())) {
-                $deal->comments()->create([
-                    'type' => CommentTypeEnum::REMOTE->value,
-                    'title' => 'Сообщение на номер ' . $data['recipient'],
-                    'content' => $data['message'],
-                    'author_id' => backpack_user()->id
-                ]);
-
-                $messages[] = $service->getTitle() . ' сообщение доставлено.';
-
-            }
-
-            $errors[] = $service->getError();
-
+            $message = $service->getTitle() . ' сообщение доставлено.';
+            $success = true;
+        } else {
+            $message = $service->getError();
+            $success = false;
         }
-
 
         $type = $request->get('type');
         $sort = $request->get('date_sort', 'desc');
@@ -71,9 +58,9 @@ class SenderController extends Controller
         ]);
 
         return response()->json([
-            'errors' => $errors,
+            'success' => $success,
             'data' => $deal,
-            'messages' => $messages
+            'message' => $message
         ]);
     }
 }

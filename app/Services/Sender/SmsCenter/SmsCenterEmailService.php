@@ -5,11 +5,11 @@ namespace App\Services\Sender\SmsCenter;
 use App\Enums\IntegrationEnum;
 use App\Services\Sender\SenderService;
 
-class SmsCenterService extends SenderService
+class SmsCenterEmailService extends SenderService
 {
     public function __construct()
     {
-        $this->title = IntegrationEnum::getTitle(IntegrationEnum::SMS_CENTER->value);
+        $this->title = IntegrationEnum::getTitle(IntegrationEnum::SMS_CENTER_EMAIL->value);
         $this->client = new SmsCenterClient();
     }
 
@@ -18,7 +18,9 @@ class SmsCenterService extends SenderService
         $response = $this->client->get('send.php', [
             'mes' => $message,
             'phones' => $recipient,
-            'all' => 3
+            'subj' => 'Test Theme',
+            'sender' => 'a.manchin@webabsolute.ru',
+            'mail' => 1
         ]);
 
         $response = json_decode($response, true);
@@ -30,7 +32,6 @@ class SmsCenterService extends SenderService
 
         return $response;
     }
-
 
     public function check(): bool
     {
