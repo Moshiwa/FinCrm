@@ -7,18 +7,17 @@ use App\Services\Sender\SenderService;
 
 class SmsCenterService extends SenderService
 {
-    public function __construct($recipient)
+    public function __construct()
     {
-        $this->recipient = $recipient;
         $this->title = IntegrationEnum::getTitle(IntegrationEnum::SMS_CENTER->value);
         $this->client = new SmsCenterClient();
     }
 
-    public function send($message)
+    public function send($message, $recipient)
     {
         $response = $this->client->get('send.php', [
             'mes' => $message,
-            'phones' => $this->recipient,
+            'phones' => $recipient,
             'all' => 3
         ]);
 
@@ -33,7 +32,7 @@ class SmsCenterService extends SenderService
     }
 
 
-    public function getBalance()
+    public function check()
     {
         return $this->client->get('balance.php', []);
     }

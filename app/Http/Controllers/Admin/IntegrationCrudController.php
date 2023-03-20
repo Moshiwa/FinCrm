@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\IntegrationRequest;
 use App\Models\Integration;
+use App\Services\Sender\SenderService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -63,6 +64,10 @@ class IntegrationCrudController extends CrudController
         $data = $request->validated();
 
         $integration = Integration::query()->find($data['id']);
+
+
+        $service = SenderService::factory($integration->name);
+        $service->check();
 
         $integration->update([
             'login' => $data['login'],

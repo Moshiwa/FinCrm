@@ -230,12 +230,12 @@ export default {
         },
         call() {
             ElMessageBox.confirm(
-                'Вы уверены?',
+                'Продолжить?',
                 'Позвонить',
                 {
                     confirmButtonText: 'Хорошо',
                     cancelButtonText: 'Отмена',
-                    type: 'warning',
+                    type: 'success',
                 }
             )
             .then(() => {

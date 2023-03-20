@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\IntegrationEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SenderRequest;
+use App\Models\Client;
 use App\Services\Sender\SenderService;
 
 class SenderController extends Controller
@@ -16,14 +17,16 @@ class SenderController extends Controller
         $errors = [];
         $messages = [];
 
+/*        $client = Client::query()->where()*/
+
         foreach ($data['integrations'] as $integration) {
-            $service = SenderService::factory($integration['name'], $data['recipient']);
+            $service = SenderService::factory($integration['name']);
             if (empty($service)) {
                 $errors[] = "Интеграция {$integration['name']} не настроена.";
                 continue;
             }
 
-            $response = $service->send($data['message']);
+            $response = $service->send($data['message'], $data['recipient']);
 
             if (empty($service->getError())) {
                 $messages[] = $service->getTitle() . ' сообщение доставлено.';

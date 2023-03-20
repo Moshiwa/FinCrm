@@ -93,5 +93,9 @@ Route::group([
         Route::post('/call', [TelephonyController::class, 'call'])->name('call');
     });
 
+    Route::prefix('integration')->name('integration.')->group(function () {
+        Route::post('/save', [IntegrationCrudController::class, 'save'])->name('save');
+    });
+
     Route::crud('integration', 'IntegrationCrudController');
 });
