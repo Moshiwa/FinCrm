@@ -192,58 +192,17 @@ export default {
             }
         },
         sendMessage() {
-            axios.post('/admin/sender/send', {
-                'integrations': this.integrations,
-                'message': this.message,
-                'recipient': this.field.pivot.value
-            }).then((response) => {
-                this.popupVisible = false;
-                this.message = '';
-
-                if (!!response.data.errors) {
-                    response.data.errors.forEach((error) => {
-                        if (!!error) {
-                            setTimeout(() => {
-                                ElNotification({
-                                    duration: 8000,
-                                    title: 'Ошибка',
-                                    message: error,
-                                    type: 'error',
-                                })
-                            }, 100);
-                        }
-                    })
-                }
-
-                if (!!response.data.messages) {
-                    response.data.messages.forEach((message) => {
-                        setTimeout(() => {
-                            ElNotification({
-                                title: 'Доставлено',
-                                message: message,
-                                type: 'success',
-                            })
-                        }, 100);
-                    })
-                }
-            });
+            let data = {
+                field: this.field,
+                message: this.message,
+                integrations: this.integrations
+            }
+            this.$emit('sendMessage', data);
+            this.popupVisible = false;
+            this.message = '';
         },
         call() {
-            ElMessageBox.confirm(
-                'Продолжить?',
-                'Позвонить',
-                {
-                    confirmButtonText: 'Хорошо',
-                    cancelButtonText: 'Отмена',
-                    type: 'success',
-                }
-            )
-            .then(() => {
-                    axios.post('/admin/telephony/call', {
-                        phone: this.field.pivot.value
-                    });
-                }
-            );
+            this.$emit('call', this.field);
         },
         send() {
             if (this.error) {

@@ -287,7 +287,7 @@ export default {
             this.visibleFileUploadForm = false;
             this.newComment.files = event;
             this.newComment.type = 'document';
-            if (this.newComment.files.length > 0) {
+            if (this.newComment.files?.length > 0) {
                 this.thisTask.comments.unshift(this.newComment);
             }
 

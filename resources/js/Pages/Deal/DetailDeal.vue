@@ -85,6 +85,8 @@
                         :field="field"
                         :is-sender-prefix="true"
                         @send="send"
+                        @sendMessage="sendRemoteMessage($event)"
+                        @call="call($event)"
                     />
                 </el-form-item>
                 <div>
@@ -257,12 +259,76 @@ export default {
             this.visibleFileUploadForm = false;
             this.newComment.files = event;
             this.newComment.type = 'document';
-            if (this.newComment.files.length > 0) {
+            if (this.newComment.files?.length > 0) {
                 this.thisDeal.comments.unshift(this.newComment);
             }
 
             this.newComment = { id: '', type: 'comment', content: '', author_id: null, files: [] };
             this.send();
+        },
+        call(event) {
+            ElMessageBox.confirm(
+                'Продолжить?',
+                'Позвонить',
+                {
+                    confirmButtonText: 'Хорошо',
+                    cancelButtonText: 'Отмена',
+                    type: 'success',
+                }
+            )
+                .then(() => {
+                        axios.post('/admin/telephony/call', {
+                            phone: event.pivot.value
+                        });
+                    }
+                );
+        },
+        sendRemoteMessage(event) {
+            axios.post('/admin/sender/send', {
+                'integrations': event.integrations,
+                'message': event.message,
+                'recipient': event.field.pivot.value,
+                'client_id': this.thisDeal.client.id,
+                'deal_id': this.thisDeal.id
+            }).then((response) => {
+                if (!!response.data.errors ) {
+                    response.data.errors.forEach((error) => {
+                        if (!!error) {
+                            setTimeout(() => {
+                                ElNotification({
+                                    duration: 8000,
+                                    title: 'Ошибка',
+                                    message: error,
+                                    type: 'error',
+                                })
+                            }, 100);
+                        }
+                    })
+                }
+
+                if (!!response.data.messages) {
+                    response.data.messages.forEach((message) => {
+                        setTimeout(() => {
+                            ElNotification({
+                                title: 'Доставлено',
+                                message: message,
+                                type: 'success',
+                            })
+                        }, 100);
+                    });
+
+                    this.thisDeal = response.data.data ?? [];
+                }
+            }).catch((failResponse) => {
+                if (!!failResponse.response.data.message) {
+                    ElNotification({
+                        duration: 8000,
+                        title: 'Ошибка',
+                        message: failResponse.response.data.message,
+                        type: 'error',
+                    })
+                }
+            });
         },
         prepareCommentDataSend(event) {
             if (event) {

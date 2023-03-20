@@ -16,8 +16,10 @@ class SenderRequest extends FormRequest
     {
         return [
             'integrations.*' => 'exclude_unless:integrations.*.value,true',
+            'client_id' => 'required|exists:clients,id',
+            'deal_id' => 'required|exists:deals,id',
             'message' => 'required|max:255',
-            'recipient' => 'required|max:255'
+            'recipient' => 'required|max:255',
         ];
     }
 

@@ -67,7 +67,7 @@
 
 <script>
 import {ElMessageBox} from "element-plus";
-import {Bell, ChatDotSquare, Paperclip} from "@element-plus/icons-vue";
+import {Bell, ChatDotSquare, Paperclip, Position} from "@element-plus/icons-vue";
 
 export default {
     name: 'Comments',
@@ -90,7 +90,8 @@ export default {
     methods: {
         canDeleteComment(comment) {
             return comment.author?.id === this.auth.id
-                && (comment.content?.length > 0 || comment.files.length > 0);
+                && (comment.content?.length > 0 || comment.files?.length > 0)
+                && comment.type !== 'remote';
         },
         removeComment(comment) {
             ElMessageBox.confirm(
@@ -124,6 +125,8 @@ export default {
                     return 'grey';
                 case 'action':
                     return 'pink';
+                case 'remote':
+                    return '#3c81d5';
                 default:
                     return 'green';
             }
@@ -134,6 +137,8 @@ export default {
                     return Paperclip;
                 case 'action':
                     return Bell;
+                case 'remote':
+                    return Position;
                 default:
                     return ChatDotSquare;
             }

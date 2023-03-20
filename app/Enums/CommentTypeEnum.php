@@ -11,4 +11,5 @@ enum CommentTypeEnum: string
     case COMMENT = 'comment';
     case ACTION = 'action';
     case DOCUMENT = 'document';
+    case REMOTE = 'remote';
 }
