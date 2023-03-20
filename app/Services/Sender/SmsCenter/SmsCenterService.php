@@ -37,6 +37,7 @@ class SmsCenterService extends SenderService
         $response = $this->client->get('balance.php', []);
         $response = json_decode($response, true);
         if (isset($response['error_code'])) {
+            $this->error = $this->errorsList($response['error_code'], 'send');
             return false;
         }
 

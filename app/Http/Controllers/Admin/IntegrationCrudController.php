@@ -64,17 +64,18 @@ class IntegrationCrudController extends CrudController
         $data = $request->validated();
 
         $integration = Integration::query()->find($data['id']);
-
-
         $service = SenderService::factory($integration->name);
-        $service->check();
-
         $integration->update([
             'login' => $data['login'],
             'password' => $data['password'],
             'access_token' => $data['access_token']
         ]);
 
-        //По возможности тест
+        $response = $service->check();
+
+        return response()->json([
+            'success' => $response,
+            'message' => $service->getError()
+        ]);
     }
 }

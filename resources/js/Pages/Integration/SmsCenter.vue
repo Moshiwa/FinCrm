@@ -24,6 +24,8 @@
 </template>
 
 <script>
+import {ElNotification} from "element-plus";
+
 export default {
     name: 'SmsCenter',
     props: {
@@ -39,7 +41,20 @@ export default {
     },
     methods: {
         save() {
-            axios.post('/admin/integration/save/', this.thisIntegration)
+            axios.post('/admin/integration/save/', this.thisIntegration).then((response) => {
+                if (response.data.success === false) {
+                    ElNotification({
+                        title: response.data.message,
+                        type: 'error',
+                        position: 'bottom-right',
+                    });
+                } else {
+                    ElNotification({
+                        title: 'Успех',
+                        type: 'success',
+                    })
+                }
+            });
         }
     }
 }

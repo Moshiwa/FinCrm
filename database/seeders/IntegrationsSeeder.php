@@ -14,10 +14,5 @@ class IntegrationsSeeder extends Seeder
             'name' => 'sms_center',
             'title' => 'СмсЦентр',
         ]);
-
-        Integration::query()->firstOrCreate(['name' => 'uiscom'], [
-            'name' => 'uiscom',
-            'title' => 'UIS',
-        ]);
     }
 }

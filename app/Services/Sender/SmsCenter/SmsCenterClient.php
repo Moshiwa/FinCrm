@@ -2,6 +2,7 @@
 
 namespace App\Services\Sender\SmsCenter;
 
+use App\Models\Integration;
 use GuzzleHttp\Client;
 
 class SmsCenterClient
@@ -13,9 +14,11 @@ class SmsCenterClient
 
     public function __construct()
     {
+        $login = Integration::query()->where('name','sms_center')->first()->login;
+        $password = Integration::query()->where('name','sms_center')->first()->password;
         $this->params = [
-            'login' =>  env('SMS_CENTER_LOGIN'),
-            'psw' => env('SMS_CENTER_PASSWORD'),
+            'login' =>  $login,
+            'psw' => $password,
             'fmt' => 3,
             'cost' => 3
         ];
@@ -37,11 +40,4 @@ class SmsCenterClient
 
         return $result->getBody()->getContents();
     }
-
-    public function post($type, $params)
-    {
-
-    }
-
-
 }
