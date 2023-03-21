@@ -88,8 +88,8 @@
                     <el-date-picker
                         v-model="datetime"
                         type="datetimerange"
-                        format="YYYY-MM-DD hh:mm"
-                        value-format="YYYY-MM-DD hh:mm"
+                        format="YYYY-MM-DD HH:mm"
+                        value-format="YYYY-MM-DD HH:mm"
                         :shortcuts="shortcuts"
                         @change="changeDateTime"
                     />

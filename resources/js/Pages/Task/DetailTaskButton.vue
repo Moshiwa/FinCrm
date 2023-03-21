@@ -116,8 +116,8 @@
                             v-if="actionChangeStart"
                             type="datetime"
                             placeholder="Select date and time"
-                            format="YYYY/MM/DD hh:mm:ss"
-                            value-format="YYYY-MM-DD h:m:s"
+                            format="YYYY/MM/DD HH:mm:ss"
+                            value-format="YYYY-MM-DD H:m:s"
                         />
                     </div>
                     <div class="popup__item">
@@ -131,8 +131,8 @@
                             v-if="actionChangeEnd"
                             type="datetime"
                             placeholder="Select date and time"
-                            format="YYYY/MM/DD hh:mm:ss"
-                            value-format="YYYY-MM-DD h:m:s"
+                            format="YYYY/MM/DD HH:mm:ss"
+                            value-format="YYYY-MM-DD H:m:s"
                         />
                     </div>
                     <div class="popup__item">
