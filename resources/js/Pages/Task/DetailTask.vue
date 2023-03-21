@@ -103,7 +103,7 @@
                 >
                     <field
                         :field="field"
-                        @send="send"
+                        @send="changeCustomField(field)"
                     />
                 </el-form-item>
                 <div>
@@ -245,6 +245,10 @@ export default {
         this.thisTask.all_fields = this.castFieldValue(this.thisTask.all_fields);
     },
     methods: {
+        changeCustomField(field) {
+            this.action = field;
+            this.send();
+        },
         loadMore (e) {
             if (this.loading) {
                 return;
@@ -318,7 +322,6 @@ export default {
             this.send();
         },
         prepareDataByButtonOptions(action) {
-            this.action = action;
             this.thisTask.stage.id = !!action.task_stage_id ? action.task_stage_id : this.thisTask.stage?.id;
             this.thisTask.responsible = !!action.responsible_id ? {id: action.responsible_id} : this.thisTask.responsible;
             this.thisTask.manager = !!action.manager_id ? {id: action.manager_id} : this.thisTask.manager;
@@ -409,6 +412,13 @@ export default {
                     })
                 }
             });
+
+            if (!!this.action?.id) {
+                console.log(this.action);
+                formData.append('change_custom_field[field_id]', this.action.id);
+                formData.append('change_custom_field[task_id]', this.thisTask.id);
+                formData.append('change_custom_field[value]', this.action.pivot.value);
+            }
 
             let url = '/admin/task/update';
             url += window.location.search

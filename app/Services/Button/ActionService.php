@@ -164,6 +164,7 @@ class ActionService
                     'new' => $value['value'] ?? '',
                     'client_id' => $value['client_id'] ?? '',
                     'deal_id' => $value['deal_id'] ?? '',
+                    'task_id' => $value['task_id'] ?? '',
                     'field_id' => $value['field_id'] ?? '',
                 ];
 
@@ -192,6 +193,8 @@ class ActionService
                 if (! empty($action['client_id'])) {
                     $field = $entity->client->fields->find($field_id);
                 } elseif (! empty($action['deal_id'])) {
+                    $field = $entity->fields->find($field_id);
+                } elseif (! empty($action['task_id'])) {
                     $field = $entity->fields->find($field_id);
                 }
 

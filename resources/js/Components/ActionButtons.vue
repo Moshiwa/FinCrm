@@ -67,7 +67,7 @@ import FileUpload from "../Components/FileUpload.vue";
 
 export default {
     name: 'ActionButtons',
-    emits: ['changeData', 'commentSend'],
+    emits: ['changeData', 'commentSend', 'filesSend', 'deleteAction'],
     components: {
         ActionButton, FileUpload
     },
