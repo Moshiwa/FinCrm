@@ -35,10 +35,10 @@ class DealCrudController extends CrudController
 
     protected function setupListOperation()
     {
-        CRUD::column('name');
-        CRUD::column('pipeline_id');
-        CRUD::column('stage_id');
-        CRUD::column('created_at');
+        CRUD::column('name')->label('Наименование');
+        CRUD::column('pipeline_id')->label('Воронка');
+        CRUD::column('stage_id')->label('Стадия');
+        CRUD::column('created_at')->label('Дата создания');
 
         $this->hiddenClientFilter();
         $this->hiddenResponsibleFilter();

@@ -41,6 +41,7 @@ class PipelineCrudController extends CrudController
             ->subfields([
                 [
                     'name' => 'color',
+                    'label' => 'Цвет',
                     'type' => 'color',
                     'wrapper' => [
                         'class' => 'form-group col-md-1',
@@ -48,6 +49,7 @@ class PipelineCrudController extends CrudController
                 ],
                 [
                     'name' => 'name',
+                    'label' => 'Наименование',
                     'type' => 'text',
                     'wrapper' => [
                         'class' => 'form-group col-md-6',

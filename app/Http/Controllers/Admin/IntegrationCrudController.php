@@ -32,9 +32,9 @@ class IntegrationCrudController extends CrudController
 
     protected function setupListOperation()
     {
-        CRUD::column('name');
-        CRUD::column('title');
-        CRUD::column('access_token');
+        CRUD::column('name')->label('Наименование');
+        CRUD::column('title')->label('Название');
+        CRUD::column('access_token')->label('Токен');
 
     }
 

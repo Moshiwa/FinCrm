@@ -41,9 +41,9 @@ class SpaceCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::column('name');
-        CRUD::column('code');
-        CRUD::column('active')->type('boolean');
+        CRUD::column('name')->label('Наименование');
+        CRUD::column('code')->label('Код');
+        CRUD::column('active')->label('Активность')->type('boolean');
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -62,9 +62,9 @@ class SpaceCrudController extends CrudController
     {
         CRUD::setValidation(SpaceRequest::class);
 
-        CRUD::field('active');
-        CRUD::field('name');
-        CRUD::field('code');
+        CRUD::field('active')->label('Активность');
+        CRUD::field('name')->label('Наименование');
+        CRUD::field('code')->label('Код');
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

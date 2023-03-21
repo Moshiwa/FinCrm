@@ -28,8 +28,8 @@ class ManagerCrudController extends CrudController
         CRUD::addButton('line', 'manager-actions', 'view', 'crud::buttons.manager_actions');
 
 
-        CRUD::column('name');
-        CRUD::column('email');
+        CRUD::column('name')->label('Наименование');
+        CRUD::column('email')->label('Email');
         CRUD::column('Сделки')
             ->type('custom_html')
             ->value(function ($entry) {

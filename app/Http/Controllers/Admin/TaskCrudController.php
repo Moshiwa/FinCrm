@@ -33,8 +33,8 @@ class TaskCrudController extends CrudController
 
         CRUD::addButton('top', 'task_create', 'view', 'crud::buttons.task_create');
 
-        CRUD::column('name');
-        CRUD::column('start');
+        CRUD::column('name')->label('Наименование');
+        CRUD::column('start')->label('Дата начала');
     }
 
     public function show($id)
