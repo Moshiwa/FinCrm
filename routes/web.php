@@ -23,5 +23,6 @@ Route::get('/', function () {
 ));
 
 Route::get('/webhook', function (\Illuminate\Http\Request $request) {
-    Log::info('WEBHOOK:'. json_encode($request));
+    $link = $request->get('file_link');
+    Log::info('WEBHOOK:'. json_encode($link));
 });
