@@ -14,7 +14,7 @@ class TelephonyController extends Controller
     {
         $link = $request->get('file_link');
         $employee_full_name = $request->get('employee_full_name');
-        Log::info('WEBHOOK:'. json_encode($request->host()));
+        Log::info('WEBHOOK:'. $_SERVER['REMOTE_ADDR']);
     }
 
     public function call(TelephonyRequest $request)
