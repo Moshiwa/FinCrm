@@ -1,61 +1,63 @@
 <template>
-    <filters :filter="filter" :daterange-filter="true"/>
+    <div style="overflow: hidden;">
+        <filters :filter="filter" :daterange-filter="true"/>
 
-    <div v-if="comments.length > 0" v-for="comment in comments">
-        <el-card style="margin: 10px">
-            <div class="row-right">
-                <div class="row-right__upper">
-                    <span v-html="comment.title" /> {{ comment.date_create }}
-                </div>
-                <div class="row-right__content">
-                    <div
-                        v-if="comment.type === 'document'"
-                        class="flex-inline"
-                    >
+        <div v-if="comments.length > 0" v-for="comment in comments">
+            <el-card style="margin: 10px">
+                <div class="row-right">
+                    <div class="row-right__upper">
+                        <span v-html="comment.title" /> {{ comment.date_create }}
+                    </div>
+                    <div class="row-right__content">
                         <div
-                            v-for="file in comment.files"
-                            class="row-right__item-files"
+                            v-if="comment.type === 'document'"
+                            class="flex-inline"
                         >
-                            <el-image
-                                v-if="isImage(file.meme)"
-                                style="width: 100px; height: 100px; border-radius: 4px;"
-                                :src="file.full_path"
-                                :zoom-rate="1.2"
-                                :preview-src-list="[file.full_path]"
-                                :initial-index="4"
-                                fit="cover"
-                            />
-                            <div v-else>
-                                <a :href="file.full_path" target="_blank">
-                                    <i class="las la-file-alt"></i>
-                                    {{ file.original_name }}
-                                </a>
+                            <div
+                                v-for="file in comment.files"
+                                class="row-right__item-files"
+                            >
+                                <el-image
+                                    v-if="isImage(file.meme)"
+                                    style="width: 100px; height: 100px; border-radius: 4px;"
+                                    :src="file.full_path"
+                                    :zoom-rate="1.2"
+                                    :preview-src-list="[file.full_path]"
+                                    :initial-index="4"
+                                    fit="cover"
+                                />
+                                <div v-else>
+                                    <a :href="file.full_path" target="_blank">
+                                        <i class="las la-file-alt"></i>
+                                        {{ file.original_name }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div class="content-container" v-if="comment.content?.length > 0">
+                                <div class="comment-content">
+                                    {{comment.content}}
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div v-else>
-                        <div class="content-container" v-if="comment.content?.length > 0">
-                            <div class="comment-content">
-                                {{comment.content}}
-                            </div>
+                    <div class="row-right__author">
+                        <div v-if="comment.commentable_type === 'App\\Models\\Task'">
+                            <a :href="'/admin/task/' + comment.commentable_id + '/detail'">Задача</a>
+                        </div>
+                        <div v-else>
+                            <a :href="'/admin/deal/' + comment.commentable_id + '/detail'">Сделка</a>
                         </div>
                     </div>
                 </div>
-                <div class="row-right__author">
-                    <div v-if="comment.commentable_type === 'App\\Models\\Task'">
-                        <a :href="'/admin/task/' + comment.commentable_id + '/detail'">Задача</a>
-                    </div>
-                    <div v-else>
-                        <a :href="'/admin/deal/' + comment.commentable_id + '/detail'">Сделка</a>
-                    </div>
-                </div>
-            </div>
-        </el-card>
+            </el-card>
+        </div>
+        <div v-else style="margin: 10px">
+            <el-empty description="Менеджер не совершал каких-либо действий" />
+        </div>
+        <div v-loading="loading"></div>
     </div>
-    <div v-else style="margin: 10px">
-        <el-empty description="Менеджер не совершал каких-либо действий" />
-    </div>
-    <div v-loading="loading"></div>
 </template>
 
 <script>
