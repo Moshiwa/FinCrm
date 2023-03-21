@@ -24,7 +24,7 @@ class UsersSeeder extends Seeder
         ]);
 
         User::query()->firstOrCreate([ 'email' => 'test1@mail.ru' ], [
-            'name' => 'Сифон Парашев',
+            'name' => 'Сифон Паршев',
             'email' => 'test1@mail.ru',
             'password' => bcrypt('test1')
         ]);
