@@ -45,8 +45,10 @@ class DealCrudController extends CrudController
         $this->hiddenPipelineFilter();
 
         CRUD::addButton('top', 'pipelines', 'view', 'crud::buttons.pipelines');
-        $pipeline_id = CRUD::getRequest()->get('pipeline', Pipeline::query()->first()->id);
-        $stages = Stage::query()->select('id', 'name')->where('pipeline_id', $pipeline_id)->get()->toArray();
+        $pipeline_id = CRUD::getRequest()->get('pipeline');
+        $stages = Stage::query()->select('id', 'name')->when($pipeline_id, function ($query) use ($pipeline_id) {
+            $query->where('pipeline_id', $pipeline_id);
+        })->get()->toArray();
         $stages = Arr::pluck($stages, 'name', 'id');
         CRUD::addFilter([
             'type'  => 'dropdown',
