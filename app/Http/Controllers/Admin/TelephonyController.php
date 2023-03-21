@@ -12,26 +12,12 @@ class TelephonyController extends Controller
 {
     public function recordFromWebhook(Request $request)
     {
+
+
+
         $link = $request->get('file_link');
         $employee_full_name = $request->get('employee_full_name');
-        Log::info('WEBHOOK:'. $this->getIp());
-    }
-
-    function getIp() {
-        $keys = [
-            'HTTP_CLIENT_IP',
-            'HTTP_X_FORWARDED_FOR',
-            'REMOTE_ADDR'
-        ];
-        foreach ($keys as $key) {
-            if (!empty($_SERVER[$key])) {
-                $parts = explode(',', $_SERVER[$key]);
-                $ip = trim(end($parts));
-                if (filter_var($ip, FILTER_VALIDATE_IP)) {
-                    return $ip;
-                }
-            }
-        }
+        Log::info('WEBHOOK:' . json_encode($request->query()));
     }
 
     public function call(TelephonyRequest $request)

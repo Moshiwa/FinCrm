@@ -23,4 +23,6 @@ Route::get('/', function () {
     (array) config('backpack.base.middleware_key', 'admin')
 ));
 
-Route::get('/webhook/record', [TelephonyController::class, 'recordFromWebhook']);
+Route::middleware('client.ip')->group(function () {
+    Route::get('/webhook/record', [TelephonyController::class, 'recordFromWebhook']);
+});
