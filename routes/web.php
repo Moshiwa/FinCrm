@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\TelephonyController;
 use App\Http\Controllers\DealController;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -22,7 +23,4 @@ Route::get('/', function () {
     (array) config('backpack.base.middleware_key', 'admin')
 ));
 
-Route::get('/webhook', function (\Illuminate\Http\Request $request) {
-    $link = $request->get('file_link');
-    Log::info('WEBHOOK:'. json_encode($link));
-});
+Route::get('/webhook/record', [TelephonyController::class, 'recordFromWebhook']);
