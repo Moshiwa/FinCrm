@@ -19,7 +19,7 @@ class TaskButtonCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\DealButton::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/button');
-        CRUD::setEntityNameStrings(__('entity.crud_titles.action.task_button'), __('entity.crud_titles.many.task_button'));
+        CRUD::setEntityNameStrings(__('entity.crud_titles.action.button_task'), __('entity.crud_titles.many.button_task'));
     }
 
     public function index()
