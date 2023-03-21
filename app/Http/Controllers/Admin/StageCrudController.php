@@ -27,14 +27,12 @@ class StageCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\Stage::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/stage');
-        CRUD::setEntityNameStrings('stage', 'stages');
+        CRUD::setEntityNameStrings(__('entity.crud_titles.action.stage'), __('entity.crud_titles.many.stage'));
     }
 
     protected function setupCreateOperation()
     {
         CRUD::setValidation(StageRequest::class);
-        CRUD::setEntityNameStrings('stage', 'stage');
-
         CRUD::field('settings')->type('stage_settings');
         //Обавить настрйоки
     }

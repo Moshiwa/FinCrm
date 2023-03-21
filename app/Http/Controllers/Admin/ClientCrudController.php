@@ -25,7 +25,7 @@ class ClientCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\Client::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/client');
-        CRUD::setEntityNameStrings(__('entity.add_client'), __('entity.clients'));
+        CRUD::setEntityNameStrings(__('entity.crud_titles.action.client'), __('entity.crud_titles.many.client'));
         CRUD::denyAccess(['show']);
 
         $this->service = new ClientService();
@@ -45,7 +45,6 @@ class ClientCrudController extends CrudController
 
     protected function setupCreateOperation()
     {
-        CRUD::setEntityNameStrings(__('entity.add_client'), __('entity.client'));
         CRUD::setValidation(ClientRequest::class);
         CRUD::field('client')->type('client');
     }

@@ -19,7 +19,7 @@ class ReportCrudController extends CrudController
     public function setup()
     {
         CRUD::setRoute(config('backpack.base.route_prefix') . '/report');
-        CRUD::setEntityNameStrings('report', 'reports');
+        CRUD::setEntityNameStrings(__('entity.crud_titles.action.report'), __('entity.crud_titles.many.report'));
     }
 
     public function index()

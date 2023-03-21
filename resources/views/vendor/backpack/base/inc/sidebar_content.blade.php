@@ -9,6 +9,7 @@
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('client') }}"><i class="nav-icon la la-users"></i> {{ __('sidebar.clients') }}</a></li>
 
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('report') }}"><i class="nav-icon la la-archive"></i> {{ __('sidebar.reports') }} </a></li>
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('integration') }}"><i class="nav-icon la la-code-branch"></i> {{ __('sidebar.integrations') }} </a></li>
 
 <li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#">{{ __('sidebar.settings') }}</a>
@@ -21,5 +22,3 @@
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('task-button') }}"><i class="nav-icon la la-icons"></i> {{ __('sidebar.task_buttons') }} </a></li>
     </ul>
 </li>
-
-<li class="nav-item"><a class="nav-link" href="{{ backpack_url('integration') }}"><i class="nav-icon la la-question"></i> Integrations</a></li>

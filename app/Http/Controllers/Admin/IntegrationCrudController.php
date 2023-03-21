@@ -27,7 +27,7 @@ class IntegrationCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\Integration::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/integration');
-        CRUD::setEntityNameStrings('integration', 'integrations');
+        CRUD::setEntityNameStrings(__('entity.crud_titles.action.integration'), __('entity.crud_titles.many.integration'));
     }
 
     protected function setupListOperation()

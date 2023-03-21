@@ -18,7 +18,7 @@ class DealButtonCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\DealButton::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/button');
-        CRUD::setEntityNameStrings('button', 'buttons');
+        CRUD::setEntityNameStrings(__('entity.crud_titles.action.field'), __('entity.crud_titles.many.field'));
     }
 
     public function index()

@@ -30,7 +30,7 @@ class SpaceCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\Space::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/space');
-        CRUD::setEntityNameStrings('Организацию', 'Организации');
+        CRUD::setEntityNameStrings(__('entity.crud_titles.action.space'), __('entity.crud_titles.many.space'));
     }
 
     /**

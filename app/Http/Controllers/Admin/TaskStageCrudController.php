@@ -18,7 +18,7 @@ class TaskStageCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\TaskStage::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/task-stage');
-        CRUD::setEntityNameStrings('task stage', 'task stages');
+        CRUD::setEntityNameStrings(__('entity.crud_titles.action.task_stage'), __('entity.crud_titles.many.task_stage'));
     }
 
     protected function setupListOperation()

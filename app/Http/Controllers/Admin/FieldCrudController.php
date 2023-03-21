@@ -26,7 +26,7 @@ class FieldCrudController extends CrudController
     {
         CRUD::setModel(Field::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/field');
-        CRUD::setEntityNameStrings('field', 'field');
+        CRUD::setEntityNameStrings(__('entity.crud_titles.action.field'), __('entity.crud_titles.many.field'));
         CRUD::denyAccess(['show']);
     }
 
@@ -49,7 +49,6 @@ class FieldCrudController extends CrudController
 
         $entity = FieldService::getEntityFromRequest($this->crud->getRequest());
         $this->crud->addClause('where', 'entity', $entity->value);
-        CRUD::setEntityNameStrings('Поле', __('fields.crud_titles.many.' . $entity->value));
     }
 
     protected function setupCreateOperation()
@@ -58,7 +57,6 @@ class FieldCrudController extends CrudController
         Widget::add()->type('script')->content(asset('assets/js/admin/fields/toggle_options_block.js'));
 
         $entity = FieldService::getEntityFromRequest($this->crud->getRequest());
-        CRUD::setEntityNameStrings('Поле', __('fields.crud_titles.one.' . $entity->value));
 
         CRUD::field('type_id')
             ->label('Тип')
