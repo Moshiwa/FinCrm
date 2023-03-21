@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DealController;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +21,7 @@ Route::get('/', function () {
     (array) config('backpack.base.web_middleware', 'web'),
     (array) config('backpack.base.middleware_key', 'admin')
 ));
+
+Route::get('/webhook', function (\Illuminate\Http\Request $request) {
+    Log::info('WEBHOOK:'. json_encode($request));
+});
