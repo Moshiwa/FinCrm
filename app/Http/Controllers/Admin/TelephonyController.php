@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\CommentTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TelephonyRequest;
+use App\Models\Comment;
+use App\Models\Deal;
 use App\Services\Telephony\Uiscom\UiscomService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -12,12 +15,14 @@ class TelephonyController extends Controller
 {
     public function recordFromWebhook(Request $request)
     {
-
-
-
+        $call_session_id = $request->get('call_session_id');
         $link = $request->get('file_link');
-        $employee_full_name = $request->get('employee_full_name');
-        Log::info('WEBHOOK:' . json_encode($request->query()));
+        $comment = Comment::query()->where('temp_id', $call_session_id)->first();
+        $comment?->update([
+            'title' => 'Звонок',
+            'temp_id' => null,
+            'content' => $link
+        ]);
     }
 
     public function call(TelephonyRequest $request)
@@ -29,7 +34,15 @@ class TelephonyController extends Controller
         $error = $service->getError();
 
         if (!empty($phone) && empty($error)) {
-            $service->call($data['phone']);
+            $call_id = $service->call($data['phone']);
+
+            if ($call_id) {
+                $deal = Deal::query()->find($data['deal_id']);
+                $deal->comments()->create([
+                    'type' => CommentTypeEnum::REMOTE->value,
+                    'temp_id' => $call_id
+                ]);
+            }
         }
 
         return response()->json([

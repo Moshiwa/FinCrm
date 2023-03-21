@@ -12,11 +12,10 @@ return new class extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->morphs('commentable');
-            /*$table->foreignId('deal_id')
-                ->constrained()
-                ->cascadeOnDelete();*/
             $table->string('type');
-            $table->string('action_name')->default('');
+            $table->string('temp_id')
+                ->nullable()
+                ->comment('Поле для связи звонка и аудиосообщения из webhook. После привязки должно очищатсья');
             $table->text('title')->default('');
             $table->text('content')->default('');
             $table->timestamps();

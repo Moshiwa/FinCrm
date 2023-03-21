@@ -282,7 +282,8 @@ export default {
             )
                 .then(() => {
                         axios.post('/admin/telephony/call', {
-                            phone: event.pivot.value
+                            phone: event.pivot.value,
+                            deal_id: this.thisDeal.id
                         });
                     }
                 );

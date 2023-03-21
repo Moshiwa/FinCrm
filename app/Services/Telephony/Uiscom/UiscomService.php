@@ -79,8 +79,7 @@ class UiscomService
 
         $result = $this->client->post('start.employee_call', $params);
 
-        $call_session_id = $result['result']['data']['call_session_id'] ?? '';
-dd($result);
+        return $result['result']['data']['call_session_id'] ?? '';
     }
 
     //Завершение звонка

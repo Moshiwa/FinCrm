@@ -15,6 +15,7 @@ class TelephonyRequest extends FormRequest
     public function rules()
     {
         return [
+            'deal_id' => 'required|exists:deals,id',
             'phone' => 'required|max:255',
         ];
     }

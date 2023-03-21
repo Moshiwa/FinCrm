@@ -15,7 +15,7 @@ class Comment extends Model
         'title',
         'content',
         'author_id',
-        'action_name'
+        'temp_id'
     ];
 
     protected $appends = [
