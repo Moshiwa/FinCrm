@@ -2,12 +2,12 @@
     <div class="row">
         <div class="card row common-gap">
             <div class="card-left">
-                <el-divider content-position="center">СДЕЛКА</el-divider>
                 <el-input
                     class="input-title hidden-border"
                     v-model="thisDeal.name"
                     @change="send"
                 />
+                <el-divider content-position="center">СДЕЛКА</el-divider>
                 <el-form-item label="Воронка/Стадия" class="select-container">
                     <el-select
                         v-model="thisDeal.pipeline"
@@ -61,7 +61,7 @@
                 >
                     <field
                         :field="field"
-                        @send="send"
+                        @send="changeCustomField(field)"
                     />
                 </el-form-item>
                 <div>
@@ -84,7 +84,7 @@
                     <field
                         :field="field"
                         :is-sender-prefix="true"
-                        @send="send"
+                        @send="changeCustomField(field)"
                         @sendMessage="sendRemoteMessage($event)"
                         @call="call($event)"
                     />
@@ -217,6 +217,10 @@ export default {
                     this.send();
                 });
         },
+        changeCustomField(field) {
+            this.action = field;
+            this.send();
+        },
         loadMore (e) {
             if (this.loading) {
                 return;
@@ -340,7 +344,6 @@ export default {
             this.send();
         },
         prepareDataByButtonOptions(action) {
-            this.action = action;
             this.thisDeal.pipeline.id = !!action.pipeline_id ? action.pipeline_id : this.thisDeal.pipeline.id;
             this.thisDeal.stage.id = !!action.stage_id ? action.stage_id : this.thisDeal.stage.id;
             this.thisDeal.responsible.id = !!action.responsible_id ? action.responsible_id : this.thisDeal.responsible.id;
@@ -415,6 +418,17 @@ export default {
                     })
                 }
             });
+
+            if (!!this.action?.id) {
+                console.log(this.action);
+                formData.append('change_custom_field[field_id]', this.action.id);
+                if (!! this.action?.pivot?.client_id) {
+                    formData.append('change_custom_field[client_id]', this.thisDeal.client.id);
+                } else {
+                    formData.append('change_custom_field[deal_id]', this.thisDeal.id);
+                }
+                formData.append('change_custom_field[value]', this.action.pivot.value);
+            }
 
             let url = '/admin/deal/update';
             url += window.location.search

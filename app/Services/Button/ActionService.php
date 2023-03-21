@@ -4,7 +4,10 @@ namespace App\Services\Button;
 
 use App\Enums\ActionsEnum;
 use App\Enums\CommentTypeEnum;
+use App\Models\Client;
 use App\Models\Comment;
+use App\Models\Deal;
+use App\Models\Field;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
@@ -41,9 +44,37 @@ class ActionService
         foreach ($actions as $action_name => $value) {
             $action_name = ActionsEnum::fromValue($action_name)?->value;
 
+            //Исключение для обычного комментария
             if ($action_name === ActionsEnum::COMMENT->value) {
                 $comment['title'] = ActionsEnum::getMessageTemplate($action_name);
                 $comment['type'] = CommentTypeEnum::COMMENT->value;
+                continue;
+            }
+
+            //Исключение для кастомных полей
+            if ($action_name === ActionsEnum::CHANGE_CUSTOM_FIELD->value) {
+                $value['old'] = $value['old'] ?? '';
+                $value['new'] = $value['new'] ?? '';
+                if ($value['old'] != $value['new']) {
+                    $value['old'] = $value['old'] === 'false' ? 'Выкл.' : $value['old'];
+                    $value['old'] = $value['old'] === 'true' ? 'Вкл.' : $value['old'];
+                    $value['new'] = $value['new'] === 'false' ? 'Выкл.' : $value['new'];
+                    $value['new'] = $value['new'] === 'true' ? 'Вкл.' : $value['new'];
+
+                    $field_name = Field::query()->find($value['field_id'])->name;
+
+                    $text = ActionsEnum::getMessageTemplate($action_name);
+                    if (empty($value['old'])) {
+                        $text .= empty($value['new']) ? '' :  ' ' . $field_name . ' на <i style="color: ' . $this->old_data_color . '">' . $value['new'] . '</i><br>';
+                    } else {
+                        $text .= ' ' . $field_name . ' с <i style="color: ' . $this->new_data_color . '">' . $value['old'] . '</i>';
+                        $text .= empty($value['new']) ? '' : ' на <i style="color: ' . $this->old_data_color . '">' . $value['new'] . '</i><br>';
+                    }
+
+                    $comment['title'] = $text;
+                    $comment['type'] = CommentTypeEnum::ACTION->value;
+                }
+
                 continue;
             }
 
@@ -91,6 +122,7 @@ class ActionService
         }
 
         $action = $this->prepareAction($ready_action);
+        $action['change_custom_field'] = $save_data['change_custom_field'] ?? [];
 
         $this->definitionNewAction($action);
         $this->definitionOldAction($entity);
@@ -127,6 +159,17 @@ class ActionService
                 continue;
             }
 
+            if ($action_name === ActionsEnum::CHANGE_CUSTOM_FIELD->value) {
+                $this->actions[ActionsEnum::CHANGE_CUSTOM_FIELD->value] = [
+                    'new' => $value['value'] ?? '',
+                    'client_id' => $value['client_id'] ?? '',
+                    'deal_id' => $value['deal_id'] ?? '',
+                    'field_id' => $value['field_id'] ?? '',
+                ];
+
+                continue;
+            }
+
             $value = $value['name'] ?? $value;
             $value = strtotime($value) ? Carbon::make($value)->translatedFormat('j F Y H:i') : $value;
 
@@ -140,6 +183,26 @@ class ActionService
     {
         foreach ($this->actions as $action_name => $action) {
             if (empty($action['new'])) {
+                continue;
+            }
+
+            if ($action_name === ActionsEnum::CHANGE_CUSTOM_FIELD->value) {
+                $field = null;
+                $field_id = $action['field_id'] ?? '';
+                if (! empty($action['client_id'])) {
+                    $field = $entity->client->fields->find($field_id);
+                } elseif (! empty($action['deal_id'])) {
+                    $field = $entity->fields->find($field_id);
+                }
+
+                if (empty($field->pivot?->value)) {
+                    continue;
+                }
+
+                $this->actions[ActionsEnum::CHANGE_CUSTOM_FIELD->value] += [
+                    'old' => $field->pivot?->value ?? ''
+                ];
+
                 continue;
             }
 
