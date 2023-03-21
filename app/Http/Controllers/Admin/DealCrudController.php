@@ -96,7 +96,7 @@ class DealCrudController extends CrudController
 
     private function hiddenPipelineFilter()
     {
-        $request_entity = $this->crud->getRequest()->get('pipeline', Pipeline::query()->first()->id);
+        $request_entity = $this->crud->getRequest()->get('pipeline');
         if ($request_entity) {
             $this->crud->addClause('where', 'pipeline_id', $request_entity);
         }

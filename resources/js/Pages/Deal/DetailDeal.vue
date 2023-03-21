@@ -443,8 +443,8 @@ export default {
                     this.stageButtons = response.data.deal.pipeline.buttons;
                     this.action = null;
 
-                    this.thisDeal.fields = this.castFieldValue(this.thisDeal.fields);
-                    this.thisDeal.client.fields = this.castFieldValue(this.thisDeal.client.fields);
+                    this.thisDeal.all_fields = this.castFieldValue(this.thisDeal.fields);
+                    this.thisDeal.client.all_fields = this.castFieldValue(this.thisDeal.client.fields);
 
                     ElNotification({
                         title: 'Сохранено',

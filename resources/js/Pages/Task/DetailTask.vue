@@ -2,12 +2,12 @@
     <div class="row">
         <div class="card row common-gap">
             <div class="card-left">
-                <el-divider content-position="center">ЗАДАЧА</el-divider>
                 <el-input
                     class="input-title hidden-border"
                     v-model="thisTask.name"
                     @change="send"
                 />
+                <el-divider content-position="center">ЗАДАЧА</el-divider>
                 <el-form-item label="Описание">
                     <el-input
                         type="textarea"
@@ -432,9 +432,7 @@ export default {
                     this.users = response.data.users;
                     this.stageButtons = response.data.task.stage.buttons;
                     this.action = null;
-
-                    this.thisTask.fields = this.castFieldValue(this.thisTask.fields);
-
+                    this.thisTask.all_fields = this.castFieldValue(this.thisTask.all_fields);
                     ElNotification({
                         title: 'Сохранено',
                         type: 'success',

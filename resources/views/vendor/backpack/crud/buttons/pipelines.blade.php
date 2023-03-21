@@ -2,7 +2,7 @@
     use App\Models\Pipeline;
     $pipelines = Pipeline::query()->get();
     $default = $pipelines->first()->id;
-    $pipeline_id = $crud->getRequest()->get('pipeline', $default);
+    $pipeline_id = $crud->getRequest()->get('pipeline');
 ?>
 <div style="display: flex; gap: 10px; margin: 10px 0 10px 0;">
     @foreach($pipelines as $pipeline)
