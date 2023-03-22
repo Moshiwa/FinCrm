@@ -15,7 +15,9 @@
     "dependencies": {
         "@element-plus/icons-vue": "^2.0.10",
         "element-plus": "^2.2.28",
+        "laravel-echo": "^1.15.0",
         "pinia": "^2.0.32",
+        "pusher-js": "^8.0.1",
         "vue": "^3.2.36",
         "vue-loader": "^17.0.1"
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\CommentTypeEnum;
+use App\Events\WebhookCommentPush;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TelephonyRequest;
 use App\Models\Comment;
@@ -19,7 +20,6 @@ class TelephonyController extends Controller
     {
         $call_session_id = $request->get('call_session_id');
         $contact_phone_number = $request->get('contact_phone_number');
-        $file_duration = $request->get('file_duration');
         $employee_id = $request->get('employee_id');
         $link = $request->get('file_link');
         $comment = Comment::query()->where('temp_id', $call_session_id)->first();
@@ -31,6 +31,8 @@ class TelephonyController extends Controller
             'content' => $link,
             'author_id' => $user->id,
         ]);
+
+        broadcast(new WebhookCommentPush($comment));
     }
 
     public function call(TelephonyRequest $request)

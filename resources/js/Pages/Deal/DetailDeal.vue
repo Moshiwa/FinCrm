@@ -207,6 +207,11 @@ export default {
         this.thisDeal.all_fields = this.castFieldValue(this.thisDeal.all_fields);
         this.thisDeal.client.all_fields = this.castFieldValue(this.thisDeal.client.all_fields);
     },
+    created() {
+        Echo.join('record').listen('WebsocketDemoEvent', (e) => {
+            console.log(e)
+        });
+    },
     methods: {
         changePipeline(item) {
             axios
