@@ -44,7 +44,10 @@ class User extends Authenticatable
         'two_factor_recovery_codes',
         'two_factor_secret',
         'two_factor_confirmed_at',
-        'spaceAccess'
+        'spaceAccess',
+        'uiscom_token',
+        'uiscom_employee_id',
+        'uiscom_virtual_number',
     ];
 
     /**

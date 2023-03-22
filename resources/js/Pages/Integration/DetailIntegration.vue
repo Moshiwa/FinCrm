@@ -4,7 +4,7 @@
 </el-card>
 
 <el-card v-else-if="integration.name === 'uiscom'">
-    <uiscom :integration="integration" />
+    <uiscom :integration="integration" :auth="auth"/>
 </el-card>
 
     <el-card v-else>
@@ -25,6 +25,10 @@ export default {
     },
     props: {
         integration: {
+            type: Object,
+            required: true
+        },
+        auth: {
             type: Object,
             required: true
         }

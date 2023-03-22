@@ -32,11 +32,11 @@ class UiscomService
         return $phone;
     }
 
-    public function authManager()
+    public function authManager($login, $password)
     {
         $params = [
-            "login" => "",
-            "password" => ""
+            'login' => $login,
+            'password' => $password
         ];
         $client = new Client();
         $response = $client->post('https://my.uiscom.ru/sup/auth/login', [
@@ -49,81 +49,48 @@ class UiscomService
         return $data['data']['employee_id'] ?? '';
     }
 
-    public function login()
-    {
-        $params = [
-            'login' => env('UISCOM_LOGIN'),
-            'password' => env('UISCOM_PASSWORD')
-        ];
-
-        $result = $this->client->post('login.user', $params);
-
-        if (isset($result['error'])) {
-
-        }
-
-        dd($result);
-    }
-
     public function call($phone)
     {
         $params = [
-            'access_token' => '8l1vxvi61873i2r2i3kozovb55dft846ejsnld7e',
-            "first_call" => "employee",
-            "virtual_phone_number" => "78452338065",
-            "contact" => $phone,
-            "employee" => [
-                'id' => 3950243
+            'access_token' => backpack_user()->uiscom_token,
+            'first_call' => 'employee',
+            'virtual_phone_number' => backpack_user()->uiscom_virtual_number,
+            'contact' => $phone,
+            'employee' => [
+                'id' => (int)backpack_user()->uiscom_employee_id
             ]
         ];
 
         $result = $this->client->post('start.employee_call', $params);
 
+        if (isset($result['error'])) {
+            $this->error = $this->errorsList($result['error']);
+        }
+
         return $result['result']['data']['call_session_id'] ?? '';
     }
 
-    //Завершение звонка
-    public function releaseCall()
-    {
-        $params = [
-            'access_token' => '8l1vxvi61873i2r2i3kozovb55dft846ejsnld7e',
-            "call_session_id" => "",
-        ];
-
-        $result = $this->client->post('release.call', $params);
-        dd($result);
-    }
-
-    //Удержание звонка
-    public function holdCall()
-    {
-        $params = [
-            'access_token' => '8l1vxvi61873i2r2i3kozovb55dft846ejsnld7e',
-            "call_session_id" => "",
-        ];
-
-        $result = $this->client->post('hold.call', $params);
-        dd($result);
-    }
-    //Снять с удержания звонка
-    public function unholdCall()
-    {
-        $params = [
-            'access_token' => '8l1vxvi61873i2r2i3kozovb55dft846ejsnld7e',
-            "call_session_id" => "",
-        ];
-
-        $result = $this->client->post('unhold.call', $params);
-        dd($result);
-    }
-
-    private function errorsList($code, $type)
+    private function errorsList(array $error)
     {
 
         $errors = [
-
+            'Invalid Request The JSON sent is not a valid Request object' => 'Неверный запрос. Отправленный JSON не является допустимым объектом запроса.',
+            'Access token has been expired' => 'Срок действия токена доступа истек.',
+            'Access token has been blocked' => 'Токен доступа заблокирован.',
+            'Access token is invalid' => 'Токен доступа недействителен.',
+            'Login or password is wrong' => 'Логин или пароль неверный.',
+            'Your account has been disabled, contact the support service' => 'Ваш аккаунт отключен, обратитесь в службу поддержки.',
+            'Call session not found' => 'Сеанс вызова не найден.',
+            'Internal error, contact the support service' => 'Внутренняя ошибка, обратитесь в службу поддержки Uis.',
+            'Data supplied is of wrong type' => 'Предоставленные данные имеют неправильный тип.',
+            'Permission denied' => 'Доступ запрещен.',
+            'Invalid JSON was received by the server' => 'Сервер получил неверный JSON.',
+            'Batch operations not supported' => 'Пакетные операции не поддерживаются.',
+            'Notifications not supported' => 'Уведомления не поддерживаются.',
+            'The required parameter has been missed' => 'Не указан нужный параметр.',
+            'Invalid parameter value' => 'Недопустимое значение параметра.',
         ];
 
-        return $errors[$type][$code] ?? '';
+        return $errors[$error['message']] ?? $error['message'];
     }
 }

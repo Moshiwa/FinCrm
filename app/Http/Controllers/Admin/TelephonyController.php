@@ -7,7 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TelephonyRequest;
 use App\Models\Comment;
 use App\Models\Deal;
+use App\Models\User;
 use App\Services\Telephony\Uiscom\UiscomService;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -21,11 +23,13 @@ class TelephonyController extends Controller
         $employee_id = $request->get('employee_id');
         $link = $request->get('file_link');
         $comment = Comment::query()->where('temp_id', $call_session_id)->first();
-        //Todo author добавить
+        $user = User::query()->where('uiscom_employee_id', $employee_id)->first();
+
         $comment?->update([
             'title' => 'Звонок',
             'temp_id' => null,
-            'content' => $link
+            'content' => $link,
+            'author_id' => $user->id,
         ]);
     }
 
@@ -36,20 +40,24 @@ class TelephonyController extends Controller
 
         $phone = $service->cleanPhone($data['phone']);
         $error = $service->getError();
+        $success = false;
 
         if (!empty($phone) && empty($error)) {
             $call_id = $service->call($data['phone']);
-
-            if ($call_id) {
+            $error = $service->getError();
+            if ($call_id && empty($error)) {
                 $deal = Deal::query()->find($data['deal_id']);
                 $deal->comments()->create([
                     'type' => CommentTypeEnum::REMOTE->value,
                     'temp_id' => $call_id
                 ]);
+
+                $success = true;
             }
         }
 
         return response()->json([
+            'success' => $success,
             'errors' => [ $error ]
         ]);
     }

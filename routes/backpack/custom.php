@@ -94,6 +94,8 @@ Route::group([
     });
 
     Route::prefix('integration')->name('integration.')->group(function () {
+        Route::post('/uiscom/manager-id', [IntegrationCrudController::class, 'getUisManagerId'])->name('getUisManagerId');
+        Route::post('/uiscom/save', [IntegrationCrudController::class, 'saveUiscom'])->name('saveUiscom');
         Route::post('/save', [IntegrationCrudController::class, 'save'])->name('save');
     });
 });

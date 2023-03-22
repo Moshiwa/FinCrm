@@ -21,8 +21,9 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('uiscom_token')->nullable();
-            $table->string('uiscom_employee_id')->nullable();
+            $table->string('uiscom_token')->nullable()->unique();
+            $table->string('uiscom_employee_id')->nullable()->unique();
+            $table->string('uiscom_virtual_number')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

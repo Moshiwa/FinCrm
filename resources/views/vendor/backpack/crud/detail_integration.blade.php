@@ -27,6 +27,7 @@
 
             <detail-integration
                 :integration="{{ $integration }}"
+                :auth="{{ $user }}"
             />
         </div>
     </div>
