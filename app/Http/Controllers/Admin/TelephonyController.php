@@ -26,7 +26,7 @@ class TelephonyController extends Controller
         $user = User::query()->where('uiscom_employee_id', $employee_id)->first();
 
         $comment?->update([
-            'title' => 'Звонок',
+            'title' => 'Звонок на ' . $contact_phone_number,
             'temp_id' => null,
             'content' => $link,
             'author_id' => $user->id,
@@ -48,7 +48,7 @@ class TelephonyController extends Controller
             if ($call_id && empty($error)) {
                 $deal = Deal::query()->find($data['deal_id']);
                 $deal->comments()->create([
-                    'type' => CommentTypeEnum::REMOTE->value,
+                    'type' => CommentTypeEnum::AUDIO->value,
                     'temp_id' => $call_id
                 ]);
 

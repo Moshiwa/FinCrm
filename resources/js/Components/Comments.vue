@@ -41,6 +41,11 @@
                             </div>
                         </div>
                     </div>
+                    <div v-else-if="comment.type === 'audio'">
+                        <audio controls>
+                            <source :src="comment.content" type="audio/mp3">
+                        </audio>
+                    </div>
                     <div v-else>
                         <div class="content-container" v-if="comment.content?.length > 0">
                             <div class="comment-content">
@@ -91,7 +96,8 @@ export default {
         canDeleteComment(comment) {
             return comment.author?.id === this.auth.id
                 && (comment.content?.length > 0 || comment.files?.length > 0)
-                && comment.type !== 'remote';
+                && comment.type !== 'remote'
+                && comment.type !== 'audio';
         },
         removeComment(comment) {
             ElMessageBox.confirm(
