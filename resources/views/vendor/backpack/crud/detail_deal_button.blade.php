@@ -3,6 +3,7 @@
 @php
     use \App\Models\Pipeline;
     use \App\Services\Button\ButtonService;
+    use \App\Models\User;
 
     $defaultBreadcrumbs = [
       trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
@@ -20,6 +21,7 @@
     foreach ($pipelines as $pipeline) {
         $ready_pipelines[] = $service->mergeDealButtonsSettings($pipeline);
     }
+    $users = User::query()->select(['id', 'name'])->get();
 
 @endphp
 
@@ -37,6 +39,8 @@
             </section>
             <detail-deal-button
                 :pipelines="{{ json_encode($ready_pipelines) }}"
+                :auth="{{ backpack_user() }}"
+                :users="{{ $users }}"
             />
         </div>
     </div>

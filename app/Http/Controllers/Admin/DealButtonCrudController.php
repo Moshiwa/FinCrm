@@ -19,6 +19,9 @@ class DealButtonCrudController extends CrudController
         CRUD::setModel(\App\Models\DealButton::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/button');
         CRUD::setEntityNameStrings(__('entity.crud_titles.action.field'), __('entity.crud_titles.many.field'));
+        if (! backpack_user()->can('deal_buttons.list')) {
+            CRUD::denyAccess(['list']);
+        }
     }
 
     public function index()
@@ -40,6 +43,13 @@ class DealButtonCrudController extends CrudController
         $options = [];
 
         if (empty($data['id'])) {
+            if (! backpack_user()->can('deal_buttons.create')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'У вас недостаточно прав'
+                ], 403);
+            }
+
             $button = $button->create([
                 'name' => $data['name'],
                 'pipeline_id' => $data['pipeline_id'],
@@ -48,6 +58,13 @@ class DealButtonCrudController extends CrudController
                 'options' => $options
             ]);
         } else {
+            if (! backpack_user()->can('deal_buttons.update')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'У вас недостаточно прав'
+                ], 403);
+            }
+
             $button = $button->find($data['id']);
             $button->update([
                 'name' => $data['name'],
@@ -57,7 +74,6 @@ class DealButtonCrudController extends CrudController
                 'options' => $options
             ]);
         }
-
 
         $stages = Arr::pluck($data['visible'], 'id');
         $stages = array_filter($stages);
@@ -77,27 +93,23 @@ class DealButtonCrudController extends CrudController
             'data' => [
                 'pipeline' => $pipeline
             ],
-            'errors' => [],
         ]);
     }
 
     public function delete(DealButton $button)
     {
-        if (backpack_user()->can('deal_buttons.delete')) {
-            $button->delete();
-
+        if (! backpack_user()->can('deal_buttons.delete')) {
             return response()->json([
-                'success' => true,
-                'errors' => [],
-            ]);
+                'success' => false,
+                'message' => 'У вас недостаточно прав'
+            ], 403);
         }
 
+        $button->delete();
+
         return response()->json([
-            'success' => false,
-            'errors' => [
-                'У вас недостаточно прав'
-            ],
-        ], 403);
+            'success' => true,
+        ]);
     }
 
 }

@@ -27,7 +27,23 @@ class FieldCrudController extends CrudController
         CRUD::setModel(Field::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/field');
         CRUD::setEntityNameStrings(__('entity.crud_titles.action.field'), __('entity.crud_titles.many.field'));
+
         CRUD::denyAccess(['show']);
+        if (! backpack_user()->can('fields.create')) {
+            CRUD::denyAccess(['create']);
+        }
+
+        if (! backpack_user()->can('fields.update')) {
+            CRUD::denyAccess(['update']);
+        }
+
+        if (! backpack_user()->can('fields.delete')) {
+            CRUD::denyAccess(['delete']);
+        }
+
+        if (! backpack_user()->can('fields.list')) {
+            CRUD::denyAccess(['list']);
+        }
     }
 
     protected function setupListOperation()
@@ -66,7 +82,10 @@ class FieldCrudController extends CrudController
             ->type('select');
         CRUD::field('name')->label('Наименование');
         CRUD::field('entity')->type('hidden')->default($entity);
-        CRUD::field('is_active')->label('Активирован');
+        if (backpack_user()->can('fields.activate')) {
+            CRUD::field('is_active')->label('Активирован');
+        }
+
         CRUD::field('is_required')->label('Обязательность');
         CRUD::field('options')
             ->type('table')
@@ -101,7 +120,9 @@ class FieldCrudController extends CrudController
 
     public function toggleActivity(Request $request, Field $field)
     {
-        $is_active = $request->get('is_active');
-        $field->update(['is_active' => $is_active]);
+        if (backpack_user()->can('fields.activate')) {
+            $is_active = $request->get('is_active');
+            $field->update(['is_active' => $is_active]);
+        }
     }
 }

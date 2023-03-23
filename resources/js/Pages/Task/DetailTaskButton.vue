@@ -1,5 +1,11 @@
 <template>
-    <a href="#" class="btn btn-primary" data-style="zoom-in" @click="openEditButton()">
+    <a
+        v-if="permissions.can_create"
+        href="#"
+        class="btn btn-primary"
+        data-style="zoom-in"
+        @click="openEditButton()"
+    >
         <span class="ladda-label">
             <i class="la la-plus"></i>
             Добавить Кнопку
@@ -148,7 +154,7 @@
                             filterable
                             remote
                             reserve-keyword
-                            placeholder="Please enter a keyword"
+                            placeholder="Выберите ответственного"
                         >
                             <el-option
                                 v-for="user in allUsers"
@@ -171,7 +177,7 @@
                             filterable
                             remote
                             reserve-keyword
-                            placeholder="Please enter a keyword"
+                            placeholder="Выберите наблюдателя"
                         >
                             <el-option
                                 v-for="user in allUsers"
@@ -194,7 +200,7 @@
                             filterable
                             remote
                             reserve-keyword
-                            placeholder="Please enter a keyword"
+                            placeholder="Выберите исполнителя"
                         >
                             <el-option
                                 v-for="user in allUsers"
@@ -216,8 +222,20 @@
                 </div>
             </div>
             <div class="popup__actions">
-                <el-button type="success" @click="save">Сохранить</el-button>
-                <el-button type="danger" @click="remove">Удалить</el-button>
+                <el-button
+                    v-if="permissions.can_update"
+                    type="success"
+                    @click="save"
+                >
+                    Сохранить
+                </el-button>
+                <el-button
+                    v-if="permissions.can_delete"
+                    type="danger"
+                    @click="remove"
+                >
+                    Удалить
+                </el-button>
             </div>
         </div>
     </el-drawer>
@@ -225,9 +243,15 @@
 
 <script>
 
+import {ElNotification} from "element-plus";
+
 export default {
     name: 'DetailTaskButton',
     props: {
+        auth: {
+            type: Object,
+            default: {}
+        },
         buttons: {
             type: Array,
             default: [],
@@ -261,6 +285,12 @@ export default {
             actionChangeStart: false,
             actionChangeEnd: false,
 
+            permissions: {
+                can_delete: this.auth.permission_names.find((item) => item === 'task_buttons.delete'),
+                can_update: this.auth.permission_names.find((item) => item === 'task_buttons.update') || this.auth.permission_names.find((item) => item === 'task_buttons.create'),
+                can_create: this.auth.permission_names.find((item) => item === 'task_buttons.create'),
+            },
+
             colors: [
                 'default', 'grey', 'black',
                 'green', 'yellow', 'pink',
@@ -273,9 +303,6 @@ export default {
             ],
 
         }
-    },
-    mounted() {
-        console.log(this.buttons)
     },
     methods: {
         selectActionStage(stage_id) {
@@ -299,17 +326,13 @@ export default {
             this.actionChangeStart = false;
             this.actionChangeEnd = false;
             if (!!button) {
-                this.allTaskStages.forEach((stage) => {
-                    if (stage.id === button.task_stage_id) {
-                        this.actionLeaveComment = !!button.action.comment;
-                        this.actionChangeStage = !!button.action.task_stage_id;
-                        this.actionChangeResponsible = !!button.action.responsible_id;
-                        this.actionChangeManager = !!button.action.manager_id;
-                        this.actionChangeExecutor = !!button.action.executor_id;
-                        this.actionChangeStart = !!button.action.start_time;
-                        this.actionChangeEnd = !!button.action.end_time;
-                    }
-                })
+                this.actionLeaveComment = !!button.action.comment;
+                this.actionChangeStage = !!button.action.task_stage_id;
+                this.actionChangeResponsible = !!button.action.responsible_id;
+                this.actionChangeManager = !!button.action.manager_id;
+                this.actionChangeExecutor = !!button.action.executor_id;
+                this.actionChangeStart = !!button.action.start_time;
+                this.actionChangeEnd = !!button.action.end_time;
             } else {
                 button = {
                     name: '',
@@ -329,7 +352,6 @@ export default {
         save() {
             this.prepareData();
             let data = {};
-            console.log(this.currentButton);
             data.id = this.currentButton.id ?? null;
             data.name = this.currentButton.name ?? null;
             data.action = this.currentButton.action ?? null;
@@ -337,11 +359,22 @@ export default {
             data.color = this.currentColor ?? 'default';
             data.icon = this.currentIcon ?? 'angle-double-right';
 
+            console.log(data);
             axios.post('/admin/task/button/save', data)
                 .then((response) => {
                     this.allButtons = response.data.data.buttons ?? [];
                     this.allTaskStages = response.data.data.task_stages ?? [];
                     this.visibleDrawer = false;
+                })
+                .catch((response) => {
+                    this.visibleDrawer = false;
+                    let error = response.response.data.message ?? '';
+                    ElNotification({
+                        duration: 8000,
+                        title: 'Ошибка',
+                        message: error,
+                        type: 'error',
+                    });
                 });
         },
         prepareData() {
@@ -354,7 +387,7 @@ export default {
             this.currentButton.action.comment = !!this.actionLeaveComment;
         },
         remove() {
-            axios.delete('/admin/task/buttons/' + this.currentButton.id)
+            axios.delete('/admin/task/button/' + this.currentButton.id)
                 .then((response) => {
                     this.allButtons.forEach((button, index) => {
                         if(button.id === this.currentButton.id) {
@@ -362,8 +395,17 @@ export default {
                             this.allButtons.splice(index, 1);
                         }
                     })
-                }
-            );
+                })
+                .catch((response) => {
+                    this.visibleDrawer = false;
+                    let error = response.response.data.message ?? '';
+                    ElNotification({
+                        duration: 8000,
+                        title: 'Ошибка',
+                        message: error,
+                        type: 'error',
+                    });
+                });
         },
     }
 }

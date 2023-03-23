@@ -20,6 +20,9 @@ class TaskButtonCrudController extends CrudController
         CRUD::setModel(\App\Models\DealButton::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/button');
         CRUD::setEntityNameStrings(__('entity.crud_titles.action.button_task'), __('entity.crud_titles.many.button_task'));
+        if (! backpack_user()->can('task_buttons.list')) {
+            CRUD::denyAccess(['list']);
+        }
     }
 
     public function index()
@@ -41,6 +44,13 @@ class TaskButtonCrudController extends CrudController
         $options = [];
 
         if (empty($data['id'])) {
+            if (! backpack_user()->can('task_buttons.create')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'У вас недостаточно прав'
+                ], 403);
+            }
+
             $button = $button->create([
                 'name' => $data['name'],
                 'color' => $data['color'] ?? null,
@@ -48,6 +58,13 @@ class TaskButtonCrudController extends CrudController
                 'options' => $options
             ]);
         } else {
+            if (! backpack_user()->can('task_buttons.update')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'У вас недостаточно прав'
+                ], 403);
+            }
+
             $button = $button->find($data['id']);
             $button->update([
                 'name' => $data['name'],
@@ -70,7 +87,7 @@ class TaskButtonCrudController extends CrudController
             'end_time' => $data['action']['end_time'] ?? null,
         ]);
 
-        $buttons = \App\Models\TaskButton::query()->with(['visible', 'action'])->get();
+        $buttons = TaskButton::query()->with(['visible', 'action'])->get();
         $buttons = (new ButtonService())->mergeTaskButtonsSettings($buttons);
 
         return response()->json([
@@ -78,12 +95,22 @@ class TaskButtonCrudController extends CrudController
                 'buttons' => $buttons,
                 'task_stages' => TaskStage::query()->select(['id', 'name'])->get(),
             ],
-            'errors' => [],
         ]);
     }
 
     public function delete(TaskButton $button)
     {
+        if (! backpack_user()->can('task_buttons.delete')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'У вас недостаточно прав'
+            ], 403);
+        }
+
         $button->delete();
+
+        return response()->json([
+            'success' => true,
+        ]);
     }
 }

@@ -31,6 +31,9 @@ class SpaceCrudController extends CrudController
         CRUD::setModel(\App\Models\Space::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/space');
         CRUD::setEntityNameStrings(__('entity.crud_titles.action.space'), __('entity.crud_titles.many.space'));
+        if (! backpack_user()->hasRole('admin')) {
+            $this->crud->denyAccess(['list', 'update', 'delete', 'show']);
+        }
     }
 
     /**

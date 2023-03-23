@@ -30,14 +30,13 @@ Route::group([
     ),
     'namespace'  => 'App\Http\Controllers\Admin',
 ], function () { // custom admin routes
-    Route::crud('user', 'UserCrudController');
     Route::crud('field', 'FieldCrudController');
     Route::crud('pipeline', 'PipelineCrudController');
     Route::crud('space', 'SpaceCrudController');
     Route::crud('deal', 'DealCrudController');
     Route::crud('client', 'ClientCrudController');
     Route::crud('stage', 'StageCrudController');
-    Route::crud('button', 'DealButtonCrudController');
+    Route::crud('deal-button', 'DealButtonCrudController');
     Route::crud('task', 'TaskCrudController');
     Route::crud('task-stage', 'TaskStageCrudController');
     Route::crud('task-button', 'TaskButtonCrudController');
@@ -68,7 +67,6 @@ Route::group([
     });
 
     Route::prefix('user')->name('user.')->group(function () {
-        Route::get('find-users', [UserCrudController::class, 'findUsers'])->name('find');
         Route::get('/{user}/load_comments', [ManagerCrudController::class, 'loadComments'])->name('loadComments');
     });
 

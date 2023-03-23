@@ -20,6 +20,9 @@ class ReportCrudController extends CrudController
     {
         CRUD::setRoute(config('backpack.base.route_prefix') . '/report');
         CRUD::setEntityNameStrings(__('entity.crud_titles.action.report'), __('entity.crud_titles.many.report'));
+        if (! backpack_user()->hasRole('admin')) {
+            $this->crud->denyAccess(['list', 'update', 'delete', 'show']);
+        }
     }
 
     public function index()

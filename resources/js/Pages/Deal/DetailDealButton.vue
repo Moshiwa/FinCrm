@@ -1,5 +1,11 @@
 <template>
-    <a href="#" class="btn btn-primary" data-style="zoom-in" @click="openEditButton()">
+    <a
+        v-if="permissions.can_create"
+        href="#"
+        class="btn btn-primary"
+        data-style="zoom-in"
+        @click="openEditButton()"
+    >
         <span class="ladda-label">
             <i class="la la-plus"></i>
             Добавить Кнопку
@@ -156,11 +162,10 @@
                             filterable
                             remote
                             reserve-keyword
-                            placeholder="Please enter a keyword"
-                            :remote-method="getUsers"
+                            placeholder="Выберите ответственного"
                         >
                             <el-option
-                                v-for="user in responsibles"
+                                v-for="user in users"
                                 :key="user.id"
                                 :label="user.name"
                                 :value="user"
@@ -178,8 +183,20 @@
                 </div>
             </div>
             <div class="popup__actions">
-                <el-button type="success" @click="save">Сохранить</el-button>
-                <el-button type="danger" @click="remove">Удалить</el-button>
+                <el-button
+                    v-if="permissions.can_update"
+                    type="success"
+                    @click="save"
+                >
+                    Сохранить
+                </el-button>
+                <el-button
+                    v-if="permissions.can_delete"
+                    type="danger"
+                    @click="remove"
+                >
+                    Удалить
+                </el-button>
             </div>
         </div>
     </el-drawer>
@@ -188,20 +205,29 @@
 </template>
 
 <script>
+import {ElNotification} from "element-plus";
+
 export default {
     name: 'DetailDealButton',
     props: {
+        auth: {
+            type: Object,
+            default: {}
+        },
         pipelines: {
             type: Array,
             default: [],
         },
+        users: {
+            type: Array,
+            default: [{}]
+        }
     },
     data() {
         return {
             visibleDrawer: false,
 
             allPipelines: this.pipelines ?? [],
-            responsibles: [],
 
             currentResponsible: {},
             currentPipeline: this.pipelines[0] ?? { buttons: [] },
@@ -213,6 +239,12 @@ export default {
             actionChangeStage: false,
             actionChangeResponsible: false,
             actionLeaveComment: false,
+
+            permissions: {
+                can_delete: this.auth.permission_names.find((item) => item === 'deal_buttons.delete'),
+                can_update: this.auth.permission_names.find((item) => item === 'deal_buttons.update') || this.auth.permission_names.find((item) => item === 'deal_buttons.create'),
+                can_create: this.auth.permission_names.find((item) => item === 'deal_buttons.create'),
+            },
 
             colors: [
                 'default', 'grey', 'black',
@@ -226,9 +258,6 @@ export default {
             ],
 
         }
-    },
-    mounted() {
-        console.log(this.pipelines)
     },
     methods: {
         selectPipeline(pipeline) {
@@ -260,8 +289,6 @@ export default {
                         this.currentActionPipeline = this.findStagesForPipeline(button.action?.pipeline?.id);
                         this.currentResponsible = button.action.responsible ?? {};
 
-                        this.responsibles = [this.currentResponsible];
-
                         this.actionChangeStage = !!button.action.stage_id;
                         this.actionChangeResponsible = !!button.action.responsible_id;
                         this.actionLeaveComment = !!button.action.comment;
@@ -279,6 +306,7 @@ export default {
                     pipeline_id: this.currentPipeline.id
                 }
             }
+
             this.currentColor = button.color
             this.currentIcon = button.icon
             this.currentButton = button;
@@ -299,6 +327,16 @@ export default {
                 .then((response) => {
                     this.currentPipeline = response.data.data.pipeline ?? [];
                     this.visibleDrawer = false;
+                })
+                .catch((response) => {
+                    this.visibleDrawer = false;
+                    let error = response.response.data.message ?? '';
+                    ElNotification({
+                        duration: 8000,
+                        title: 'Ошибка',
+                        message: error,
+                        type: 'error',
+                    });
                 });
         },
         remove() {
@@ -309,16 +347,18 @@ export default {
                             this.visibleDrawer = false;
                             this.currentPipeline.buttons.splice(index, 1);
                         }
-                    })
-                });
-        },
-        getUsers(query) {
-            if (query.length >= 3) {
-                axios.get('/admin/user/find-users?search=' + query)
-                    .then((response) => {
-                        this.responsibles = response.data.data;
                     });
-            }
+                })
+                .catch((response) => {
+                    this.visibleDrawer = false;
+                    let error = response.response.data.message ?? '';
+                    ElNotification({
+                        duration: 8000,
+                        title: 'Ошибка',
+                        message: error,
+                        type: 'error',
+                    });
+                });
         },
         prepareData() {
             this.currentButton.action.stage_id = this.actionChangeStage ? this.currentButton.action.stage_id : '';

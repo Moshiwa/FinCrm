@@ -21,6 +21,17 @@ class PipelineCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/pipeline');
         CRUD::setEntityNameStrings(__('entity.crud_titles.action.pipeline'), __('entity.crud_titles.many.pipeline'));
         CRUD::denyAccess(['show']);
+        if (! backpack_user()->can('pipelines.update')) {
+            CRUD::denyAccess(['update']);
+        }
+
+        if (! backpack_user()->can('pipelines.delete')) {
+            CRUD::denyAccess(['delete']);
+        }
+
+        if (! backpack_user()->can('pipelines.list')) {
+            CRUD::denyAccess(['list']);
+        }
     }
 
     protected function setupListOperation()

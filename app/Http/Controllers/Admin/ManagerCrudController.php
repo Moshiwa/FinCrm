@@ -20,6 +20,9 @@ class ManagerCrudController extends CrudController
         CRUD::setModel(\App\Models\User::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/manager');
         CRUD::setEntityNameStrings(__('entity.crud_titles.action.manager'), __('entity.crud_titles.many.manager'));
+        if (! backpack_user()->hasRole('admin')) {
+            $this->crud->denyAccess(['list', 'update', 'delete', 'show']);
+        }
     }
 
     protected function setupListOperation()

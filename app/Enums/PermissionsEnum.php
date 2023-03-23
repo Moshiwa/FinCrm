@@ -5,12 +5,12 @@ namespace App\Enums;
 enum PermissionsEnum: string
 {
     case deals = 'Сделки';
-    case clients = 'Клиенты';
     case tasks = 'Задачи';
-    case deal_buttons = 'Кнопки сделок';
-
-    case users = 'Пользователи';
-    case admin = 'Администрирование';
-    case permission = 'Управление правами пользователей';
+    case clients = 'Клиенты';
     case fields = 'Поля';
+    case deal_buttons = 'Кнопки сделок';
+    case task_buttons = 'Кнопки задач';
+    case pipelines = 'Воронки';
+    case task_stages = 'Статусы задач';
+    case settings = 'Настройки';
 }

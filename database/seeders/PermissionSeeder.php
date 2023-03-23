@@ -28,28 +28,54 @@ class PermissionSeeder extends Seeder
         })->toArray(), [
             PermissionsEnum::deals->name => [
                 'create',
-                'edit',
-                'delete'
+                'delete',
+                'change_pipeline',
+                'change_stage',
             ],
             PermissionsEnum::tasks->name     => [
                 'create',
-                'edit',
-                'delete'
+                'delete',
+                'change_stage',
             ],
             PermissionsEnum::clients->name   => [
                 'create',
-                'edit',
-                'delete'
+                'update',
+                'delete',
+                'list'
             ],
             PermissionsEnum::fields->name     => [
                 'create',
-                'edit',
-                'delete'
+                'activate',
+                'update',
+                'delete',
+                'list'
             ],
             PermissionsEnum::deal_buttons->name   => [
                 'create',
-                'edit',
-                'delete'
+                'update',
+                'delete',
+                'list'
+            ],
+            PermissionsEnum::task_buttons->name   => [
+                'create',
+                'update',
+                'delete',
+                'list'
+            ],
+            PermissionsEnum::task_stages->name   => [
+                'create',
+                'update',
+                'delete',
+                'list'
+            ],
+            PermissionsEnum::pipelines->name   => [
+                'create',
+                'update',
+                'delete',
+                'list'
+            ],
+            PermissionsEnum::settings->name   => [
+                'list'
             ],
         ]);
     }

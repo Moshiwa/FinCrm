@@ -36,6 +36,7 @@
                 </h2>
             </section>
             <detail-task-button
+                :auth="{{ backpack_user() }}"
                 :buttons="{{ json_encode($buttons) }}"
                 :task-stages="{{ $task_stages }}"
                 :users="{{ $users }}"
