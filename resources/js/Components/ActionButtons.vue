@@ -62,7 +62,7 @@
 <script>
 
 import ActionButton from "./ActionButton.vue";
-import {ElNotification} from "element-plus";
+import {ElMessageBox, ElNotification} from "element-plus";
 import FileUpload from "../Components/FileUpload.vue";
 
 export default {
@@ -146,7 +146,18 @@ export default {
             this.$emit('changeData', button);
         },
         deleteEntityAction() {
-            this.$emit('deleteAction');
+            ElMessageBox.confirm(
+                'Вы уверены?',
+                'Удалить',
+                {
+                    confirmButtonText: 'Хорошо',
+                    cancelButtonText: 'Отмена',
+                    type: 'warning',
+                }
+            )
+                .then(() => {
+                    this.$emit('deleteAction');
+                })
         }
     }
 }

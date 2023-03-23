@@ -134,7 +134,6 @@
 
 <script>
 import {ElInput, ElMessageBox} from 'element-plus';
-import Contenteditable from "../../Components/Contenteditable.vue";
 import FileUpload from "../../Components/FileUpload.vue";
 import { ElNotification } from 'element-plus'
 import ActionButtons from "../../Components/ActionButtons.vue";
@@ -142,11 +141,11 @@ import Comments from "../../Components/Comments.vue";
 import Field from "../../Components/Field.vue";
 import Helper from "../../Mixins/Helper.vue";
 import Filters from "../../Components/Filters.vue";
+import DataGenerateHelper from "../../Mixins/DataGenerateHelper.vue";
 
 export default {
     name: 'DetailDeal',
     components: {
-        Contenteditable,
         FileUpload,
         ActionButtons,
         Field,
@@ -154,7 +153,7 @@ export default {
         Filters
     },
     mixins: [
-        Helper
+        Helper, DataGenerateHelper
     ],
     props: {
         auth: {
@@ -240,31 +239,9 @@ export default {
             this.action = field;
             this.send();
         },
-        loadMore (e) {
-            if (this.loading) {
-                return;
-            }
-            let can = false;
-            let currentPos = window.pageYOffset;
-            let pos = document.body.offsetHeight - window.innerHeight;
-            if (pos <= (currentPos + 3)) {
-                can = true;
-            }
-
-            if (can) {
-                this.loading = true;
-
-                let url = '/admin/deal/' + this.thisDeal.id + '/load_comments?';
-                url += window.location.search
-                if (this.thisDeal.comments?.length > 0) {
-                    url+= '&offset=' +  this.thisDeal.comments.length;
-                }
-
-                axios.get(url).then((response) => {
-                    this.thisDeal.comments = this.thisDeal.comments.concat(response.data.comments)
-                    this.loading = false;
-                })
-            }
+        changeData(options) {
+            this.thisDeal = this.dealPrepareDataByButtonOptions(options, this.thisDeal);
+            this.send();
         },
         sendComment(e) {
             this.visibleCommentForm = false;
@@ -273,8 +250,7 @@ export default {
                 this.thisDeal.comments.unshift(this.newComment);
             }
 
-            this.prepareDataByButtonOptions(e.button.action);
-
+            this.thisDeal = this.dealPrepareDataByButtonOptions(e.button.action, this.thisDeal);
             this.newComment = { id: '', type: 'comment', content: '', author_id: null, files: [] };
             this.send();
         },
@@ -300,12 +276,11 @@ export default {
                 }
             )
                 .then(() => {
-                        axios.post('/admin/telephony/call', {
-                            phone: event.pivot.value,
-                            deal_id: this.thisDeal.id
-                        });
-                    }
-                );
+                    axios.post('/admin/telephony/call', {
+                        phone: event.pivot.value,
+                        deal_id: this.thisDeal.id
+                    });
+                });
         },
         sendRemoteMessage(event) {
             axios.post('/admin/sender/send', {
@@ -315,31 +290,21 @@ export default {
                 'client_id': this.thisDeal.client.id,
                 'deal_id': this.thisDeal.id
             }).then((response) => {
-                if (!!response.data.errors ) {
-                    response.data.errors.forEach((error) => {
-                        if (!!error) {
-                            setTimeout(() => {
-                                ElNotification({
-                                    duration: 8000,
-                                    title: 'Ошибка',
-                                    message: error,
-                                    type: 'error',
-                                })
-                            }, 100);
-                        }
-                    })
-                }
-
-                if (!!response.data.message) {
-                    setTimeout(() => {
-                        ElNotification({
-                            title: 'Доставлено',
-                            message: response.data.message,
-                            type: 'success',
-                        })
-                    }, 100);
+                if (!!response.data.success === true) {
+                    ElNotification({
+                        title: 'Доставлено',
+                        message: response.data.message,
+                        type: 'success',
+                    });
 
                     this.thisDeal = response.data.data ?? [];
+                } else {
+                    ElNotification({
+                        duration: 8000,
+                        title: 'Ошибка',
+                        message: response.data.message,
+                        type: 'error',
+                    })
                 }
             }).catch((failResponse) => {
                 if (!!failResponse.response.data.message) {
@@ -359,97 +324,26 @@ export default {
             this.send();
             this.deleteCommentId = null;
         },
-        changeData(options) {
-            this.prepareDataByButtonOptions(options);
-            this.send();
-        },
-        prepareDataByButtonOptions(action) {
-            this.thisDeal.pipeline.id = !!action.pipeline_id ? action.pipeline_id : this.thisDeal.pipeline.id;
-            this.thisDeal.stage.id = !!action.stage_id ? action.stage_id : this.thisDeal.stage.id;
-            this.thisDeal.responsible.id = !!action.responsible_id ? action.responsible_id : this.thisDeal.responsible.id;
-        },
         deleteDeal() {
-            ElMessageBox.confirm(
-                'Вы уверены?',
-                'Удалить сделку',
-                {
-                    confirmButtonText: 'Хорошо',
-                    cancelButtonText: 'Отмена',
-                    type: 'warning',
-                }
-            )
-                .then(() => {
-                    axios
-                        .delete('/admin/deal/' + this.thisDeal.id)
-                        .then((response) => {
-                            location.href = '/admin/deal/';
-                        })
-                        .catch((response) => {
-                            if (!!response.response?.data?.errors) {
-                                response.response.data.errors.forEach((error) => {
-                                    ElNotification({
-                                        title: error,
-                                        type: 'error',
-                                        position: 'bottom-right',
-                                    });
-                                });
-                            }
+            axios
+                .delete('/admin/deal/' + this.thisDeal.id)
+                .then((response) => {
+                    location.href = '/admin/deal/';
+                })
+                .catch((response) => {
+                    if (!!response.response?.data?.errors) {
+                        response.response.data.errors.forEach((error) => {
+                            ElNotification({
+                                title: error,
+                                type: 'error',
+                                position: 'bottom-right',
+                            });
                         });
                     }
-                );
+                });
         },
         send() {
-            const formData = new FormData();
-            formData.append('id', this.thisDeal.id);
-            formData.append('name', this.thisDeal.name);
-            formData.append('pipeline_id', this.thisDeal.pipeline.id);
-            formData.append('stage_id', this.thisDeal.stage.id);
-            formData.append('responsible_id', this.thisDeal.responsible.id);
-            formData.append('client_id', this.thisDeal.client_id);
-
-            formData.append('comment_count', this.thisDeal.comments.length ?? 0);
-
-            if (!!this.deleteCommentId) {
-                formData.append('delete_comment_id', this.deleteCommentId);
-            }
-
-            this.thisDeal.all_fields = this.thisDeal.all_fields ?? [];
-            this.thisDeal?.all_fields.forEach((field, fieldIndex) => {
-                formData.append('fields[' + field.id + '][value]', field.pivot?.value ?? '');
-            });
-
-            this.thisDeal.client = this.thisDeal.client ?? [];
-            formData.append('client[name]', this.thisDeal.client?.name);
-            this.thisDeal.client.all_fields = this.thisDeal.client?.all_fields ?? [];
-            this.thisDeal.client?.all_fields.forEach((field, fieldIndex) => {
-                formData.append('client[fields][' + field.id + '][value]', field.pivot?.value ?? '');
-            });
-
-            this.thisDeal.comments = this.thisDeal.comments ?? [];
-            this.thisDeal?.comments.forEach((comment, commentIndex) => {
-                if (!comment.id) {
-                    formData.append('new_comment[id]', comment.id ?? '');
-                    formData.append('new_comment[deal_id]', this.thisDeal.id);
-                    formData.append('new_comment[type]', comment.type);
-                    formData.append('new_comment[content]', comment.content);
-                    comment.files = comment.files ?? [];
-                    comment.files.forEach((file, fileIndex) => {
-                        formData.append('new_comment[files][' + fileIndex + ']', file);
-                    })
-                }
-            });
-
-            if (!!this.action?.id) {
-                console.log(this.action);
-                formData.append('change_custom_field[field_id]', this.action.id);
-                if (!! this.action?.pivot?.client_id) {
-                    formData.append('change_custom_field[client_id]', this.thisDeal.client.id);
-                } else {
-                    formData.append('change_custom_field[deal_id]', this.thisDeal.id);
-                }
-                formData.append('change_custom_field[value]', this.action.pivot.value);
-            }
-
+            let formData = this.dealFormData(this.thisDeal, this.action, this.deleteCommentId)
             let url = '/admin/deal/update';
             url += window.location.search
 
@@ -476,11 +370,34 @@ export default {
                 }
             )
         },
+        loadMore (e) {
+            if (this.loading) {
+                return;
+            }
+            let can = false;
+            let currentPos = window.pageYOffset;
+            let pos = document.body.offsetHeight - window.innerHeight;
+            if (pos <= (currentPos + 3)) {
+                can = true;
+            }
+
+            if (can) {
+                this.loading = true;
+                let url = '/admin/deal/' + this.thisDeal.id + '/load_comments?';
+                url += window.location.search
+                if (this.thisDeal.comments?.length > 0) {
+                    url+= '&offset=' +  this.thisDeal.comments.length;
+                }
+
+                axios.get(url).then((response) => {
+                    this.thisDeal.comments = this.thisDeal.comments.concat(response.data.comments)
+                    this.loading = false;
+                })
+            }
+        },
         permissionsUpdate() {
             this.permissions.can_change_responsible_self = this.thisDeal.responsible_id === this.auth.id;
         },
     }
 }
 </script>
-<style scoped>
-</style>
