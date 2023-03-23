@@ -4,6 +4,7 @@
             <div class="card-left">
                 <el-input
                     class="input-title hidden-border"
+                    :disabled="!permissions.can_update_task"
                     v-model="thisTask.name"
                     @change="send"
                 />
@@ -11,6 +12,7 @@
                 <el-form-item label="Описание">
                     <el-input
                         type="textarea"
+                        :disabled="!permissions.can_update_task"
                         v-model="thisTask.description"
                         @change="send"
                     />
@@ -18,6 +20,7 @@
                 <el-form-item label="Статус">
                     <el-select
                         v-model="thisTask.stage"
+                        :disabled="!permissions.can_change_stage"
                         value-key="id"
                         @change="send"
                     >
@@ -32,6 +35,7 @@
                 <el-form-item label="Ответственный">
                     <el-select
                         v-model="thisTask.responsible"
+                        :disabled="!permissions.can_change_responsible"
                         value-key="id"
                         filterable
                         remote
@@ -50,6 +54,7 @@
                 <el-form-item label="Наблюдатель">
                     <el-select
                         v-model="thisTask.manager"
+                        :disabled="!permissions.can_update_task"
                         value-key="id"
                         filterable
                         remote
@@ -68,6 +73,7 @@
                 <el-form-item label="Исполнитель">
                     <el-select
                         v-model="thisTask.executor"
+                        :disabled="!permissions.can_update_task"
                         value-key="id"
                         filterable
                         remote
@@ -87,6 +93,7 @@
                 <el-form-item label="Даты начала/окончания" class="select-container">
                     <el-date-picker
                         v-model="datetime"
+                        :disabled="!permissions.can_update_task"
                         type="datetimerange"
                         format="YYYY-MM-DD HH:mm"
                         value-format="YYYY-MM-DD HH:mm"
@@ -103,10 +110,11 @@
                 >
                     <field
                         :field="field"
+                        :disabled="!permissions.can_update_task"
                         @send="changeCustomField(field)"
                     />
                 </el-form-item>
-                <div>
+                <div v-if="permissions.can_create_field">
                     <a href="/admin/field/create?entity=task">Добавить поле</a>
                 </div>
             </div>
@@ -235,12 +243,14 @@ export default {
 
             permissions: {
                 can_delete: this.auth.permission_names.find((item) => item === 'tasks.delete'),
+                can_change_stage: this.auth.permission_names.find((item) => item === 'tasks.change_stage'),
+                can_change_responsible: this.auth.permission_names.find((item) => item === 'tasks.change_responsible'),
+                can_create_field: this.auth.permission_names.find((item) => item === 'fields.create'),
+                can_update_task: this.auth.permission_names.find((item) => item === 'tasks.update'),
             }
         }
     },
     beforeMount() {
-        console.log(this.auth);
-        console.log(this.thisTask);
         $(document).on('scroll', this.loadMore);
         this.thisTask.all_fields = this.castFieldValue(this.thisTask.all_fields);
     },

@@ -14,15 +14,23 @@ class TaskService
 {
     public function updateTask($task, $data)
     {
-        $task->name = $data['name'];
-        $task->task_stage_id = $data['task_stage_id'];
-        $task->description = $data['description'] ?? '';
-        $task->start = empty($data['start']) ? null : Carbon::make($data['start']);
-        $task->end = empty($data['end']) ? null : Carbon::make($data['end']);
-        $task->responsible_id = $data['responsible_id'] ?? backpack_user()->id;
-        $task->manager_id = $data['manager_id'] ?? null;
-        $task->executor_id = $data['executor_id'] ?? null;
-        $task->save();
+        if (backpack_user()->can('tasks.update')) {
+            $task->name = $data['name'];
+            if (backpack_user()->can('tasks.change_stage')) {
+                $task->task_stage_id = $data['task_stage_id'];
+            }
+
+            $task->description = $data['description'] ?? '';
+            $task->start = empty($data['start']) ? null : Carbon::make($data['start']);
+            $task->end = empty($data['end']) ? null : Carbon::make($data['end']);
+            if (backpack_user()->can('tasks.change_responsible')) {
+                $task->responsible_id = $data['responsible_id'] ?? backpack_user()->id;
+            }
+
+            $task->manager_id = $data['manager_id'] ?? null;
+            $task->executor_id = $data['executor_id'] ?? null;
+            $task->save();
+        }
 
         return $task;
     }

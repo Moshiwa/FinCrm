@@ -4,6 +4,7 @@
             <div class="card-left">
                 <el-input
                     class="input-title hidden-border"
+                    :disabled="!permissions.can_update_deal"
                     v-model="thisDeal.name"
                     @change="send"
                 />
@@ -11,6 +12,7 @@
                 <el-form-item label="Воронка/Стадия" class="select-container">
                     <el-select
                         v-model="thisDeal.pipeline"
+                        :disabled="!permissions.can_change_pipeline || !permissions.can_update_deal"
                         value-key="id"
                         @change="changePipeline"
                     >
@@ -23,6 +25,7 @@
                     </el-select>
                     <el-select
                         v-model="thisDeal.stage"
+                        :disabled="!permissions.can_change_stage || !permissions.can_update_deal"
                         value-key="id"
                         @change="send"
                     >
@@ -37,6 +40,7 @@
                 <el-form-item label="Ответственный">
                     <el-select
                         v-model="thisDeal.responsible"
+                        :disabled="(!permissions.can_change_responsible && !permissions.can_change_responsible_self) || !permissions.can_update_deal"
                         value-key="id"
                         filterable
                         remote
@@ -61,10 +65,11 @@
                 >
                     <field
                         :field="field"
+                        :disabled="!permissions.can_update_deal"
                         @send="changeCustomField(field)"
                     />
                 </el-form-item>
-                <div>
+                <div v-if="permissions.can_create_field">
                     <a href="/admin/field/create?entity=deal">Добавить поле</a>
                 </div>
 
@@ -73,6 +78,7 @@
                 <el-input
                     class="input-subtitle hidden-border"
                     v-model="thisDeal.client.name"
+                    :disabled="!permissions.can_update_client"
                     @change="send"
                 />
                 <el-divider content-position="left">Дополнительные поля</el-divider>
@@ -84,12 +90,13 @@
                     <field
                         :field="field"
                         :is-sender-prefix="true"
+                        :disabled="!permissions.can_update_client"
                         @send="changeCustomField(field)"
                         @sendMessage="sendRemoteMessage($event)"
                         @call="call($event)"
                     />
                 </el-form-item>
-                <div>
+                <div v-if="permissions.can_create_field">
                     <a href="/admin/field/create?entity=client">Добавить поле</a>
                 </div>
             </div>
@@ -186,6 +193,7 @@ export default {
             visibleFileUploadForm: false,
 
             thisDeal: this.deal,
+
             allPipelines: this.pipelines ?? [],
             allStages: this.stages ?? [],
             stageButtons: this.buttons ?? [],
@@ -198,11 +206,17 @@ export default {
 
             permissions: {
                 can_delete: this.auth.permission_names.find((item) => item === 'deals.delete'),
+                can_change_pipeline: this.auth.permission_names.find((item) => item === 'deals.change_pipeline'),
+                can_change_stage: this.auth.permission_names.find((item) => item === 'deals.change_stage'),
+                can_change_responsible: this.auth.permission_names.find((item) => item === 'deals.change_responsible'),
+                can_change_responsible_self: (this.auth.permission_names.find((item) => item === 'deals.change_responsible_self')) !== undefined ? this.auth.id === this.deal.responsible_id : false,
+                can_create_field: this.auth.permission_names.find((item) => item === 'fields.create'),
+                can_update_client: this.auth.permission_names.find((item) => item === 'clients.update'),
+                can_update_deal: this.auth.permission_names.find((item) => item === 'deals.update'),
             }
         }
     },
     beforeMount() {
-        console.log(this.thisDeal);
         $(document).on('scroll', this.loadMore);
         this.thisDeal.all_fields = this.castFieldValue(this.thisDeal.all_fields);
         this.thisDeal.client.all_fields = this.castFieldValue(this.thisDeal.client.all_fields);
@@ -452,6 +466,8 @@ export default {
                     this.thisDeal.all_fields = this.castFieldValue(this.thisDeal.fields);
                     this.thisDeal.client.all_fields = this.castFieldValue(this.thisDeal.client.fields);
 
+                    this.permissionsUpdate();
+
                     ElNotification({
                         title: 'Сохранено',
                         type: 'success',
@@ -459,6 +475,9 @@ export default {
                     });
                 }
             )
+        },
+        permissionsUpdate() {
+            this.permissions.can_change_responsible_self = this.thisDeal.responsible_id === this.auth.id;
         },
     }
 }

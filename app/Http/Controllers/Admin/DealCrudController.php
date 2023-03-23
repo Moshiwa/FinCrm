@@ -114,16 +114,39 @@ class DealCrudController extends CrudController
 
         $comment_data = $service->prepareCommentData($deal, $data);
 
-        $deal->name = $data['name'];
-        $deal->pipeline_id = $data['pipeline_id'];
-        $deal->client_id = $data['client_id'];
-        $deal->stage_id = $data['stage_id'];
-        $deal->responsible_id = $data['responsible_id'];
-        $deal->save();
+        if (backpack_user()->can('deals.update')) {
+            $deal->name = $data['name'];
+            if (backpack_user()->can('deals.change_pipeline')) {
+                $deal->pipeline_id = $data['pipeline_id'];
+            }
+
+            if (backpack_user()->can('deals.change_stage')) {
+                $deal->stage_id = $data['stage_id'];
+            }
+
+            if (backpack_user()->can('deals.change_responsible_self')) {
+                if (backpack_user()->id == $deal->responsible_id) {
+                    $deal->responsible_id = $data['responsible_id'];
+                }
+            }
+
+            if(backpack_user()->can('deals.change_responsible')) {
+                $deal->responsible_id = $data['responsible_id'];
+            }
+
+
+
+            $deal->client_id = $data['client_id'];
+            $deal->save();
+
+            $deal->fields()->sync($data['fields'] ?? []);
+        }
+
+        if (backpack_user()->can('clients.update')) {
+            $service->updateClient($deal, $data);
+        }
 
         $service->createNewMessage($deal, $comment_data);
-        $deal->fields()->sync($data['fields'] ?? []);
-        $service->updateClient($deal, $data);
         $service->updateComments($deal, $data);
 
         $comment_count = $data['comment_count'] ?? 10;

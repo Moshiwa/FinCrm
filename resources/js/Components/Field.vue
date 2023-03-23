@@ -2,6 +2,7 @@
     <div v-if="field.type.name === 'select'">
         <el-select
             v-model="field.pivot.value"
+            :disabled="disabled"
             :name="'fields['+ fieldIndex +'][value]'"
             @change="send"
         >
@@ -17,6 +18,7 @@
     <div v-else-if="field.type.name === 'date'">
         <el-input
             v-model="field.pivot.value"
+            :disabled="disabled"
             :name="'fields['+ fieldIndex +'][value]'"
             type="date"
             @change="send"
@@ -26,6 +28,7 @@
     <div v-else-if="field.type.name === 'number'">
         <el-input-number
             v-model="field.pivot.value"
+            :disabled="disabled"
             :name="'fields['+ fieldIndex +'][value]'"
             @change="send"
         />
@@ -34,6 +37,7 @@
     <div v-else-if="field.type.name === 'checkbox'">
         <el-checkbox
             v-model="field.pivot.value"
+            :disabled="disabled"
             :name="'fields['+ fieldIndex +'][value]'"
             :label="field.name"
             @change="send"
@@ -43,6 +47,7 @@
     <div v-else-if="field.type.name === 'email'">
         <el-input
             v-model="field.pivot.value"
+            :disabled="disabled"
             :name="'fields['+ fieldIndex +'][value]'"
             type="email"
             :label="field.name"
@@ -61,6 +66,7 @@
     <div v-else-if="field.type.name === 'phone'">
         <el-input
             v-model="field.pivot.value"
+            :disabled="disabled"
             :name="'fields['+ fieldIndex +'][value]'"
             :label="field.name"
             :class="error ? 'error' : ''"
@@ -78,6 +84,7 @@
     </div>
     <div v-else-if="field.type.name === 'address'">
         <el-select
+            :disabled="disabled"
             v-model="field.pivot.value"
             :name="'fields['+ fieldIndex +'][value]'"
             filterable
@@ -137,6 +144,10 @@ export default {
             type: Boolean,
             default: false
         },
+        disabled: {
+            type: Boolean,
+            default: false
+        }
     },
     data() {
         return {

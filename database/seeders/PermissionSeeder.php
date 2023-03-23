@@ -12,9 +12,15 @@ class PermissionSeeder extends Seeder
     public function scopesDisplayName($scope): string
     {
         $map = [
-            'edit'   => 'редактирование',
-            'create' => 'создание',
-            'delete' => 'удаление',
+            'create' => '- создание',
+            'delete' => '- удаление',
+            'update'   => '- редактирование',
+            'change_pipeline' => '- смена воронки',
+            'change_stage' => '- смена стадии',
+            'change_responsible' => '- смена ответственного',
+            'change_responsible_self' => '- смена ответственного если менеджер ответственный',
+            'list' => '- просмотр списка',
+            'activate' => '- смена активности'
         ];
         return $map[$scope] ?? '';
     }
@@ -29,13 +35,19 @@ class PermissionSeeder extends Seeder
             PermissionsEnum::deals->name => [
                 'create',
                 'delete',
+                'update',
                 'change_pipeline',
                 'change_stage',
+                'change_responsible',
+                'change_responsible_self'
             ],
             PermissionsEnum::tasks->name     => [
                 'create',
                 'delete',
+                'update',
                 'change_stage',
+                'change_responsible',
+                'change_responsible_self',
             ],
             PermissionsEnum::clients->name   => [
                 'create',
