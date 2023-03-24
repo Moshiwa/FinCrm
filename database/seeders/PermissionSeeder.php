@@ -84,9 +84,6 @@ class PermissionSeeder extends Seeder
                 'delete',
                 'list'
             ],
-            PermissionsEnum::settings->name   => [
-                'list'
-            ],
         ]);
     }
 
