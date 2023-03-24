@@ -1,9 +1,5 @@
 <?php
 
-use App\Models\User;
-use Backpack\PermissionManager\app\Models\Permission;
-use Backpack\PermissionManager\app\Models\Role;
-
 return [
 
     /*
@@ -16,9 +12,10 @@ return [
     */
 
     'models' => [
-        'user'       => config('backpack.base.user_model_fqn', User::class),
-        'permission' => Permission::class,
-        'role'       => Role::class,
+        'user'       => config('backpack.base.user_model_fqn', \App\Models\User::class),
+//        'permission' => Backpack\PermissionManager\app\Models\Permission::class,
+        'role'       => \App\Models\Role::class,
+        'permission' => \App\Models\Permission::class,
     ],
 
     /*

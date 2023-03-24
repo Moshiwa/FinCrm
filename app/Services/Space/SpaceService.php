@@ -36,7 +36,6 @@ class SpaceService
     public static function getCurrentSpaceModel($force = false): Space
     {
         $spaceCode = self::getCurrentSpaceCode();
-
         if (!self::$model || $force) {
             self::$model = Space::query()->where('code', $spaceCode)->get()->first();
         }
@@ -45,12 +44,11 @@ class SpaceService
 
     public static function getCurrentSpaceCode()
     {
-        if(app()->runningInConsole()) {
+        if (app()->runningInConsole()) {
             $currentSpace = self::$currentCode;
         } else {
             $currentSpace = session()->get(self::$sessionName);
         }
-
         $spaces = self::getSpaces();
         if (!array_key_exists($currentSpace, $spaces)) {
             $currentSpace = null;
@@ -65,7 +63,7 @@ class SpaceService
 
     public static function setCurrentSpaceCode($space): void
     {
-        if(app()->runningInConsole()) {
+        if (app()->runningInConsole()) {
             self::$currentCode = $space;
         } else {
             session()->put(self::$sessionName, $space);
@@ -73,17 +71,17 @@ class SpaceService
 
         self::getCurrentSpaceModel(true);
         self::setDefaultDatabaseConnection();
+        self::setDefaultUploadDiskPath();
     }
 
     public static function prepareAllUploadDirectories(): void
     {
         $spaces = SpaceService::getSpaces();
         $baseUploadDirectory = base_path('public/uploads');
-
         foreach ($spaces as $spaceCode => $spaceName) {
-            if($spaceCode == 'main') continue;
+            if ($spaceCode == 'main') continue;
             $directory = self::getSpaceUploadDirectory($spaceCode);
-            if(!file_exists($directory)) {
+            if (!file_exists($directory)) {
                 shell_exec("mkdir $directory && cp $baseUploadDirectory/.htaccess $directory/.htaccess");
             }
         }
@@ -94,7 +92,7 @@ class SpaceService
         $directoryFull = self::getSpaceUploadDirectory($spaceCode);
         $directory = self::getSpaceUploadDirectory($spaceCode, false);
         shell_exec("rm -rf $directoryFull");
-        shell_exec("rm -rf ".base_path('storage/app/public/'.$directory));
+        shell_exec("rm -rf " . base_path('storage/app/public/' . $directory));
     }
 
     public static function prepareAllSpaceConnections(): void
@@ -102,7 +100,7 @@ class SpaceService
         $connections = [];
         $spaces = SpaceService::getSpaces();
         foreach ($spaces as $spaceCode => $spaceName) {
-            if($spaceCode == 'main') continue;
+            if ($spaceCode == 'main') continue;
             $connections[self::getSpaceConnectionName($spaceCode)] = SpaceService::prepareSpaceConnectionOptions($spaceCode);
             self::addSpaceConnections($spaceCode);
         }
@@ -126,9 +124,9 @@ class SpaceService
         $currentSpace = self::getCurrentSpaceCode();
         $disks = config('filesystems.disks');
 
-        if($currentSpace != self::$mainCode) {
+        if ($currentSpace != self::$mainCode) {
             $diskName = 'uploads_' . $currentSpace;
-            $disks[$diskName]  = [
+            $disks[$diskName] = [
                 'driver' => 'local',
                 'root' => self::getSpaceUploadDirectory($currentSpace),
                 'throw' => false,
@@ -146,7 +144,7 @@ class SpaceService
 
     public static function getSpaceUploadDirectory($space, $full = true): string
     {
-        $path = 'uploads'.($space != self::$mainCode ? '_' . $space : '');
+        $path = 'public/uploads' . ($space != self::$mainCode ? '_' . $space : '');
         return $full ? base_path($path) : $path;
     }
 
