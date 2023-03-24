@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect('/admin');
+    return redirect('/admin/deal');
 })->middleware(array_merge(
     (array) config('backpack.base.web_middleware', 'web'),
     (array) config('backpack.base.middleware_key', 'admin')
