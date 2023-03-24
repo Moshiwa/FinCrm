@@ -36,10 +36,12 @@ window.Pusher = Pusher;
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_PUSHER_APP_KEY,
+    cluster: false,
     wsHost: window.location.hostname,
     wsPort: 6001,
     forceTLS: false,
     disableStats: true,
+    enabledTransports: ['ws', 'wss'],
 });
 // import Echo from 'laravel-echo';
 
