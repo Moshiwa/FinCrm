@@ -20,7 +20,6 @@ class PermissionSeeder extends Seeder
             'change_responsible' => '- смена ответственного',
             'change_responsible_self' => '- смена ответственного если менеджер ответственный',
             'list' => '- просмотр списка',
-            'activate' => '- смена активности'
         ];
         return $map[$scope] ?? '';
     }
@@ -57,7 +56,6 @@ class PermissionSeeder extends Seeder
             ],
             PermissionsEnum::fields->name     => [
                 'create',
-                'activate',
                 'update',
                 'delete',
                 'list'

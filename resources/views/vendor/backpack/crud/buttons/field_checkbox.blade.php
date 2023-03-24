@@ -2,7 +2,7 @@
     type="checkbox"
     data-id="{{ $entry->getKey() }}"
     onchange="toggleFieldActivity(this)"
-    <?php if(!backpack_user()->can('fields.activate')) {echo 'disabled';} ?>
+    <?php if(!backpack_user()->can('fields.update')) {echo 'disabled';} ?>
     <?php if($entry->is_active) {echo 'checked';} ?>
 >
 <script>

@@ -14,7 +14,6 @@
 @endrole
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('integration') }}"><i class="nav-icon la la-code-branch"></i> {{ __('sidebar.integrations') }} </a></li>
 
-@can('settings.list')
 <li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#">{{ __('sidebar.settings') }}</a>
     <ul class="nav-dropdown-items">
@@ -38,4 +37,3 @@
         @endcan
     </ul>
 </li>
-@endcan

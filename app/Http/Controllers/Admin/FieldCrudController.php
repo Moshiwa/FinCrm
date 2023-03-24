@@ -82,9 +82,7 @@ class FieldCrudController extends CrudController
             ->type('select');
         CRUD::field('name')->label('Наименование');
         CRUD::field('entity')->type('hidden')->default($entity);
-        if (backpack_user()->can('fields.activate')) {
-            CRUD::field('is_active')->label('Активирован');
-        }
+        CRUD::field('is_active')->label('Активирован');
 
         CRUD::field('is_required')->label('Обязательность');
         CRUD::field('options')
@@ -120,7 +118,7 @@ class FieldCrudController extends CrudController
 
     public function toggleActivity(Request $request, Field $field)
     {
-        if (backpack_user()->can('fields.activate')) {
+        if (backpack_user()->can('fields.update')) {
             $is_active = $request->get('is_active');
             $field->update(['is_active' => $is_active]);
         }
