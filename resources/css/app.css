@@ -71,6 +71,10 @@
     width: 65%;
 }
 
+.load-more {
+    margin-left: 50%;
+}
+
 .infinite-list {
     min-height: 700px;
     width: 100%;

@@ -112,7 +112,13 @@
                             :auth="auth"
                             @commentSend="prepareCommentDataSend($event)"
                         />
-                        <div v-loading="loading"></div>
+                        <a
+                            href="javascript:void(0)"
+                            class="d-print-none font-sm load-more"
+                            @click="loadMore"
+                        >
+                            Загрузить еще
+                        </a>
                     </el-timeline>
                 </div>
             </div>
@@ -216,7 +222,6 @@ export default {
         }
     },
     beforeMount() {
-        $(document).on('scroll', this.loadMore);
         this.thisDeal.all_fields = this.castFieldValue(this.thisDeal.all_fields);
         this.thisDeal.client.all_fields = this.castFieldValue(this.thisDeal.client.all_fields);
     },
@@ -371,29 +376,19 @@ export default {
             )
         },
         loadMore (e) {
-            if (this.loading) {
+            if (!!this.loading) {
                 return;
             }
-            let can = false;
-            let currentPos = window.pageYOffset;
-            let pos = document.body.offsetHeight - window.innerHeight;
-            if (pos <= (currentPos + 3)) {
-                can = true;
-            }
 
-            if (can) {
-                this.loading = true;
-                let url = '/admin/deal/' + this.thisDeal.id + '/load_comments?';
-                url += window.location.search
-                if (this.thisDeal.comments?.length > 0) {
-                    url+= '&offset=' +  this.thisDeal.comments.length;
-                }
-
-                axios.get(url).then((response) => {
-                    this.thisDeal.comments = this.thisDeal.comments.concat(response.data.comments)
-                    this.loading = false;
-                })
-            }
+            this.loading = true;
+            let url = '/admin/deal/' + this.thisDeal.id + '/load_comments?';
+            url += window.location.search;
+            url += this.thisDeal.comments?.length > 0 ? '&offset=' +  this.thisDeal.comments.length : '';
+            axios.get(url).then((response) => {
+                this.thisDeal.comments = this.thisDeal.comments.concat(response.data.comments);
+                this.loading = false;
+                window.scrollTo(0, document.body.scrollHeight);
+            });
         },
         permissionsUpdate() {
             this.permissions.can_change_responsible_self = this.thisDeal.responsible_id === this.auth.id;

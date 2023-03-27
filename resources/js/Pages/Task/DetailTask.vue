@@ -128,7 +128,13 @@
                             :auth="auth"
                             @commentSend="prepareCommentDataSend($event)"
                         />
-                        <div v-loading="loading"></div>
+                        <a
+                            href="javascript:void(0)"
+                            class="d-print-none font-sm load-more"
+                            @click="loadMore"
+                        >
+                            Загрузить еще
+                        </a>
                     </el-timeline>
                 </div>
             </div>
@@ -251,7 +257,6 @@ export default {
         }
     },
     beforeMount() {
-        $(document).on('scroll', this.loadMore);
         this.thisTask.all_fields = this.castFieldValue(this.thisTask.all_fields);
     },
     methods: {
@@ -263,27 +268,18 @@ export default {
             if (this.loading) {
                 return;
             }
-            let can = false;
-            let currentPos = window.pageYOffset;
-            let pos = document.body.offsetHeight - window.innerHeight;
-            if (pos <= (currentPos + 3)) {
-                can = true;
-            }
 
-            if (can) {
-                this.loading = true;
+            this.loading = true;
 
-                let url = '/admin/task/' + this.thisTask.id + '/load_comments?';
-                url += window.location.search
-                if (this.thisTask.comments?.length > 0) {
-                    url+= '&offset=' +  this.thisTask.comments.length;
-                }
+            let url = '/admin/task/' + this.thisTask.id + '/load_comments?';
+            url += window.location.search;
+            url += this.thisTask.comments?.length > 0 ? '&offset=' +  this.thisTask.comments.length : '';
 
-                axios.get(url).then((response) => {
-                    this.thisTask.comments = this.thisTask.comments.concat(response.data.comments)
-                    this.loading = false;
-                })
-            }
+            axios.get(url).then((response) => {
+                this.thisTask.comments = this.thisTask.comments.concat(response.data.comments)
+                this.loading = false;
+                window.scrollTo(0, document.body.scrollHeight);
+            });
         },
         sendComment(e) {
             this.visibleCommentForm = false;
