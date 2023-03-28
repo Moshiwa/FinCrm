@@ -40,7 +40,7 @@
                 <el-form-item label="Ответственный">
                     <el-select
                         v-model="thisDeal.responsible"
-                        :disabled="(!permissions.can_change_responsible && !permissions.can_change_responsible_self) || !permissions.can_update_deal"
+                        :disabled="(!permissions.can_change_responsible && !permissions.can_change_members_self) || !permissions.can_update_deal"
                         value-key="id"
                         filterable
                         remote
@@ -214,7 +214,7 @@ export default {
                 can_change_pipeline: this.auth.permission_names.find((item) => item === 'deals.change_pipeline'),
                 can_change_stage: this.auth.permission_names.find((item) => item === 'deals.change_stage'),
                 can_change_responsible: this.auth.permission_names.find((item) => item === 'deals.change_responsible'),
-                can_change_responsible_self: (this.auth.permission_names.find((item) => item === 'deals.change_responsible_self')) !== undefined ? this.auth.id === this.deal.responsible_id : false,
+                can_change_members_self: (this.auth.permission_names.find((item) => item === 'deals.change_members_self')) !== undefined ? this.auth.id === this.deal.responsible_id : false,
                 can_create_field: this.auth.permission_names.find((item) => item === 'fields.create'),
                 can_update_client: this.auth.permission_names.find((item) => item === 'clients.update'),
                 can_update_deal: this.auth.permission_names.find((item) => item === 'deals.update'),
@@ -391,7 +391,7 @@ export default {
             });
         },
         permissionsUpdate() {
-            this.permissions.can_change_responsible_self = this.thisDeal.responsible_id === this.auth.id;
+            this.permissions.can_change_members_self = this.thisDeal.responsible_id === this.auth.id;
         },
     }
 }

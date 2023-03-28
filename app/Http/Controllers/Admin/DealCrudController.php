@@ -124,7 +124,7 @@ class DealCrudController extends CrudController
                 $deal->stage_id = $data['stage_id'];
             }
 
-            if (backpack_user()->can('deals.change_responsible_self')) {
+            if (backpack_user()->can('deals.change_members_self')) {
                 if (backpack_user()->id == $deal->responsible_id) {
                     $deal->responsible_id = $data['responsible_id'];
                 }

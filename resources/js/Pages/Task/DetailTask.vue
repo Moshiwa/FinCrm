@@ -35,7 +35,7 @@
                 <el-form-item label="Ответственный">
                     <el-select
                         v-model="thisTask.responsible"
-                        :disabled="!permissions.can_change_responsible"
+                        :disabled="(!permissions.can_change_responsible && !permissions.can_change_members_self) || !permissions.can_update_task"
                         value-key="id"
                         filterable
                         remote
@@ -54,7 +54,7 @@
                 <el-form-item label="Наблюдатель">
                     <el-select
                         v-model="thisTask.manager"
-                        :disabled="!permissions.can_update_task"
+                        :disabled="!permissions.can_change_members_self || !permissions.can_update_task"
                         value-key="id"
                         filterable
                         remote
@@ -73,7 +73,7 @@
                 <el-form-item label="Исполнитель">
                     <el-select
                         v-model="thisTask.executor"
-                        :disabled="!permissions.can_update_task"
+                        :disabled="!permissions.can_change_members_self || !permissions.can_update_task"
                         value-key="id"
                         filterable
                         remote
@@ -253,6 +253,7 @@ export default {
                 can_change_responsible: this.auth.permission_names.find((item) => item === 'tasks.change_responsible'),
                 can_create_field: this.auth.permission_names.find((item) => item === 'fields.create'),
                 can_update_task: this.auth.permission_names.find((item) => item === 'tasks.update'),
+                can_change_members_self: (this.auth.permission_names.find((item) => item === 'tasks.change_members_self')) !== undefined ? this.auth.id === this.task.responsible_id : false,
             }
         }
     },
@@ -437,6 +438,9 @@ export default {
                     this.allStages = response.data.stages;
                     this.users = response.data.users;
                     this.stageButtons = response.data.task.stage.buttons;
+
+                    this.permissionsUpdate();
+
                     this.action = null;
                     this.thisTask.all_fields = this.castFieldValue(this.thisTask.all_fields);
                     ElNotification({
@@ -446,6 +450,9 @@ export default {
                     });
                 }
             )
+        },
+        permissionsUpdate() {
+            this.permissions.can_change_members_self = this.thisTask.responsible_id === this.auth.id;
         },
     }
 }
