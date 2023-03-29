@@ -18,7 +18,7 @@ class SmsCenterEmailService extends SenderService
         $response = $this->client->get('send.php', [
             'mes' => $message,
             'phones' => $recipient,
-            'subj' => 'Test Theme',
+            'subj' => 'MkkCrm',
             'sender' => 'a.manchin@webabsolute.ru',
             'mail' => 1
         ]);

@@ -14,11 +14,9 @@ class SmsCenterClient
 
     public function __construct()
     {
-        $login = Integration::query()->where('name','sms_center')->first()->login;
-        $password = Integration::query()->where('name','sms_center')->first()->password;
         $this->params = [
-            'login' =>  $login,
-            'psw' => $password,
+            'login' => env('SMS_CENTER_LOGIN'),
+            'psw' => env('SMS_CENTER_PASSWORD'),
             'fmt' => 3,
             'cost' => 3
         ];
