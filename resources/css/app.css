@@ -71,6 +71,14 @@
     width: 65%;
 }
 
+.audio-container {
+    width: 100%;
+}
+.audio-container > audio {
+    width: 100%;
+}
+
+
 .load-more {
     margin-left: 50%;
 }

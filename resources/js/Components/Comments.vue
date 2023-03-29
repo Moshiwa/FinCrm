@@ -41,7 +41,7 @@
                             </div>
                         </div>
                     </div>
-                    <div v-else-if="comment.type === 'audio'">
+                    <div class="audio-container" v-else-if="comment.type === 'audio'">
                         <audio controls>
                             <source :src="comment.content" type="audio/mp3">
                         </audio>
