@@ -1,5 +1,5 @@
 <template>
-    <el-form-item label="Тема">
+    <el-form-item label="Тема письма">
         <el-input
             v-model="thisIntegration.data.theme"
         />
