@@ -234,11 +234,11 @@ export default {
     },
     created() {
         console.log('Created')
-        let channel = Echo.channel('record');
+        /*let channel = Echo.channel('record');
         console.log(channel)
         channel.listen('WebhookCommentPush', (e) => {
             this.thisDeal.comments.unshift(e.comment);
-        });
+        });*/
     },
     methods: {
         changePipeline(item) {
