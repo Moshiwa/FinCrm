@@ -228,7 +228,7 @@ export default {
                     this.thisDeal.comments.unshift(response.data.data);
                 }
             })
-        }, 5000)
+        }, 2000)
         this.thisDeal.all_fields = this.castFieldValue(this.thisDeal.all_fields);
         this.thisDeal.client.all_fields = this.castFieldValue(this.thisDeal.client.all_fields);
     },
