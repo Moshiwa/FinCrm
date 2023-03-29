@@ -89,6 +89,7 @@ Route::group([
 
     Route::prefix('telephony')->name('telephony.')->group(function () {
         Route::post('/call', [TelephonyController::class, 'call'])->name('call');
+        Route::get('/check', [TelephonyController::class, 'check'])->name('check');
     });
 
     Route::prefix('integration')->name('integration.')->group(function () {

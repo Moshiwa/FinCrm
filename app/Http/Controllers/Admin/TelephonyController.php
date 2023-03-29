@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Services\Telephony\Uiscom\UiscomService;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class TelephonyController extends Controller
@@ -32,7 +33,28 @@ class TelephonyController extends Controller
             'author_id' => $user->id,
         ]);
 
+        Cache::set('webhook.record', true);
+
         broadcast(new WebhookCommentPush($comment));
+    }
+
+    public function check(Request $request)
+    {
+        $check = Cache::get('webhook.record');
+
+        if (empty($check)) {
+            return response()->json([
+                'success' => false
+            ]);
+        }
+
+        Cache::set('webhook.record', null);
+
+        $comment = Comment::query()->orderby('id', 'desc')->first();
+        return response()->json([
+            'success' => true,
+            'data' => $comment
+        ]);
     }
 
     public function call(TelephonyRequest $request)

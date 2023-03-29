@@ -222,6 +222,13 @@ export default {
         }
     },
     beforeMount() {
+        setInterval(() => {
+            axios.get('/admin/telephony/check').then((response) => {
+                if (response.data.success) {
+                    this.thisDeal.comments.unshift(response.data.data);
+                }
+            })
+        }, 5000)
         this.thisDeal.all_fields = this.castFieldValue(this.thisDeal.all_fields);
         this.thisDeal.client.all_fields = this.castFieldValue(this.thisDeal.client.all_fields);
     },
