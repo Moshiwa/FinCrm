@@ -33,7 +33,7 @@ class TelephonyController extends Controller
             'author_id' => $user->id,
         ]);
 
-        Cache::set('webhook.record', true);
+        Cache::set('webhook.record', $comment->id);
 
         broadcast(new WebhookCommentPush($comment));
     }
@@ -50,7 +50,7 @@ class TelephonyController extends Controller
 
         Cache::set('webhook.record', null);
 
-        $comment = Comment::query()->orderby('id', 'desc')->first();
+        $comment = Comment::query()->find($check);
         return response()->json([
             'success' => true,
             'data' => $comment
