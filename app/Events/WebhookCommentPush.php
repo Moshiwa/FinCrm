@@ -23,6 +23,6 @@ class WebhookCommentPush implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return new PresenceChannel('record');
+        return new Channel('record');
     }
 }

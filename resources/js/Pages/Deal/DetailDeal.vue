@@ -226,8 +226,11 @@ export default {
         this.thisDeal.client.all_fields = this.castFieldValue(this.thisDeal.client.all_fields);
     },
     created() {
-        Echo.join('record').listen('WebsocketDemoEvent', (e) => {
-            console.log(e)
+        console.log('Created')
+        let channel = Echo.channel('record');
+        console.log(channel)
+        channel.listen('WebhookCommentPush', (e) => {
+            this.thisDeal.comments.unshift(e.comment);
         });
     },
     methods: {
