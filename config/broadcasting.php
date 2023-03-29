@@ -41,7 +41,7 @@ return [
                 'host' => '127.0.0.1',
                 'port' => 6001,
                 'scheme' => 'http',
-                'useTLS' => false, // this is no error, we are talking without SSL to the WebSocket server from Laravel but your end-users will connect with SSL
+                'useTLS' => true, // this is no error, we are talking without SSL to the WebSocket server from Laravel but your end-users will connect with SSL
             ],
         ],
 

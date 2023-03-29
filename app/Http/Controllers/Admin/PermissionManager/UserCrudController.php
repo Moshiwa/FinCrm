@@ -175,6 +175,7 @@ class UserCrudController extends CrudController
             [
                 'name'  => 'spaceAccess',
                 'label' => 'Доступ к организации',
+                'default' => true,
                 'type'  => 'boolean'
             ],
             [

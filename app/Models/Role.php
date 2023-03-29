@@ -14,30 +14,14 @@ class Role extends BackpackRole
     protected $table = 'roles';
     protected $connection = 'pgsql';
 
-    protected $fillable = ['name', 'guard_name', 'updated_at', 'created_at', 'space_id'];
+    protected $fillable = ['name', 'guard_name', 'updated_at', 'created_at'];
 
     public function getTable()
     {
         return 'roles';
     }
 
-    public function space(){
-        return $this->belongsTo(Space::class);
-    }
-
     protected static function booted()
     {
-        static::addGlobalScope('space', function (Builder $builder) {
-            $space = SpaceService::getCurrentSpaceModel();
-            $builder->where(function (Builder $builder) use ($space) {
-                $builder->whereNull('space_id');
-                $builder->orWhere('space_id', $space->id);
-            });
-        });
-
-        static::creating(function (self $item) {
-            $space = SpaceService::getCurrentSpaceModel();
-            $item->space_id = $space ? $space->id : null;
-        });
     }
 }
