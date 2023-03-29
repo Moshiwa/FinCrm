@@ -224,7 +224,7 @@ export default {
     beforeMount() {
         setInterval(() => {
             axios.get('/admin/telephony/check').then((response) => {
-                if (response.data.success) {
+                if (response.data.success === true) {
                     this.thisDeal.comments.unshift(response.data.data);
                 }
             })

@@ -35,7 +35,7 @@ class TelephonyController extends Controller
 
         Cache::set('webhook.record', $comment->id);
 
-        broadcast(new WebhookCommentPush($comment));
+        //broadcast(new WebhookCommentPush($comment));
     }
 
     public function check(Request $request)
