@@ -56,6 +56,8 @@
 </template>
 
 <script>
+import {ElNotification} from "element-plus";
+
 export default {
     name: 'Uiscom',
     props: {
@@ -87,6 +89,17 @@ export default {
                 if (response.data.success === true) {
                     this.employeeId = response.data.data
                     this.visibleGetIdForm = false;
+
+                    ElNotification({
+                        title: 'Успех',
+                        type: 'success',
+                    });
+                } else {
+                    ElNotification({
+                        title: response.data.message,
+                        type: 'error',
+                        position: 'bottom-right',
+                    });
                 }
             });
         },
@@ -96,7 +109,18 @@ export default {
                 employee_id: this.employeeId,
                 virtual_number: this.virtualNumber
             }).then((response) => {
-
+                if (response.data.success === true) {
+                    ElNotification({
+                        title: 'Успех',
+                        type: 'success',
+                    });
+                } else {
+                    ElNotification({
+                        title: response.data.message,
+                        type: 'error',
+                        position: 'bottom-right',
+                    });
+                }
             });
         }
     }

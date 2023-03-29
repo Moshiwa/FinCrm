@@ -16,6 +16,11 @@ class Integration extends Model
     protected $fillable = [
         'login',
         'password',
-        'access_token'
+        'data'
     ];
+
+    protected $casts = [
+        'data' => 'array',
+    ];
+
 }

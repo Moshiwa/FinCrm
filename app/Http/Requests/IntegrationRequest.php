@@ -16,9 +16,7 @@ class IntegrationRequest extends FormRequest
     {
         return [
             'id' => 'required|exists:integrations,id',
-            'login' => 'nullable|max:255',
-            'password' => 'nullable|max:255',
-            'access_token' => 'nullable|max:255',
+            'data' => 'array',
         ];
     }
 

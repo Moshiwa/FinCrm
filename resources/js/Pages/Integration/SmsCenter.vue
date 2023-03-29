@@ -1,25 +1,28 @@
 <template>
-    <el-form-item label="Логин">
+    <el-form-item label="Тема">
         <el-input
-            v-model="thisIntegration.login"
-            autocomplete="off"
+            v-model="thisIntegration.data.theme"
         />
     </el-form-item>
 
-    <el-form-item label="Пароль">
-        <el-input
-            v-model="thisIntegration.password"
+    <el-form-item label="Отправитель">
+        <el-select
+            v-model="thisIntegration.data.sender"
             autocomplete="off"
-            type="password"
-        />
+        >
+            <el-option
+                v-for="(option, index) in senders"
+                :key="index"
+                :label="option.sender"
+                :value="option.sender"
+            />
+        </el-select>
     </el-form-item>
 
     <el-button type="success" @click="save">Сохранить</el-button>
 
     <el-divider content-position="center">Инструкция</el-divider>
-    1. Используйте ваш логин
-    <br>
-    2. Установите пароль для API <a href="https://smsc.ru/passwords/">тут</a>, не используйте пароль от аккаунта
+    Добавить отправителя можно <a href="https://smsc.ru/mail_senders/">здесь</a>
 
 </template>
 
@@ -36,12 +39,19 @@ export default {
     },
     data() {
         return {
-            thisIntegration: this.integration ?? {}
+            thisIntegration: this.integration ?? {},
+            senders: []
+
         }
+    },
+    created() {
+        axios.get('/admin/integration/smsc/senders').then((response) => {
+            this.senders = response.data.data ?? [];
+        });
     },
     methods: {
         save() {
-            axios.post('/admin/integration/save/', this.thisIntegration).then((response) => {
+            axios.post('/admin/integration/smsc/save/', this.thisIntegration).then((response) => {
                 if (response.data.success === false) {
                     ElNotification({
                         title: response.data.message,

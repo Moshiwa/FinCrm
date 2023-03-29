@@ -31,6 +31,21 @@ class SmsCenterService extends SenderService
         return $response;
     }
 
+    public function getSenders()
+    {
+        $response = $this->client->get('senders.php', [
+            'get' => 1,
+        ]);
+
+        $response = json_decode($response, true);
+
+        if (isset($response['error_code'])) {
+            $this->error = $this->errorsList($response['error_code'], 'send') ?? $response['error'];
+            return [];
+        }
+
+        return $response;
+    }
 
     public function check(): bool
     {

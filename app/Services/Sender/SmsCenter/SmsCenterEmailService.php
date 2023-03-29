@@ -3,14 +3,18 @@
 namespace App\Services\Sender\SmsCenter;
 
 use App\Enums\IntegrationEnum;
+use App\Models\Integration;
 use App\Services\Sender\SenderService;
 
 class SmsCenterEmailService extends SenderService
 {
+    protected $integration;
+
     public function __construct()
     {
         $this->title = IntegrationEnum::getTitle(IntegrationEnum::SMS_CENTER_EMAIL->value);
         $this->client = new SmsCenterClient();
+        $this->integration = Integration::query()->where('name', IntegrationEnum::SMS_CENTER_EMAIL->value);
     }
 
     public function send($message, $recipient)
@@ -18,8 +22,25 @@ class SmsCenterEmailService extends SenderService
         $response = $this->client->get('send.php', [
             'mes' => $message,
             'phones' => $recipient,
-            'subj' => 'MkkCrm',
-            'sender' => 'a.manchin@webabsolute.ru',
+            'subj' => $this->integration->data->theme ?? '',
+            'sender' => $this->integration->data->sender ?? '',
+            'mail' => 1
+        ]);
+
+        $response = json_decode($response, true);
+
+        if (isset($response['error_code'])) {
+            $this->error = $this->errorsList($response['error_code'], 'send') ?? $response['error'];
+            return [];
+        }
+
+        return $response;
+    }
+
+    public function getSenders()
+    {
+        $response = $this->client->get('senders.php', [
+            'get' => 1,
             'mail' => 1
         ]);
 

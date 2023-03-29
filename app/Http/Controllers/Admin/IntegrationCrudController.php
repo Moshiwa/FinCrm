@@ -70,6 +70,7 @@ class IntegrationCrudController extends CrudController
 
         if (empty($login) || empty($password)) {
             return response()->json([
+                'message' => 'Указаны не все данные',
                 'success' => false,
             ]);
         }
@@ -78,6 +79,7 @@ class IntegrationCrudController extends CrudController
 
         if (empty($id)) {
             return response()->json([
+                'message' => 'Не найден менеджер',
                 'success' => false,
             ]);
         }
@@ -85,6 +87,25 @@ class IntegrationCrudController extends CrudController
         return response()->json([
             'success' => true,
             'data' => $id
+        ]);
+    }
+
+    public function getSendersSmsCenter(Request $request)
+    {
+        $service = SenderService::factory('sms_center_email');
+        $response = $service->getSenders();
+        $error = $service->getError();
+
+        if ($error) {
+            return response()->json([
+                'success' => false,
+                'message' => $error
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $response
         ]);
     }
 
@@ -100,25 +121,33 @@ class IntegrationCrudController extends CrudController
             'uiscom_employee_id' => $employee_id,
             'uiscom_virtual_number' => $virtual_number
         ]);
+
+        return response()->json([
+            'success' => true,
+        ]);
     }
 
-    public function save(IntegrationRequest $request)
+    public function saveSmsCenter(IntegrationRequest $request)
     {
         $data = $request->validated();
 
         $integration = Integration::query()->find($data['id']);
         $service = SenderService::factory($integration->name);
         $integration->update([
-            'login' => $data['login'],
-            'password' => $data['password'],
-            'access_token' => $data['access_token']
+            'data' => $data['data'],
         ]);
 
-        $response = $service->check();
+        $error = $service->getError();
+
+        if ($error) {
+            return response()->json([
+                'success' => false,
+                'message' => $error
+            ]);
+        }
 
         return response()->json([
-            'success' => $response,
-            'message' => $service->getError()
+            'success' => true,
         ]);
     }
 }

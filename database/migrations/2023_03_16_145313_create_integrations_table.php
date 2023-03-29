@@ -12,9 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('title')->default('');
-            $table->string('access_token')->nullable();
-            $table->string('login')->nullable();
-            $table->string('password')->nullable();
+            $table->json('data')->nullable();
             $table->boolean('active')->default(false);
         });
     }
