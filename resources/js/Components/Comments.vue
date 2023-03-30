@@ -41,7 +41,7 @@
                     </div>
                 </div>
                 <div class="row-right__author common-gap row">
-                    <a :href="'/admin/user/' + comment.author?.id"> {{ comment.author?.name }} </a>
+                    {{ comment.author?.name }}
                 </div>
             </div>
         </div>
