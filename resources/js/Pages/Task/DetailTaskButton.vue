@@ -46,7 +46,7 @@
                         />
                     </div>
                     <div class="popup__item inline-flex">
-                        <div class="flex-column mr-2">
+                        <div class="flex-column mr-2" style="width: auto">
                             <div class="item__title">Цвет</div>
                             <div class="color__container">
                                 <div
@@ -58,7 +58,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex-column">
+                        <div class="flex-column" style="width: auto">
                             <div class="item__title">Иконка</div>
                             <div class="icon__container">
                                 <div
