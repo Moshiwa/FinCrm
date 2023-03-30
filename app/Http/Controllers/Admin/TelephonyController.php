@@ -78,6 +78,9 @@ class TelephonyController extends Controller
                 $deal = Deal::query()->find($data['deal_id']);
                 $deal->comments()->create([
                     'type' => CommentTypeEnum::AUDIO->value,
+                    'author_id' => backpack_user()->id,
+                    'content' => "Не удалось получить запись звонка (ID:$call_id)",
+                    'title' => 'Звонок на ' . $phone,
                     'temp_id' => $call_id
                 ]);
 

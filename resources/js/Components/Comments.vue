@@ -1,6 +1,6 @@
 <template>
     <el-timeline-item
-        v-for="(comment, index) in thisComments"
+        v-for="(comment, index) in comments"
         class="deal-comment-item"
         :icon="definitionCommentIcon(comment)"
         :timestamp="comment.date_create"
@@ -16,39 +16,15 @@
             </div>
             <div class="row-right__lower">
                 <div class="row-right__content">
-                    <div
+                    <comment-document
                         v-if="comment.type === 'document'"
-                        class="row common-gap"
-                    >
-                        <div
-                            v-for="file in comment.files"
-                            class="row-right__item-files"
-                        >
-                            <el-image
-                                v-if="definitionFileType(file.meme) === 'image'"
-                                style="width: 100px; height: 100px; border-radius: 4px;"
-                                :src="file.full_path"
-                                :zoom-rate="1.2"
-                                :preview-src-list="[file.full_path]"
-                                :initial-index="4"
-                                fit="cover"
-                            />
-                            <div v-else>
-                                <a :href="file.full_path" target="_blank">
-                                    <i class="las la-file-alt"></i>
-                                    {{ file.original_name }}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="audio-container" v-else-if="comment.type === 'audio' && !!comment.content">
-                        <audio
-                            :src="comment.content"
-                            :id="'audio_player_' + index"
-                            controls
-                            @play="stopAllExceptCurrent('audio_player_' + index)"
-                        />
-                    </div>
+                        :comment="comment"
+                    />
+                    <comment-audio
+                        v-else-if="comment.type === 'audio' && !!comment.content"
+                        :comment="comment"
+                        @stopAll="stopAllExceptCurrent($event)"
+                    />
                     <div v-else>
                         <div class="content-container" v-if="comment.content?.length > 0">
                             <div class="comment-content">
@@ -75,11 +51,17 @@
 
 <script>
 import {ElMessageBox} from "element-plus";
-import {Bell, ChatDotSquare, Paperclip, Position} from "@element-plus/icons-vue";
+import {Bell, ChatDotSquare, Paperclip, Position, Headset} from "@element-plus/icons-vue";
+import CommentDocument from './CommentsTypes/Document.vue'
+import CommentAudio from './CommentsTypes/Audio.vue'
 
 export default {
     name: 'Comments',
     emits: ['commentSend'],
+    components: {
+        CommentDocument,
+        CommentAudio,
+    },
     props: {
         comments: {
             type: Array,
@@ -91,32 +73,13 @@ export default {
     },
     data() {
         return {
-            thisComments: this.comments ?? [],
             deleteCommentId: null
         }
     },
+    mounted() {
+        console.log(this.comments)
+    },
     methods: {
-        stopAllExceptCurrent(ref) {
-            let index = 0;
-            this.comments.forEach((comment) => {
-                if (comment.type === 'audio') {
-                    let id = 'audio_player_' + index;
-                    if (id !== ref) {
-                        id = '#' + id;
-                        let audio = document.querySelector(id);
-                            audio.pause();
-                            audio.currentTime = 0;
-                    }
-                    index++;
-                }
-            })
-        },
-        canDeleteComment(comment) {
-            return comment.author?.id === this.auth.id
-                && (comment.content?.length > 0 || comment.files?.length > 0)
-                && comment.type !== 'remote'
-                && comment.type !== 'audio';
-        },
         removeComment(comment) {
             ElMessageBox.confirm(
                 'Вы уверены?',
@@ -128,13 +91,13 @@ export default {
                 }
             )
                 .then(() => {
-                    this.thisComments.forEach((item, index) => {
+                    this.comments.forEach((item, index) => {
                         if (item.id === comment.id) {
                             if (comment.type === 'action') {
-                                this.thisComments[index].content = '';
+                                this.comments[index].content = '';
                                 this.deleteCommentId = item.id;
                             } else {
-                                this.thisComments.splice(index, 1);
+                                this.comments.splice(index, 1);
                                 this.deleteCommentId = item.id;
                             }
                         }
@@ -143,6 +106,21 @@ export default {
                     this.send()
                 });
         },
+        stopAllExceptCurrent(ref) {
+            let index = 0;
+            this.comments.forEach((comment) => {
+                if (comment.type === 'audio') {
+                    let id = 'audio_player_' + index;
+                    if (id !== ref) {
+                        id = '#' + id;
+                        let audio = document.querySelector(id);
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }
+                    index++;
+                }
+            })
+        },
         definitionCommentColor(comment) {
             switch (comment.type) {
                 case 'document':
@@ -150,6 +128,7 @@ export default {
                 case 'action':
                     return 'pink';
                 case 'remote':
+                case 'audio':
                     return '#3c81d5';
                 default:
                     return 'green';
@@ -163,20 +142,17 @@ export default {
                     return Bell;
                 case 'remote':
                     return Position;
+                case 'audio':
+                    return Headset;
                 default:
                     return ChatDotSquare;
             }
         },
-        definitionFileType(meme) {
-            switch (meme) {
-                case 'jpg':
-                case 'jpeg':
-                case 'png':
-                case 'svg':
-                    return 'image'
-                default:
-                    return 'document'
-            }
+        canDeleteComment(comment) {
+            return comment.author?.id === this.auth.id
+                && (comment.content?.length > 0 || comment.files?.length > 0)
+                && comment.type !== 'remote'
+                && comment.type !== 'audio';
         },
         send() {
             this.$emit('commentSend', this.deleteCommentId);

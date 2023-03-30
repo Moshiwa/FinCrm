@@ -222,13 +222,6 @@ export default {
         }
     },
     beforeMount() {
-        setInterval(() => {
-            axios.get('/admin/telephony/check?user=' + this.auth.id + '&deal=' + this.thisDeal.id).then((response) => {
-                if (response.data.success === true) {
-                    this.thisDeal.comments.unshift(response.data.data);
-                }
-            })
-        }, 2000)
         this.thisDeal.all_fields = this.castFieldValue(this.thisDeal.all_fields);
         this.thisDeal.client.all_fields = this.castFieldValue(this.thisDeal.client.all_fields);
     },
@@ -295,6 +288,15 @@ export default {
                         phone: event.pivot.value,
                         deal_id: this.thisDeal.id
                     });
+
+                    //ToDo замена сокетов (каждые две секунды проверяем пришел ли вебхук)
+                    setInterval(() => {
+                        axios.get('/admin/telephony/check?user=' + this.auth.id + '&deal=' + this.thisDeal.id).then((response) => {
+                            if (response.data.success === true) {
+                                this.thisDeal.comments.unshift(response.data.data);
+                            }
+                        })
+                    }, 2000)
                 });
         },
         sendRemoteMessage(event) {

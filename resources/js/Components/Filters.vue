@@ -1,24 +1,24 @@
 <template>
     <div style="margin: 0 0 0 10px; display: inline-flex; gap: 10px;">
         <el-select
-            v-model="filterByType"
-            clearable
-            @change="appendQuery"
-        >
-            <el-option
-                v-for="item in filterByTypeOption"
-                :key="item.type"
-                :label="item.label"
-                :value="item.type"
-            />
-        </el-select>
-        <el-select
             v-model="sortByDate"
             clearable
             @change="appendQuery"
         >
             <el-option
                 v-for="item in sortByDateOption"
+                :key="item.type"
+                :label="item.label"
+                :value="item.type"
+            />
+        </el-select>
+        <el-select
+            v-model="filterByType"
+            clearable
+            @change="appendQuery"
+        >
+            <el-option
+                v-for="item in filterByTypeOption"
                 :key="item.type"
                 :label="item.label"
                 :value="item.type"
@@ -64,6 +64,10 @@ export default {
                 {
                     label: 'События',
                     type: 'action'
+                },
+                {
+                    label: 'Аудио',
+                    type: 'audio'
                 },
 
             ],
