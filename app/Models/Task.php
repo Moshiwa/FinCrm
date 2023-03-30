@@ -58,6 +58,11 @@ class Task extends Model
         return $this->belongsTo(TaskStage::class, 'task_stage_id');
     }
 
+    public function comments(): morphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+
     public function fields(): BelongsToMany
     {
         return $this->belongsToMany(Field::class, 'task_fields')
@@ -83,15 +88,16 @@ class Task extends Model
         return $fields;
     }
 
-    public function comments(): morphMany
-    {
-        return $this->morphMany(Comment::class, 'commentable');
-    }
-
     protected static function booted()
     {
         static::created(function (self $task) {
             event(new CreateTask($task));
+        });
+        static::deleting(function (self $task) {
+            /*$comments = $task->comments;
+            foreach ($comments as $comment) {
+                $comment->delete();
+            }*/
         });
     }
 

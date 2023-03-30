@@ -40,4 +40,14 @@ class Comment extends Model
     public function getDateCreateAttribute() {
         return Carbon::make($this->created_at)->translatedFormat('j F Y H:i');
     }
+
+    protected static function booted()
+    {
+        static::deleting(function (self $comment) {
+            $files = $comment->files;
+            foreach ($files as $file) {
+                $file->delete();
+            }
+        });
+    }
 }

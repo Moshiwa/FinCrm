@@ -55,4 +55,25 @@ class TaskStageCrudController extends CrudController
     {
         $this->setupCreateOperation();
     }
+
+    public function destroy($id)
+    {
+        $this->crud->hasAccessOrFail('delete');
+
+        // get entry ID from Request (makes sure its the last ID for nested resources)
+        $id = $this->crud->getCurrentEntryId() ?? $id;
+
+        try {
+            $this->crud->delete($id);
+        } catch (\Exception $e) {
+            $code = $e->getCode();
+            if ($code == 23503) {
+                return \Alert::add('error', 'Вы не можете удалить стадию задачи у которой имееются задачи')->flash();
+            }
+
+            return \Alert::add('error', 'Произошла ошибка')->flash();
+        }
+
+        return true;
+    }
 }

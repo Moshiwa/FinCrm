@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class Deal extends Model
 {
@@ -87,6 +88,12 @@ class Deal extends Model
     {
         static::created(function (self $deal) {
             event(new CreateDeal($deal));
+        });
+        static::deleting(function (self $deal) {
+           /* $comments = $deal->comments;
+            foreach ($comments as $comment) {
+                $comment->delete();
+            }*/
         });
     }
 }

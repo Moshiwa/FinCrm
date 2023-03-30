@@ -74,4 +74,63 @@ class PipelineCrudController extends CrudController
     {
         $this->setupCreateOperation();
     }
+
+    public function update()
+    {
+        $this->crud->hasAccessOrFail('update');
+
+        // execute the FormRequest authorization and validation, if one is required
+        $request = $this->crud->validateRequest();
+        // register any Model Events defined on fields
+        $this->crud->registerFieldEvents();
+
+        try {
+            // update the row in the db
+            $item = $this->crud->update(
+                $request->get($this->crud->model->getKeyName()),
+                $this->crud->getStrippedSaveRequest($request)
+            );
+            $this->data['entry'] = $this->crud->entry = $item;
+
+            // show a success message
+            \Alert::success(trans('backpack::crud.update_success'))->flash();
+
+            // save the redirect choice for next time
+            $this->crud->setSaveAction();
+        } catch (\Exception $e) {
+            $code = $e->getCode();
+            if ($code == 23503) {
+                \Alert::add('error', 'Вы не можете удалить стадию у которой имееются сделки')->flash();
+            } else {
+                \Alert::add('error', 'Произошла ошибка')->flash();
+            }
+
+            $this->data['entry'] = $this->crud->model;
+            $this->crud->setSaveAction();
+            return $this->crud->performSaveAction($request->get($this->crud->model->getKeyName()));
+        }
+
+        return $this->crud->performSaveAction($item->getKey());
+    }
+
+    public function destroy($id)
+    {
+        $this->crud->hasAccessOrFail('delete');
+
+        // get entry ID from Request (makes sure its the last ID for nested resources)
+        $id = $this->crud->getCurrentEntryId() ?? $id;
+
+        try {
+            $this->crud->delete($id);
+        } catch (\Exception $e) {
+            $code = $e->getCode();
+            if ($code == 23503) {
+                return \Alert::add('error', 'Вы не можете удалить воронку у которой имееются сделки')->flash();
+            }
+
+            return \Alert::add('error', 'Произошла ошибка')->flash();
+        }
+
+        return true;
+    }
 }
