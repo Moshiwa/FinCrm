@@ -1,6 +1,6 @@
 <template>
     <el-timeline-item
-        v-for="comment in comments"
+        v-for="(comment, index) in thisComments"
         class="deal-comment-item"
         :icon="definitionCommentIcon(comment)"
         :timestamp="comment.date_create"
@@ -42,9 +42,12 @@
                         </div>
                     </div>
                     <div class="audio-container" v-else-if="comment.type === 'audio'">
-                        <audio controls>
-                            <source :src="comment.content" type="audio/mp3">
-                        </audio>
+                        <audio
+                            :src="comment.content"
+                            :id="'audio_player_' + index"
+                            controls
+                            @play="stopAllExceptCurrent('audio_player_' + index)"
+                        />
                     </div>
                     <div v-else>
                         <div class="content-container" v-if="comment.content?.length > 0">
@@ -86,13 +89,28 @@ export default {
             type: Object,
         }
     },
-    mounted() {},
     data() {
         return {
+            thisComments: this.comments ?? [],
             deleteCommentId: null
         }
     },
     methods: {
+        stopAllExceptCurrent(ref) {
+            let index = 0;
+            this.comments.forEach((comment) => {
+                if (comment.type === 'audio') {
+                    let id = 'audio_player_' + index;
+                    if (id !== ref) {
+                        id = '#' + id;
+                        let audio = document.querySelector(id);
+                            audio.pause();
+                            audio.currentTime = 0;
+                    }
+                    index++;
+                }
+            })
+        },
         canDeleteComment(comment) {
             return comment.author?.id === this.auth.id
                 && (comment.content?.length > 0 || comment.files?.length > 0)
@@ -110,13 +128,13 @@ export default {
                 }
             )
                 .then(() => {
-                    this.comments.forEach((item, index) => {
+                    this.thisComments.forEach((item, index) => {
                         if (item.id === comment.id) {
                             if (comment.type === 'action') {
-                                this.comments[index].content = '';
+                                this.thisComments[index].content = '';
                                 this.deleteCommentId = item.id;
                             } else {
-                                this.comments.splice(index, 1);
+                                this.thisComments.splice(index, 1);
                                 this.deleteCommentId = item.id;
                             }
                         }

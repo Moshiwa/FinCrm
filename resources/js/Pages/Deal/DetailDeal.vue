@@ -223,7 +223,7 @@ export default {
     },
     beforeMount() {
         setInterval(() => {
-            axios.get('/admin/telephony/check').then((response) => {
+            axios.get('/admin/telephony/check?user=' + this.auth.id + '&deal=' + this.thisDeal.id).then((response) => {
                 if (response.data.success === true) {
                     this.thisDeal.comments.unshift(response.data.data);
                 }

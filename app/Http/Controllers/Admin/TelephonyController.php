@@ -33,14 +33,19 @@ class TelephonyController extends Controller
             'author_id' => $user->id,
         ]);
 
-        Cache::set('webhook.record', $comment->id);
+        if ($comment->commentable_type === 'App\Models\Deal') {
+            Cache::set("webhook.record.user{$comment->author_id}.deal{$comment->commentable_id}", $comment->id);
+        }
 
         //broadcast(new WebhookCommentPush($comment));
     }
 
     public function check(Request $request)
     {
-        $check = Cache::get('webhook.record');
+        $user_id = $request->get('user');
+        $deal_id = $request->get('deal');
+        $key = "webhook.record.user{$user_id}.deal{$deal_id}";
+        $check = Cache::get($key);
 
         if (empty($check)) {
             return response()->json([
@@ -48,7 +53,7 @@ class TelephonyController extends Controller
             ]);
         }
 
-        Cache::set('webhook.record', null);
+        Cache::set($key, null);
 
         $comment = Comment::query()->find($check);
         return response()->json([

@@ -30,8 +30,8 @@ if (token) {
 import Echo from "laravel-echo"
 import Pusher from 'pusher-js';
 
-Pusher.logToConsole = true;
-window.Pusher = Pusher;
+//Pusher.logToConsole = true;
+/*window.Pusher = Pusher;
 
 window.Echo = new Echo({
     broadcaster: 'pusher',
@@ -44,4 +44,4 @@ window.Echo = new Echo({
     enableStats: true,
     forceTLS: window.location.hostname !== '127.0.0.1',
     enabledTransports: ['ws', 'wss'],
-});
+});*/
