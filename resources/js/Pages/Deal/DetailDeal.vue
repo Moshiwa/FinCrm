@@ -12,7 +12,7 @@
                 <el-form-item label="Воронка/Стадия" class="select-container">
                     <el-select
                         v-model="thisDeal.pipeline"
-                        :disabled="!permissions.can_change_pipeline || !permissions.can_update_deal"
+                        :disabled="!(permissions.can_change_pipeline && permissions.can_update_deal)"
                         value-key="id"
                         @change="changePipeline"
                     >
@@ -25,7 +25,7 @@
                     </el-select>
                     <el-select
                         v-model="thisDeal.stage"
-                        :disabled="!permissions.can_change_stage || !permissions.can_update_deal"
+                        :disabled="!(permissions.can_change_stage && permissions.can_update_deal)"
                         value-key="id"
                         @change="send"
                     >
@@ -403,7 +403,7 @@ export default {
             });
         },
         permissionsUpdate() {
-            this.permissions.can_change_members_self = this.thisDeal.responsible_id === this.auth.id;
+            this.permissions.can_change_members_self = (this.auth.permission_names.find((item) => item === 'deals.change_members_self')) !== undefined ? this.auth.id === this.deal.responsible_id : false;
         },
     }
 }

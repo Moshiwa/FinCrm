@@ -120,7 +120,11 @@ class User extends Authenticatable
     }
 
     public function getSpaceAccessAttribute() {
-        if($this->isFirstUser()) return true;
+
+        if($this->isFirstUser()) {
+            return true;
+        }
+
         return $this->spaces()->where('code', SpaceService::getCurrentSpaceCode())->count() > 0;
     }
 
