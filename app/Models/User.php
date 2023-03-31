@@ -20,17 +20,10 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, CrudTrait;
     use TwoFactorAuthenticatable;
-    use ModelBaseConnectionTrait;
 
     protected $table = 'users';
     protected $connection = 'pgsql';
     protected $spaceAccessTmp;
-
-    public function getTable()
-    {
-        return 'users';
-    }
-
     protected $appends = ['permission_names'];
     /**
      * The attributes that are mass assignable.
@@ -138,8 +131,9 @@ class User extends Authenticatable
 
     public function availableSpaces(): Collection
     {
-        if ($this->isFirstUser())
+        if ($this->isFirstUser()) {
             return Space::all();
+        }
 
         return $this->spaces()
             ->where('active', true)
@@ -175,7 +169,7 @@ class User extends Authenticatable
     {
         static::saved(function (self $user) {
             if(!is_null($user->spaceAccessTmp)) {
-                $space = SpaceService::getCurrentSpaceModel();
+                $space = SpaceService::getCurrentSpace();
                 if((int) $user->spaceAccessTmp) {
                     if($user->spaces()->where('space_id', $space->id)->count() == 0) {
                         $user->spaces()->attach($space->id);

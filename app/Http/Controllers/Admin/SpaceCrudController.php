@@ -117,7 +117,7 @@ class SpaceCrudController extends CrudController
         $id = $this->crud->getCurrentEntryId() ?? $id;
 
         $entry = CRUD::getCurrentEntry();
-        if($entry->code == SpaceService::$mainCode) {
+        if($entry->code == SpaceService::$default_space_code) {
             throw new AccessDeniedException(trans('backpack::crud.unauthorized_access', ['access' => 'delete']));
         }
         return $this->crud->delete($id);

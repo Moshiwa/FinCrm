@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\FieldsEntitiesEnum;
+use App\Traits\SpaceableTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,6 +14,7 @@ class Field extends Model
 {
     use CrudTrait;
     use HasFactory;
+    use SpaceableTrait;
 
     public $timestamps = false;
 

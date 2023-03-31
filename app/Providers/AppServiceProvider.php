@@ -30,10 +30,10 @@ class AppServiceProvider extends ServiceProvider
             $this->app['request']->server->set('HTTPS', 'on');
         }
 
-        if(!file_exists(base_path('config/database_spaces.php'))) {
+       /* if(!file_exists(base_path('config/database_spaces.php'))) {
             SpaceService::prepareAllSpaceConnections();
         }
-        SpaceService::prepareAllUploadDirectories();
+        SpaceService::prepareAllUploadDirectories();*/
         Carbon::setLocale(config('app.locale'));
     }
 }

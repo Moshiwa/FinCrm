@@ -9,13 +9,7 @@ return new class extends Migration
 {
     public function up()
     {
-        $schema = Schema::connection(SpaceService::getDefaultConnectionName());
-
-        if($schema->hasTable('users')) {
-            return;
-        }
-
-        $schema->create('users', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
@@ -31,6 +25,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::connection(SpaceService::getDefaultConnectionName())->dropIfExists('users');
+        Schema::dropIfExists('users');
     }
 };

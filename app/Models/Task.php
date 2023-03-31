@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\FieldsEntitiesEnum;
 use App\Events\CreateTask;
+use App\Traits\SpaceableTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +18,7 @@ class Task extends Model
 {
     use HasFactory;
     use CrudTrait;
+    use SpaceableTrait;
 
     protected $fillable = [
         'name',

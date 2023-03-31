@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Services\Space\SpaceService;
+use App\Traits\SpaceableTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,7 @@ class Stage extends Model
 {
     use CrudTrait;
     use HasFactory;
+    use SpaceableTrait;
 
     protected $fillable = [
         'name',
@@ -43,7 +45,7 @@ class Stage extends Model
     {
         static::created(function (self $stage) {
             $stage->with(['pipeline.buttons' => ['visible', 'action']]);
-            foreach ($stage->pipeline->buttons as $button) {
+             foreach ($stage->pipeline->buttons ?? [] as $button) {
                 if (empty($button->is_default)) {
                     continue;
                 }

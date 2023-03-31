@@ -16,32 +16,20 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->dateTime('start');
             $table->dateTime('end')->nullable();
+            $table->foreignId('responsible_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+            $table->foreignId('manager_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+            $table->foreignId('executor_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
             $table->timestamps();
         });
-
-        SpaceService::addBaseModelForeignIdMigration(
-            'tasks',
-            'responsible_id',
-            'users',
-            'cascade',
-            false
-        );
-
-        SpaceService::addBaseModelForeignIdMigration(
-            'tasks',
-            'manager_id',
-            'users',
-            'cascade',
-            true
-        );
-
-        SpaceService::addBaseModelForeignIdMigration(
-            'tasks',
-            'executor_id',
-            'users',
-            'cascade',
-            true
-        );
     }
 
     public function down()

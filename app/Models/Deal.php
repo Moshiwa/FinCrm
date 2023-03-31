@@ -7,6 +7,7 @@ use App\Events\ChangePipeline;
 use App\Events\ChangeResponsible;
 use App\Events\ChangeStage;
 use App\Events\CreateDeal;
+use App\Traits\SpaceableTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +21,7 @@ class Deal extends Model
 {
     use CrudTrait;
     use HasFactory;
+    use SpaceableTrait;
 
     protected $guarded = ['id'];
 

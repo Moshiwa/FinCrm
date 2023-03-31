@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Services\Space\SpaceService;
+use App\Traits\SpaceableTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\MorphPivot;
 

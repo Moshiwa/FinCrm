@@ -18,25 +18,22 @@ return new class extends Migration
                 ->nullable()
                 ->constrained()
                 ->nullOnDelete();
+            $table->foreignId('responsible_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+            $table->foreignId('manager_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+            $table->foreignId('executor_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
             $table->dateTime('start_time')->nullable();
             $table->dateTime('end_time')->nullable();
             $table->boolean('comment')->default(false);
         });
-        SpaceService::addBaseModelForeignIdMigration(
-            'task_button_actions',
-            'responsible_id',
-            'users'
-        );
-        SpaceService::addBaseModelForeignIdMigration(
-            'task_button_actions',
-            'manager_id',
-            'users'
-        );
-        SpaceService::addBaseModelForeignIdMigration(
-            'task_button_actions',
-            'executor_id',
-            'users'
-        );
     }
 
     public function down()

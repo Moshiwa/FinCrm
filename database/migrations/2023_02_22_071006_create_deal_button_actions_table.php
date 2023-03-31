@@ -22,14 +22,12 @@ return new class extends Migration
                 ->nullable()
                 ->constrained()
                 ->nullOnDelete();
+            $table->foreignId('responsible_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
             $table->boolean('comment')->default(false);
         });
-
-        SpaceService::addBaseModelForeignIdMigration(
-            'deal_button_actions',
-            'responsible_id',
-            'users'
-        );
     }
 
     public function down()

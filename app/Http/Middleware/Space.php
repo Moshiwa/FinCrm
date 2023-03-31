@@ -29,8 +29,7 @@ class Space
         if($request->has('space')) {
             SpaceService::setCurrentSpaceCode($request->get('space'));
         }
-        SpaceService::setDefaultDatabaseConnection();
-        SpaceService::setDefaultUploadDiskPath();
+
         $user = Auth::user();
         if(!$this->inExceptArray($request) && $user && !$user->canAccessCurrentSpace()) {
             $availableSpaces = $user->availableSpaces();

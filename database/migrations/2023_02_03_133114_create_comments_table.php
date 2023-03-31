@@ -18,11 +18,9 @@ return new class extends Migration
                 ->comment('Поле для связи звонка и аудиосообщения из webhook. После привязки должно очищатсья');
             $table->text('title')->default('');
             $table->text('content')->default('');
+            $table->foreignId('author_id')->nullable()->constrained('users');
             $table->timestamps();
         });
-
-        SpaceService::addBaseModelForeignIdMigration('comments', 'author_id', 'users', 'cascade', true);
-
     }
 
     public function down()

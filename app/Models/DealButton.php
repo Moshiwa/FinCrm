@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use App\Enums\ColorStyleEnum;
+use App\Traits\SpaceableTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
-use Backpack\CRUD\Tests81\Unit\Models\Enums\StyleEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,6 +11,7 @@ class DealButton extends Model
 {
     use HasFactory;
     use CrudTrait;
+    use SpaceableTrait;
 
     public $timestamps = false;
 

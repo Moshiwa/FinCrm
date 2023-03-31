@@ -4,15 +4,22 @@
     use \App\Services\Space\SpaceService;
     use Illuminate\Support\Facades\Auth;
 
-    $currentSpace = SpaceService::getCurrentSpaceModel();
+    $currentSpace = SpaceService::getCurrentSpace();
     $spaces = Auth::user()->availableSpaces();
 @endphp
 
 <li class="nav-item dropdown pr-4">
+    @if(count($spaces) > 0)
     <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
         <i class="la la-globe"></i>
         {{ $currentSpace->name}}
     </a>
+    @else
+    <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        <i class="la la-globe"></i>
+        Нет доступа к организациям
+    </a>
+    @endif
     @if(count($spaces) > 1 || (count($spaces) == 1 && $spaces[0]->code != $currentSpace->code))
         <div
             class="dropdown-menu {{ config('backpack.base.html_direction') == 'rtl' ? 'dropdown-menu-left' : 'dropdown-menu-right' }} mr-4 pb-1 pt-1">
