@@ -1,8 +1,6 @@
 <?php
 
 use App\Http\Controllers\Admin\TelephonyController;
-use App\Http\Controllers\DealController;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,13 +13,17 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return redirect('/admin/deal');
-})->middleware(array_merge(
-    (array) config('backpack.base.web_middleware', 'web'),
-    (array) config('backpack.base.middleware_key', 'admin')
-));
+Route::middleware(array_merge(
+    (array)config('backpack.base.web_middleware', 'web'),
+    (array)config('backpack.base.middleware_key', 'admin')
+))->group(function () {
+    Route::get('/', function () {
+        return redirect('/admin/deal');
+    });
+    Route::get('/admin', function () {
+        return redirect('/admin/deal');
+    });
+});
 
 Route::middleware('client.ip')->group(function () {
     Route::get('/webhook/record', [TelephonyController::class, 'recordFromWebhook']);
