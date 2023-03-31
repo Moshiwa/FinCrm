@@ -24,7 +24,7 @@ class TaskService
             $task->start = empty($data['start']) ? null : Carbon::make($data['start']);
             $task->end = empty($data['end']) ? null : Carbon::make($data['end']);
 
-            if (backpack_user()->can('deals.change_members_self')) {
+            if (backpack_user()->can('tasks.change_members_self')) {
                 if (backpack_user()->id == $task->responsible_id) {
                     $task->responsible_id = $data['responsible_id'] ?? backpack_user()->id;
                     $task->manager_id = $data['manager_id'] ?? null;

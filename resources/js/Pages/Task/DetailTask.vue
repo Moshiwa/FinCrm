@@ -54,7 +54,7 @@
                 <el-form-item label="Наблюдатель">
                     <el-select
                         v-model="thisTask.manager"
-                        :disabled="!permissions.can_change_members_self || !permissions.can_update_task"
+                        :disabled="!(permissions.can_change_members_self || permissions.can_update_task)"
                         value-key="id"
                         filterable
                         remote
@@ -73,7 +73,7 @@
                 <el-form-item label="Исполнитель">
                     <el-select
                         v-model="thisTask.executor"
-                        :disabled="!permissions.can_change_members_self || !permissions.can_update_task"
+                        :disabled="!(permissions.can_change_members_self || permissions.can_update_task)"
                         value-key="id"
                         filterable
                         remote
@@ -452,7 +452,7 @@ export default {
             )
         },
         permissionsUpdate() {
-            this.permissions.can_change_members_self = this.thisTask.responsible_id === this.auth.id;
+            this.permissions.can_change_members_self =  (this.auth.permission_names.find((item) => item === 'tasks.change_members_self')) !== undefined ? this.auth.id === this.thisTask.responsible_id : false;
         },
     }
 }

@@ -37,7 +37,8 @@ class DealCrudController extends CrudController
     {
         CRUD::column('name')->label('Наименование');
         CRUD::column('pipeline_id')->label('Воронка');
-        CRUD::column('stage_id')->label('Стадия');
+        CRUD::column('stage')->label('Стадия');
+        CRUD::column('responsible')->label('Ответственный');
         CRUD::column('created_at')->label('Дата создания');
 
         $this->hiddenClientFilter();

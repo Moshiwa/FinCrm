@@ -12,6 +12,7 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class TaskCrudController extends CrudController
 {
@@ -31,10 +32,25 @@ class TaskCrudController extends CrudController
         $this->hiddenManagerFilter();
         $this->hiddenResponsibleFilter();
 
+        $stages = TaskStage::query()->get()->toArray();
+        $stages = Arr::pluck($stages, 'name', 'id');
+        CRUD::addFilter([
+            'type'  => 'dropdown',
+            'name'  => 'stage',
+            'label' => 'Стадия'
+        ], $stages, function($value) { // if the filter is active (the GET parameter "draft" exits)
+            $this->crud->addClause('where', 'task_stage_id', $value);
+        });
+
         CRUD::addButton('top', 'task_create', 'view', 'crud::buttons.task_create');
 
         CRUD::column('name')->label('Наименование');
+        CRUD::column('stage')->label('Стадия');
+        CRUD::column('responsible')->label('Ответственный');
+        CRUD::column('manager')->label('Наблюдатель');
+        CRUD::column('executor')->label('Исполнитель');
         CRUD::column('start')->label('Дата начала');
+        CRUD::column('end')->label('Дата завершения');
     }
 
     public function show($id)
