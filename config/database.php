@@ -93,7 +93,7 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
     ],
-        @include_once base_path('config/database_spaces.php')
+        //@include_once base_path('config/database_spaces.php')
     ),
 
     /*
