@@ -11,8 +11,8 @@ final class UserPermission extends MorphPivot
 {
     protected static function booted()
     {
-        /*static::addGlobalScope('space', function (Builder $builder) {
-            $space = SpaceService::getCurrentSpaceModel();
+        static::addGlobalScope('space', function (Builder $builder) {
+            $space = SpaceService::getCurrentSpace();
             $builder->where(function (Builder $builder) use ($space) {
                 $builder->whereNull('space_id');
                 $builder->orWhere('space_id', $space->id);
@@ -20,8 +20,8 @@ final class UserPermission extends MorphPivot
         });
 
         static::creating(function (self $item) {
-            $space = SpaceService::getCurrentSpaceModel();
+            $space = SpaceService::getCurrentSpace();
             $item->space_id = $space ? $space->id : null;
-        });*/
+        });
     }
 }

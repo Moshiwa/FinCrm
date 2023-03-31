@@ -70,26 +70,26 @@ class Space extends Model
                 $first_space->update(['active' => true]);
             }
 
-            $this->deleteSubRelations($space);
+            self::deleteSubRelations($space);
 
             SpaceService::setCurrentSpaceCode(SpaceService::$default_space_code);
         });
 
         static::created(function ($space) {
-            $pipeline = $this->createDefaultPipeline($space);
-            $stages = $this->createDefaultStages($space, $pipeline);
-            $task_stages = $this->createDefaultTaskStage($space);
+            $pipeline = self::createDefaultPipeline($space);
+            $stages = self::createDefaultStages($space, $pipeline);
+            $task_stages = self::createDefaultTaskStage($space);
         });
     }
 
-    private function createDefaultPipeline($space): Model|Builder
+    private static function createDefaultPipeline($space): Model|Builder
     {
         $pipeline = Pipeline::query()->create(['name' => 'Основная']);
         $pipeline->spaces()->sync($space->id);
         return $pipeline;
     }
 
-    private function createDefaultStages($space, $pipeline): array
+    private static function createDefaultStages($space, $pipeline): array
     {
         $stages = [
             [
@@ -121,7 +121,7 @@ class Space extends Model
         return $result;
     }
 
-    private function createDefaultTaskStage($space): array
+    private static function createDefaultTaskStage($space): array
     {
         $task_stages = [
             [
@@ -145,7 +145,7 @@ class Space extends Model
         return $result;
     }
 
-    private function deleteSubRelations($space)
+    private static function deleteSubRelations($space)
     {
         $ids = $space->deals->pluck('id');
         $space->deals()->whereIn('spaceable_id', $ids)->delete();

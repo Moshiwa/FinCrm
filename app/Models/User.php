@@ -149,6 +149,7 @@ class User extends Authenticatable
 
     public function permissions(): BelongsToMany
     {
+        $space = SpaceService::getCurrentSpace();
         $relation = $this->morphToMany(
             config('permission.models.permission'),
             'model',
@@ -156,7 +157,8 @@ class User extends Authenticatable
             config('permission.column_names.model_morph_key'),
             PermissionRegistrar::$pivotPermission
         )
-            ->using(UserPermission::class);
+            ->using(UserPermission::class)
+            ->wherePivot('space_id', $space->id);
 
         if (! PermissionRegistrar::$teams) {
             return $relation;
