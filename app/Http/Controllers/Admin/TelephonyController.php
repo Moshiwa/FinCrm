@@ -90,7 +90,7 @@ class TelephonyController extends Controller
 
         return response()->json([
             'success' => $success,
-            'error' => $error
+            'message' => $error
         ]);
     }
 }
