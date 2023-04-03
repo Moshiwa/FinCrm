@@ -304,6 +304,15 @@ export default {
                                 type: 'error',
                             });
                         }
+                    }).catch((failResponse) => {
+                        if (!!failResponse.response.data.message) {
+                            ElNotification({
+                                duration: 8000,
+                                title: 'Ошибка',
+                                message: failResponse.response.data.message,
+                                type: 'error',
+                            })
+                        }
                     });
                 });
         },
