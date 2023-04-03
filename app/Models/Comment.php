@@ -41,13 +41,11 @@ class Comment extends Model
         return Carbon::make($this->created_at)->translatedFormat('j F Y H:i');
     }
 
-    protected static function booted()
+    public static function booted()
     {
+        parent::boot();
         static::deleting(function (self $comment) {
-            $files = $comment->files;
-            foreach ($files as $file) {
-                $file->delete();
-            }
+            $comment->files->each->delete();
         });
     }
 }

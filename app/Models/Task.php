@@ -90,16 +90,13 @@ class Task extends Model
         return $fields;
     }
 
-    protected static function booted()
+    public static function booted()
     {
         static::created(function (self $task) {
             event(new CreateTask($task));
         });
         static::deleting(function (self $task) {
-            /*$comments = $task->comments;
-            foreach ($comments as $comment) {
-                $comment->delete();
-            }*/
+            $task->comments->each->delete();
         });
     }
 

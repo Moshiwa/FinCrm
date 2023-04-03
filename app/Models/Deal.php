@@ -86,16 +86,14 @@ class Deal extends Model
         return $this->morphMany(Comment::class, 'commentable');
     }
 
-    protected static function booted()
+    public static function booted()
     {
+        parent::boot();
         static::created(function (self $deal) {
             event(new CreateDeal($deal));
         });
         static::deleting(function (self $deal) {
-           /* $comments = $deal->comments;
-            foreach ($comments as $comment) {
-                $comment->delete();
-            }*/
+            $deal->comments->each->delete();
         });
     }
 }

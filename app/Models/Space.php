@@ -147,40 +147,14 @@ class Space extends Model
 
     private static function deleteSubRelations($space)
     {
-        $ids = $space->deals->pluck('id');
-        $space->deals()->whereIn('spaceable_id', $ids)->delete();
-        Deal::query()->whereIn('id', $ids)->delete();
-
-        $ids = $space->clients->pluck('id');
-        $space->clients()->whereIn('spaceable_id', $ids)->delete();
-        Client::query()->whereIn('id', $ids)->delete();
-
-        $ids = $space->stages->pluck('id');
-        $space->stages()->whereIn('spaceable_id', $ids)->delete();
-        Stage::query()->whereIn('id', $ids)->delete();
-
-        $ids = $space->pipelines->pluck('id');
-        $space->pipelines()->whereIn('spaceable_id', $ids)->delete();
-        Pipeline::query()->whereIn('id', $ids)->delete();
-
-        $ids = $space->deal_buttons->pluck('id');
-        $space->deal_buttons()->whereIn('spaceable_id', $ids)->delete();
-        DealButton::query()->whereIn('id', $ids)->delete();
-
-        $ids = $space->tasks->pluck('id');
-        $space->tasks()->whereIn('spaceable_id', $ids)->delete();
-        Task::query()->whereIn('id', $ids)->delete();
-
-        $ids = $space->task_stages->pluck('id');
-        $space->task_stages()->whereIn('spaceable_id', $ids)->delete();
-        TaskStage::query()->whereIn('id', $ids)->delete();
-
-        $ids = $space->task_buttons->pluck('id');
-        $space->task_buttons()->whereIn('spaceable_id', $ids)->delete();
-        TaskButton::query()->whereIn('id', $ids)->delete();
-
-        $ids = $space->fields->pluck('id');
-        $space->fields()->whereIn('spaceable_id', $ids)->delete();
-        Field::query()->whereIn('id', $ids)->delete();
+        $space->deals->each->delete();
+        $space->clients->each->delete();
+        $space->stages->each->delete();
+        $space->pipelines->each->delete();
+        $space->deal_buttons->each->delete();
+        $space->tasks->each->delete();
+        $space->task_stages->each->delete();
+        $space->task_buttons->each->delete();
+        $space->fields->each->delete();
     }
 }

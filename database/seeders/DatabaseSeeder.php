@@ -14,9 +14,5 @@ class DatabaseSeeder extends Seeder
         (new SpacesSeeder())->run();
         (new PermissionSeeder())->run();
         (new UsersSeeder())->run();
-
-        (new FieldsSeeder())->run();
-
-
     }
 }

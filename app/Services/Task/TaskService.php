@@ -112,7 +112,7 @@ class TaskService
             }
 
             $space = SpaceService::getCurrentSpaceCode();
-            $name = "/deal_$space/$deal->id";
+            $name = "/task_$space/$deal->id";
             $path = Storage::disk('public')->put($name, $file);
 
             $file = File::query()->create([
