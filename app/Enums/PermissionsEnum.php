@@ -12,4 +12,6 @@ enum PermissionsEnum: string
     case task_buttons = 'Кнопки задач';
     case pipelines = 'Воронки';
     case task_stages = 'Статусы задач';
+    case comments = 'Комментарии';
+    case sms_center = 'СмсЦентр';
 }

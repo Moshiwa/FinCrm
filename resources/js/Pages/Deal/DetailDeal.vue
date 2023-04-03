@@ -40,7 +40,7 @@
                 <el-form-item label="Ответственный">
                     <el-select
                         v-model="thisDeal.responsible"
-                        :disabled="(!permissions.can_change_responsible && !permissions.can_change_members_self) || !permissions.can_update_deal"
+                        :disabled="!(permissions.can_update_deal && (permissions.can_change_responsible || permissions.can_change_members_self))"
                         value-key="id"
                         filterable
                         remote
@@ -228,7 +228,6 @@ export default {
     created() {
         console.log('Created')
         /*let channel = Echo.channel('record');
-        console.log(channel)
         channel.listen('WebhookCommentPush', (e) => {
             this.thisDeal.comments.unshift(e.comment);
         });*/
@@ -374,10 +373,10 @@ export default {
                     this.stageButtons = response.data.deal.pipeline.buttons;
                     this.action = null;
 
+                    this.permissionsUpdate();
+
                     this.thisDeal.all_fields = this.castFieldValue(this.thisDeal.fields);
                     this.thisDeal.client.all_fields = this.castFieldValue(this.thisDeal.client.fields);
-
-                    this.permissionsUpdate();
 
                     ElNotification({
                         title: 'Сохранено',
@@ -403,7 +402,7 @@ export default {
             });
         },
         permissionsUpdate() {
-            this.permissions.can_change_members_self = (this.auth.permission_names.find((item) => item === 'deals.change_members_self')) !== undefined ? this.auth.id === this.deal.responsible_id : false;
+            this.permissions.can_change_members_self = (this.auth.permission_names.find((item) => item === 'deals.change_members_self')) !== undefined ? this.auth.id === this.thisDeal.responsible_id : false;
         },
     }
 }

@@ -73,7 +73,11 @@ export default {
     },
     data() {
         return {
-            deleteCommentId: null
+            deleteCommentId: null,
+            permissions: {
+                can_delete: this.auth.permission_names.find((item) => item === 'comments.delete'),
+                can_delete_self: this.auth.permission_names.find((item) => item === 'comments.delete_self'),
+            },
         }
     },
     mounted() {
@@ -149,10 +153,22 @@ export default {
             }
         },
         canDeleteComment(comment) {
-            return comment.author?.id === this.auth.id
+            /*return comment.author?.id === this.auth.id
                 && (comment.content?.length > 0 || comment.files?.length > 0)
                 && comment.type !== 'remote'
-                && comment.type !== 'audio';
+                && comment.type !== 'audio';*/
+
+            if (this.permissions.can_delete) {
+                return true;
+            }
+
+            if (this.permissions.can_delete_self) {
+                if (comment.author?.id === this.auth.id) {
+                    return true;
+                }
+            }
+
+            return false;
         },
         send() {
             this.$emit('commentSend', this.deleteCommentId);

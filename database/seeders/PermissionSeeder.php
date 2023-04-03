@@ -18,8 +18,8 @@ class PermissionSeeder extends Seeder
             'change_pipeline' => '- смена воронки',
             'change_stage' => '- смена стадии',
             'change_responsible' => '- смена ответственного',
-            'change_responsible_self' => '- смена ответственного если менеджер ответственный',
-            'change_members_self' => '- смена участников если менеджер ответственный',
+            'change_members_self' => '- смена участников, если менеджер ответственный',
+            'delete_self' => '- удаление, если менеджер является автором',
             'list' => '- просмотр списка',
         ];
         return $map[$scope] ?? '';
@@ -40,8 +40,6 @@ class PermissionSeeder extends Seeder
                 'change_stage',
                 'change_responsible',
                 'change_members_self',
-
-                'change_responsible_self'
             ],
             PermissionsEnum::tasks->name     => [
                 'create',
@@ -86,6 +84,13 @@ class PermissionSeeder extends Seeder
                 'update',
                 'delete',
                 'list'
+            ],
+            PermissionsEnum::comments->name   => [
+                'delete',
+                'delete_self',
+            ],
+            PermissionsEnum::sms_center->name   => [
+                'update',
             ],
         ]);
     }

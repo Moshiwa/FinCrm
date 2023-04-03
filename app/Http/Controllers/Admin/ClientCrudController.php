@@ -27,6 +27,10 @@ class ClientCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/client');
         CRUD::setEntityNameStrings(__('entity.crud_titles.action.client'), __('entity.crud_titles.many.client'));
         CRUD::denyAccess(['show']);
+        if (! backpack_user()->can('clients.create')) {
+            CRUD::denyAccess(['create']);
+        }
+
         if (! backpack_user()->can('clients.update')) {
             CRUD::denyAccess(['update']);
         }

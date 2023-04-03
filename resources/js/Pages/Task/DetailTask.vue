@@ -35,7 +35,7 @@
                 <el-form-item label="Ответственный">
                     <el-select
                         v-model="thisTask.responsible"
-                        :disabled="(!permissions.can_change_responsible && !permissions.can_change_members_self) || !permissions.can_update_task"
+                        :disabled="!(permissions.can_update_task && (permissions.can_change_responsible || permissions.can_change_members_self))"
                         value-key="id"
                         filterable
                         remote
@@ -433,7 +433,6 @@ export default {
             axios
                 .post(url,  formData)
                 .then((response) => {
-                    console.log(response.data.task);
                     this.thisTask = response.data.task;
                     this.allStages = response.data.stages;
                     this.users = response.data.users;

@@ -1,5 +1,5 @@
 <template>
-<el-card v-if="integration.name === 'sms_center'">
+<el-card v-if="integration.name === 'sms_center' && permissions.can_update">
     <sms-center :integration="integration" />
 </el-card>
 
@@ -7,9 +7,9 @@
     <uiscom :integration="integration" :auth="auth"/>
 </el-card>
 
-    <el-card v-else>
-        <el-empty description="Интеграция не описана, обратитесь к разработчикам" />
-    </el-card>
+<el-card v-else>
+    <el-empty description="Интеграция не описана или у вас нет права доступа" />
+</el-card>
 </template>
 
 <script>
@@ -34,10 +34,14 @@ export default {
         }
     },
     mounted() {
-        console.log(this.integration)
+        console.log(this.auth)
     },
     data() {
-
+        return {
+            permissions: {
+                can_update: this.auth.permission_names.find((item) => item === 'sms_center.update'),
+            }
+        }
     },
 }
 </script>
