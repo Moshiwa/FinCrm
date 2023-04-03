@@ -153,10 +153,12 @@ export default {
             }
         },
         canDeleteComment(comment) {
-            /*return comment.author?.id === this.auth.id
-                && (comment.content?.length > 0 || comment.files?.length > 0)
-                && comment.type !== 'remote'
-                && comment.type !== 'audio';*/
+            if (
+                comment.type === 'remote'
+                || comment.type === 'audio'
+                || (comment.type === 'action' && (comment.content?.length === 0 || comment.files?.length === 0))) {
+                return false;
+            }
 
             if (this.permissions.can_delete) {
                 return true;
