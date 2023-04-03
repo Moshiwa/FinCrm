@@ -87,7 +87,7 @@ class SpaceCrudController extends CrudController
         $this->setupCreateOperation();
 
         $entry = CRUD::getCurrentEntry();
-        if($entry->code == SpaceService::$mainCode) {
+        if($entry->code == SpaceService::$default_space_code) {
             CRUD::field('active')->attributes([
                 'disabled' => 'disabled'
             ]);
