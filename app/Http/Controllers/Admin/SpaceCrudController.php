@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\SpaceRequest;
+use App\Models\Space;
 use App\Services\Space\SpaceService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -116,9 +117,8 @@ class SpaceCrudController extends CrudController
         $this->crud->hasAccessOrFail('delete');
         $id = $this->crud->getCurrentEntryId() ?? $id;
 
-        $entry = CRUD::getCurrentEntry();
-        if($entry->code == SpaceService::$default_space_code) {
-            throw new AccessDeniedException(trans('backpack::crud.unauthorized_access', ['access' => 'delete']));
+        if(Space::query()->count() <= 1) {
+            return \Alert::add('error', 'Нельзя удалить последнюю организацию')->flash();
         }
         return $this->crud->delete($id);
     }

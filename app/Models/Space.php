@@ -64,15 +64,7 @@ class Space extends Model
     protected static function booted()
     {
         static::deleting(function ($space) {
-            if ($space->active) {
-                $first_space = Space::query()
-                    ->where('id', '<>', $space->id)
-                    ->first();
-                $first_space->update(['active' => true]);
-            }
-
             self::deleteSubRelations($space);
-
             SpaceService::setCurrentSpaceCode(SpaceService::$default_space_code);
         });
 
