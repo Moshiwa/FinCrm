@@ -9,6 +9,8 @@ return [
         'checkbox' => 'Чекбокс',
         'radio' => 'Радио выборка',
         'date' => 'Дата',
-        'address' => 'Адрес'
+        'address' => 'Адрес',
+        'textarea' => 'Текст',
+        'input' => 'Строка'
     ],
 ];

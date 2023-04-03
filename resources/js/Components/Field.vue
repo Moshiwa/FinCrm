@@ -103,6 +103,32 @@
             />
         </el-select>
     </div>
+    <div v-else-if="field.type.name === 'textarea'">
+        <el-input
+            :disabled="disabled"
+            v-model="field.pivot.value"
+            :name="'fields['+ fieldIndex +'][value]'"
+            :label="field.name"
+            :class="error ? 'error' : ''"
+            @change="send"
+            @input="check"
+            @focus="check"
+            type="textarea"
+        />
+    </div>
+    <div v-else-if="field.type.name === 'input'">
+        <el-input
+            :disabled="disabled"
+            v-model="field.pivot.value"
+            :name="'fields['+ fieldIndex +'][value]'"
+            :label="field.name"
+            :class="error ? 'error' : ''"
+            @change="send"
+            @input="check"
+            @focus="check"
+            type="text"
+        />
+    </div>
 
 
 
