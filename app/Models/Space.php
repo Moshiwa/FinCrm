@@ -7,6 +7,7 @@ use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Support\Facades\Storage;
 
 class Space extends Model
 {
@@ -156,5 +157,15 @@ class Space extends Model
         $space->task_stages->each->delete();
         $space->task_buttons->each->delete();
         $space->fields->each->delete();
+
+        $deal_dir = 'deal_' . SpaceService::getCurrentSpaceCode();
+        if(Storage::disk('public')->exists($deal_dir)){
+            Storage::disk('public')->deleteDirectory($deal_dir);
+        }
+
+        $task_dir = 'task_' . SpaceService::getCurrentSpaceCode();
+        if(Storage::disk('public')->exists($task_dir)){
+            Storage::disk('public')->deleteDirectory($task_dir);
+        }
     }
 }
