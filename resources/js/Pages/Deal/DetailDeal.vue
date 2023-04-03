@@ -286,16 +286,25 @@ export default {
                     axios.post('/admin/telephony/call', {
                         phone: event.pivot.value,
                         deal_id: this.thisDeal.id
+                    }).then((response) => {
+                        if (response.data.success === true) {
+                            //ToDo замена сокетов (каждые две секунды проверяем пришел ли вебхук)
+                            setInterval(() => {
+                                axios.get('/admin/telephony/check?user=' + this.auth.id + '&deal=' + this.thisDeal.id).then((response) => {
+                                    if (response.data.success === true) {
+                                        this.thisDeal.comments.unshift(response.data.data);
+                                    }
+                                })
+                            }, 2000)
+                        } else {
+                            ElNotification({
+                                duration: 8000,
+                                title: 'Ошибка',
+                                message: response.data.message,
+                                type: 'error',
+                            });
+                        }
                     });
-
-                    //ToDo замена сокетов (каждые две секунды проверяем пришел ли вебхук)
-                    setInterval(() => {
-                        axios.get('/admin/telephony/check?user=' + this.auth.id + '&deal=' + this.thisDeal.id).then((response) => {
-                            if (response.data.success === true) {
-                                this.thisDeal.comments.unshift(response.data.data);
-                            }
-                        })
-                    }, 2000)
                 });
         },
         sendRemoteMessage(event) {
@@ -320,7 +329,7 @@ export default {
                         title: 'Ошибка',
                         message: response.data.message,
                         type: 'error',
-                    })
+                    });
                 }
             }).catch((failResponse) => {
                 if (!!failResponse.response.data.message) {
