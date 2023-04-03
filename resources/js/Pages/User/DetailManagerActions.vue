@@ -83,7 +83,6 @@ export default {
         }
     },
     mounted() {
-        console.log(this.user);
         $(document).on('scroll', this.loadMore);
     },
     data() {

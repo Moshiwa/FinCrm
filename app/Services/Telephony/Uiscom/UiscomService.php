@@ -4,7 +4,7 @@ namespace App\Services\Telephony\Uiscom;
 
 use App\Services\Dadata\DadataService;
 use GuzzleHttp\Client;
-//ToDo Дописать Необходимо использовать softphone uis
+
 class UiscomService
 {
     private UiscomClient $client;

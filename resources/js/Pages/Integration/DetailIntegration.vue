@@ -33,9 +33,7 @@ export default {
             required: true
         }
     },
-    mounted() {
-        console.log(this.auth)
-    },
+    mounted() {},
     data() {
         return {
             permissions: {

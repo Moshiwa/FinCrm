@@ -37,7 +37,6 @@ export default {
     },
     methods: {
         definitionFileType(meme) {
-            console.log(meme)
             switch (meme) {
                 case 'jpg':
                 case 'jpeg':

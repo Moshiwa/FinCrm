@@ -3,7 +3,7 @@
 namespace App\Services\Telephony\Uiscom;
 
 use GuzzleHttp\Client;
-//ToDo Дописать
+
 class UiscomDataService
 {
     private UiscomClient $client;
@@ -11,63 +11,6 @@ class UiscomDataService
     public function __construct()
     {
         $this->client = new UiscomClient();
-    }
-
-    public function login()
-    {
-        $params = [
-            'login' => env('UISCOM_LOGIN'),
-            'password' => env('UISCOM_PASSWORD')
-        ];
-
-        $result = $this->client->post('login.user', $params, false);
-
-        if (isset($result['error'])) {
-
-        }
-        dd($result);
-    }
-
-    public function getAccountInfo()
-    {
-        $params = [
-            'access_token' => '8l1vxvi61873i2r2i3kozovb55dft846ejsnld7e',
-
-        ];
-        $result = $this->client->post('get.account', $params, false);
-
-        if (isset($result['error'])) {
-
-        }
-        dd($result);
-    }
-
-    public function getVN()
-    {
-        $params = [
-            'access_token' => '8l1vxvi61873i2r2i3kozovb55dft846ejsnld7e',
-
-        ];
-        $result = $this->client->post('get.available_virtual_numbers', $params, false);
-
-        if (isset($result['error'])) {
-
-        }
-        dd($result);
-    }
-
-    public function getSipLines()
-    {
-        $params = [
-            'access_token' => '8l1vxvi61873i2r2i3kozovb55dft846ejsnld7e',
-
-        ];
-        $result = $this->client->post('get.sip_lines', $params, false);
-
-        if (isset($result['error'])) {
-
-        }
-        dd($result);
     }
 
     private function errorsList($error)

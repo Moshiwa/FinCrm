@@ -156,7 +156,6 @@
 
 <script>
 import {ElInput, ElMessageBox} from 'element-plus';
-import Contenteditable from "../../Components/Contenteditable.vue";
 import FileUpload from "../../Components/FileUpload.vue";
 import { ElNotification } from 'element-plus'
 import ActionButtons from "../../Components/ActionButtons.vue";
@@ -168,7 +167,6 @@ import Filters from "../../Components/Filters.vue";
 export default {
     name: 'DetailTask',
     components: {
-        Contenteditable,
         FileUpload,
         ActionButtons,
         Field,
@@ -421,7 +419,6 @@ export default {
             });
 
             if (!!this.action?.id) {
-                console.log(this.action);
                 formData.append('change_custom_field[field_id]', this.action.id);
                 formData.append('change_custom_field[task_id]', this.thisTask.id);
                 formData.append('change_custom_field[value]', this.action.pivot.value);

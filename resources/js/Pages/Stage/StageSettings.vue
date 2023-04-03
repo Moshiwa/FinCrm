@@ -63,7 +63,6 @@ export default {
         }
     },
     mounted() {
-        console.log(this.settings);
         this.stage.settings = this.settings;
     },
     methods: {

@@ -359,7 +359,6 @@ export default {
             data.color = this.currentColor ?? 'default';
             data.icon = this.currentIcon ?? 'angle-double-right';
 
-            console.log(data);
             axios.post('/admin/task/button/save', data)
                 .then((response) => {
                     this.allButtons = response.data.data.buttons ?? [];

@@ -80,9 +80,7 @@ export default {
             },
         }
     },
-    mounted() {
-        console.log(this.comments)
-    },
+    mounted() {},
     methods: {
         removeComment(comment) {
             ElMessageBox.confirm(

@@ -3,7 +3,7 @@
 namespace App\Services\Telephony\Uiscom;
 
 use GuzzleHttp\Client;
-//ToDo Дописать
+
 class UiscomClient
 {
     private string $call_url = 'https://callapi.uiscom.ru/v4.0';
