@@ -9,31 +9,15 @@
                         <span v-html="comment.title" /> {{ comment.date_create }}
                     </div>
                     <div class="row-right__content">
-                        <div
+                        <comment-document
                             v-if="comment.type === 'document'"
-                            class="flex-inline"
-                        >
-                            <div
-                                v-for="file in comment.files"
-                                class="row-right__item-files"
-                            >
-                                <el-image
-                                    v-if="isImage(file.meme)"
-                                    style="width: 100px; height: 100px; border-radius: 4px;"
-                                    :src="file.full_path"
-                                    :zoom-rate="1.2"
-                                    :preview-src-list="[file.full_path]"
-                                    :initial-index="4"
-                                    fit="cover"
-                                />
-                                <div v-else>
-                                    <a :href="file.full_path" target="_blank">
-                                        <i class="las la-file-alt"></i>
-                                        {{ file.original_name }}
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                            :comment="comment"
+                        />
+                        <comment-audio
+                            v-else-if="comment.type === 'audio' && !!comment.content"
+                            :comment="comment"
+                            @stopAll="stopAllExceptCurrent($event)"
+                        />
                         <div v-else>
                             <div class="content-container" v-if="comment.content?.length > 0">
                                 <div class="comment-content">
@@ -44,10 +28,10 @@
                     </div>
                     <div class="row-right__author">
                         <div v-if="comment.commentable_type === 'App\\Models\\Task'">
-                            <a :href="'/admin/task/' + comment.commentable_id + '/detail'">Задача</a>
+                            <a :href="'/admin/task/' + comment.commentable_id + '/show'">Задача</a>
                         </div>
                         <div v-else>
-                            <a :href="'/admin/deal/' + comment.commentable_id + '/detail'">Сделка</a>
+                            <a :href="'/admin/deal/' + comment.commentable_id + '/show'">Сделка</a>
                         </div>
                     </div>
                 </div>
@@ -61,12 +45,13 @@
 </template>
 
 <script>
-import Comments from "../../Components/Comments.vue";
 import Filters  from "../../Components/Filters.vue";
+import CommentDocument from '../../Components/CommentsTypes/Document.vue'
+import CommentAudio from '../../Components/CommentsTypes/Audio.vue'
 export default {
     name: 'DetailManagerActions',
     components: {
-        Comments, Filters
+        Filters, CommentDocument, CommentAudio
     },
     props: {
         user: {
@@ -129,7 +114,21 @@ export default {
                     return false
             }
         },
-
+        stopAllExceptCurrent(ref) {
+            let index = 0;
+            this.comments.forEach((comment) => {
+                if (comment.type === 'audio') {
+                    let id = 'audio_player_' + index;
+                    if (id !== ref) {
+                        id = '#' + id;
+                        let audio = document.querySelector(id);
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }
+                    index++;
+                }
+            })
+        },
     }
 }
 </script>
