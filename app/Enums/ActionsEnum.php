@@ -95,7 +95,6 @@ enum ActionsEnum: string
             ActionsEnum::CHANGE_NAME->value => 'Смена наименования',
             ActionsEnum::CHANGE_DESCRIPTION->value => 'Смена описания',
             ActionsEnum::CHANGE_CLIENT_NAME->value => 'Смена имени клиента',
-
             ActionsEnum::CHANGE_CUSTOM_FIELD->value => 'Изменено поле'
         };
     }

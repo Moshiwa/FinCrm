@@ -201,7 +201,6 @@ export default {
 
             this.checkPhone(field);
 
-
             this.error = false;
             if (field.is_required) {
                 if (!field.pivot.value) {

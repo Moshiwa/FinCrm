@@ -62,6 +62,69 @@ export default {
             deal.responsible.id = !!action.responsible_id ? action.responsible_id : deal.responsible.id;
 
             return deal;
+        },
+        taskFormData(task, action, deleteCommentId) {
+            const formData = new FormData();
+            if (!!task.id) {
+                formData.append('id', task.id);
+            }
+            if (!!task.name) {
+                formData.append('name', task.name);
+            }
+            if (!!task.description) {
+                formData.append('description', task.description);
+            }
+            if (!!task.start) {
+                formData.append('start', task.start);
+            }
+            if (!!task.end) {
+                formData.append('end', task.end);
+            }
+            if (!!task.stage?.id) {
+                formData.append('task_stage_id', task.stage.id);
+            }
+            if (!!task.responsible?.id) {
+                formData.append('responsible_id', task.responsible.id);
+            }
+            if (!!task.manager?.id) {
+                formData.append('manager_id', task.manager.id);
+            }
+            if (!!task.executor?.id) {
+                formData.append('executor_id', task.executor.id);
+            }
+
+            formData.append('comment_count', task.comments.length ?? 0);
+            if (!!deleteCommentId) {
+                formData.append('delete_comment_id', deleteCommentId);
+            }
+
+            task.all_fields = task.all_fields ?? [];
+            task?.all_fields.forEach((field, fieldIndex) => {
+                formData.append('fields[' + field.id + '][value]', field.pivot?.value ?? '');
+            });
+
+            task.comments = task.comments ?? [];
+            task?.comments.forEach((comment, commentIndex) => {
+                if (!comment?.id) {
+                    formData.append('new_comment[id]', comment.id ?? '');
+                    formData.append('new_comment[task_id]', task.id);
+                    formData.append('new_comment[type]', comment.type);
+                    formData.append('new_comment[content]', comment.content);
+                    comment.files = comment.files ?? [];
+                    comment.files.forEach((file, fileIndex) => {
+                        formData.append('new_comment[files][' + fileIndex + ']', file);
+                    })
+                }
+            });
+
+            console.log(action)
+            if (!!action?.id) {
+                formData.append('change_custom_field[field_id]', action.id);
+                formData.append('change_custom_field[task_id]', task.id);
+                formData.append('change_custom_field[value]', action.pivot.value);
+            }
+
+            return formData;
         }
     }
 }

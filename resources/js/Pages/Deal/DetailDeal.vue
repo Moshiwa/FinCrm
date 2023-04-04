@@ -377,9 +377,9 @@ export default {
                 });
         },
         send() {
-            let formData = this.dealFormData(this.thisDeal, this.action, this.deleteCommentId)
+            let formData = this.dealFormData(this.thisDeal, this.action, this.deleteCommentId);
             let url = '/admin/deal/update';
-            url += window.location.search
+            url += window.location.search;
 
             axios
                 .post(url,  formData)
@@ -402,7 +402,14 @@ export default {
                         position: 'bottom-right',
                     });
                 }
-            )
+            ).catch((failResponse) => {
+                ElNotification({
+                    duration: 8000,
+                    title: 'Ошибка',
+                    message: failResponse.response?.data?.message ?? '',
+                    type: 'error',
+                });
+            });
         },
         loadMore (e) {
             if (!!this.loading) {

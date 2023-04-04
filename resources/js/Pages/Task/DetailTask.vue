@@ -163,6 +163,7 @@ import Helper from "../../Mixins/Helper.vue";
 import Comments from "../../Components/Comments.vue";
 import Field from "../../Components/Field.vue";
 import Filters from "../../Components/Filters.vue";
+import DataGenerateHelper from "../../Mixins/DataGenerateHelper.vue";
 
 export default {
     name: 'DetailTask',
@@ -174,7 +175,7 @@ export default {
         Filters
     },
     mixins: [
-        Helper,
+        Helper, DataGenerateHelper
     ],
     props: {
         auth: {
@@ -365,64 +366,7 @@ export default {
             );
         },
         send() {
-            const formData = new FormData();
-            if (!!this.thisTask.id) {
-                formData.append('id', this.thisTask.id);
-            }
-            if (!!this.thisTask.name) {
-                formData.append('name', this.thisTask.name);
-            }
-            if (!!this.thisTask.description) {
-                formData.append('description', this.thisTask.description);
-            }
-            if (!!this.thisTask.start) {
-                formData.append('start', this.thisTask.start);
-            }
-            if (!!this.thisTask.end) {
-                formData.append('end', this.thisTask.end);
-            }
-            if (!!this.thisTask.stage?.id) {
-                formData.append('task_stage_id', this.thisTask.stage.id);
-            }
-            if (!!this.thisTask.responsible?.id) {
-                formData.append('responsible_id', this.thisTask.responsible.id);
-            }
-            if (!!this.thisTask.manager?.id) {
-                formData.append('manager_id', this.thisTask.manager.id);
-            }
-            if (!!this.thisTask.executor?.id) {
-                formData.append('executor_id', this.thisTask.executor.id);
-            }
-
-            formData.append('comment_count', this.thisTask.comments.length ?? 0);
-            if (!!this.deleteCommentId) {
-                formData.append('delete_comment_id', this.deleteCommentId);
-            }
-
-            this.thisTask.all_fields = this.thisTask.all_fields ?? [];
-            this.thisTask?.all_fields.forEach((field, fieldIndex) => {
-                formData.append('fields[' + field.id + '][value]', field.pivot?.value ?? '');
-            });
-
-            this.thisTask.comments = this.thisTask.comments ?? [];
-            this.thisTask?.comments.forEach((comment, commentIndex) => {
-                if (!comment.id) {
-                    formData.append('new_comment[id]', comment.id ?? '');
-                    formData.append('new_comment[task_id]', this.thisTask.id);
-                    formData.append('new_comment[type]', comment.type);
-                    formData.append('new_comment[content]', comment.content);
-                    comment.files = comment.files ?? [];
-                    comment.files.forEach((file, fileIndex) => {
-                        formData.append('new_comment[files][' + fileIndex + ']', file);
-                    })
-                }
-            });
-
-            if (!!this.action?.id) {
-                formData.append('change_custom_field[field_id]', this.action.id);
-                formData.append('change_custom_field[task_id]', this.thisTask.id);
-                formData.append('change_custom_field[value]', this.action.pivot.value);
-            }
+            let formData = this.taskFormData(this.thisTask, this.action, this.deleteCommentId)
 
             let url = '/admin/task/update';
             url += window.location.search
@@ -445,7 +389,14 @@ export default {
                         position: 'bottom-right',
                     });
                 }
-            )
+            ).catch((failResponse) => {
+                ElNotification({
+                    duration: 8000,
+                    title: 'Ошибка',
+                    message: failResponse.response?.data?.message ?? '',
+                    type: 'error',
+                });
+            });
         },
         permissionsUpdate() {
             this.permissions.can_change_members_self =  (this.auth.permission_names.find((item) => item === 'tasks.change_members_self')) !== undefined ? this.auth.id === this.thisTask.responsible_id : false;
@@ -453,5 +404,3 @@ export default {
     }
 }
 </script>
-<style scoped>
-</style>

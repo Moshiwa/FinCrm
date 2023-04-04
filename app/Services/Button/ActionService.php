@@ -66,6 +66,8 @@ class ActionService
                     $text = ActionsEnum::getMessageTemplate($action_name);
                     if (empty($value['old'])) {
                         $text .= empty($value['new']) ? '' :  ' ' . $field_name . ' на <i style="color: ' . $this->old_data_color . '">' . $value['new'] . '</i><br>';
+                    } elseif (!empty($value['old']) && empty($value['new'])) {
+                        $text = 'Поле ' . $field_name . ' со значением <i style="color: ' . $this->new_data_color . '">' . $value['old'] . '</i> очищено';
                     } else {
                         $text .= ' ' . $field_name . ' с <i style="color: ' . $this->new_data_color . '">' . $value['old'] . '</i>';
                         $text .= empty($value['new']) ? '' : ' на <i style="color: ' . $this->old_data_color . '">' . $value['new'] . '</i><br>';
@@ -155,10 +157,6 @@ class ActionService
     private function definitionNewAction(array $actions): void
     {
         foreach ($actions as $action_name => $value) {
-            if (empty($value)) {
-                continue;
-            }
-
             if ($action_name === ActionsEnum::CHANGE_CUSTOM_FIELD->value) {
                 $this->actions[ActionsEnum::CHANGE_CUSTOM_FIELD->value] = [
                     'new' => $value['value'] ?? '',
@@ -168,6 +166,10 @@ class ActionService
                     'field_id' => $value['field_id'] ?? '',
                 ];
 
+                continue;
+            }
+
+            if (empty($value)) {
                 continue;
             }
 
@@ -183,7 +185,7 @@ class ActionService
     private function definitionOldAction(object $entity): void
     {
         foreach ($this->actions as $action_name => $action) {
-            if (empty($action['new'])) {
+            if (!isset($action['new'])) {
                 continue;
             }
 
