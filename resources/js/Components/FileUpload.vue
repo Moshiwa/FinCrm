@@ -150,7 +150,9 @@ input[type="file"] {
 .file-upload .img-thumbnail {
     max-width: 64px;
 }
-
+.file-upload .name {
+    overflow: hidden;
+}
 .la-trash-alt {
     cursor: pointer;
     font-size: 20px;
