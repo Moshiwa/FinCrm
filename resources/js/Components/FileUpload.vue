@@ -153,6 +153,9 @@ input[type="file"] {
 .file-upload .name {
     overflow: hidden;
 }
+.file-upload .size {
+    white-space: nowrap;
+}
 .la-trash-alt {
     cursor: pointer;
     font-size: 20px;
