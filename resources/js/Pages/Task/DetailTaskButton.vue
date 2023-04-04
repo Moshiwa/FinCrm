@@ -112,7 +112,7 @@
                         </div>
                     </div>
                     <div class="popup__item">
-                        <div class="item__title">Иземнить время</div>
+                        <div class="item__title">Изменить время старта задачи</div>
                         <el-checkbox
                             v-model="actionChangeStart"
                             label="Менять"
@@ -127,7 +127,7 @@
                         />
                     </div>
                     <div class="popup__item">
-                        <div class="item__title">Иземнить время</div>
+                        <div class="item__title">Изменить время окончание задачи</div>
                         <el-checkbox
                             v-model="actionChangeEnd"
                             label="Менять"
