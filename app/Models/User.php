@@ -99,7 +99,7 @@ class User extends Authenticatable
 
     public function manage_tasks(): hasMany
     {
-        return $this->hasMany(Task::class, 'executor_id');
+        return $this->hasMany(Task::class, 'manager_id');
     }
 
     public function responsible_tasks(): hasMany
