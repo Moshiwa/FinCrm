@@ -85,8 +85,8 @@ enum ActionsEnum: string
         return match ($value) {
             ActionsEnum::COMMENT->value => 'Комментарий',
             ActionsEnum::CHANGE_PIPELINE->value => 'Смена воронки',
-            ActionsEnum::CHANGE_STAGE->value => 'Смена стадии',
-            ActionsEnum::CHANGE_TASK_STAGE->value => 'Смена статуса',
+            ActionsEnum::CHANGE_STAGE->value => 'Смена стадии сделки',
+            ActionsEnum::CHANGE_TASK_STAGE->value => 'Смена стадии задачи',
             ActionsEnum::CHANGE_RESPONSIBLE->value => 'Смена ответственного',
             ActionsEnum::CHANGE_MANAGER->value => 'Смена наблюдателя',
             ActionsEnum::CHANGE_EXECUTOR->value => 'Смена исполнителя',

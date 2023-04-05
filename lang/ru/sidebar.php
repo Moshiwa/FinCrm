@@ -12,7 +12,7 @@ return [
     'directories' => 'Справочники',
     'deal_buttons' => 'Кнопки сделок',
     'task_buttons' => 'Кнопки задач',
-    'task_stages' => 'Статусы задач',
+    'task_stages' => 'Стадии задач',
     'tasks' => 'Задачи',
     'managers' => 'Менеджеры',
     'reports' => 'Отчеты',

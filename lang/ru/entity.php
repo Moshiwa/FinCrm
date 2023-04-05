@@ -18,7 +18,7 @@ return [
             'field_deal' => 'Поля сделок',
             'field_client' => 'Поля клиентов',
             'field_task' => 'Поля задач',
-            'task_stage' => 'Статусы задач',
+            'task_stage' => 'Стадии задач',
         ],
         'one' => [
             'users' => 'Пользователь',
@@ -36,7 +36,7 @@ return [
             'field_deal' => 'Полe сделок',
             'field_client' => 'Полe клиентов',
             'field_task' => 'Полe задач',
-            'task_stage' => 'Статус задач',
+            'task_stage' => 'Стадия задач',
         ],
         'action' => [
             'users' => 'Пользователя',
@@ -54,7 +54,7 @@ return [
             'field_deal' => 'Полe сделки',
             'field_client' => 'Полe клиентов',
             'field_task' => 'Полe задачи',
-            'task_stage' => 'Статус задачи',
+            'task_stage' => 'Стадия задачи',
         ],
     ]
 ];

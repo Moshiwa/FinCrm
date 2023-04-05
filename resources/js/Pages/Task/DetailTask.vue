@@ -17,7 +17,7 @@
                         @change="send"
                     />
                 </el-form-item>
-                <el-form-item label="Статус">
+                <el-form-item label="Стадия">
                     <el-select
                         v-model="thisTask.stage"
                         :disabled="!permissions.can_change_stage"
