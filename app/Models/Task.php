@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 class Task extends Model
@@ -31,7 +32,8 @@ class Task extends Model
     ];
 
     protected $appends = [
-        'all_fields'
+        'all_fields',
+        'string_deadline',
     ];
 
     public $casts = [
@@ -69,6 +71,10 @@ class Task extends Model
         return $this->belongsToMany(Field::class, 'task_fields')
             ->where('entity', FieldsEntitiesEnum::task->value)
             ->withPivot('value');
+    }
+
+    public function getStringDeadlineAttribute() {
+        return Carbon::make($this->deadline)->translatedFormat('j F Y H:i');
     }
 
     public function getAllFieldsAttribute(): Collection

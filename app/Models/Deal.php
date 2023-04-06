@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -34,7 +35,8 @@ class Deal extends Model
     ];
 
     protected $appends = [
-        'all_fields'
+        'all_fields',
+        'string_deadline',
     ];
 
     public function fields()
@@ -85,6 +87,10 @@ class Deal extends Model
     public function comments(): morphMany
     {
         return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function getStringDeadlineAttribute() {
+        return Carbon::make($this->deadline)->translatedFormat('j F Y H:i');
     }
 
     public static function booted()

@@ -8,6 +8,9 @@
                     v-model="thisTask.name"
                     @change="send"
                 />
+                <div :class="this.taskIsOverdue ? 'entity-state title-overdue' : 'entity-state'">
+                    Необходимо закрыть сделку до {{ thisTask.string_deadline }}
+                </div>
                 <el-divider content-position="center">ЗАДАЧА</el-divider>
                 <el-form-item label="Описание">
                     <el-input
@@ -260,6 +263,13 @@ export default {
     },
     beforeMount() {
         this.thisTask.all_fields = this.castFieldValue(this.thisTask.all_fields);
+    },
+    computed: {
+        taskIsOverdue() {
+            let deadline = new Date(this.thisTask.deadline).getTime();
+            let now = Date.now();
+            return deadline < now;
+        }
     },
     methods: {
         changeCustomField(field) {

@@ -8,6 +8,9 @@
                     v-model="thisDeal.name"
                     @change="send"
                 />
+                <div :class="this.dealIsOverdue ? 'entity-state title-overdue' : 'entity-state'">
+                    Необходимо закрыть сделку до {{ thisDeal.string_deadline }}
+                </div>
                 <el-divider content-position="center">СДЕЛКА</el-divider>
                 <el-form-item label="Воронка/Стадия" class="select-container">
                     <el-select
@@ -206,7 +209,6 @@ export default {
     data() {
         return {
             defaultResponsible: this.deal.responsible ?? {},
-
             loading: false,
             visibleCommentForm: false,
             visibleFileUploadForm: false,
@@ -238,6 +240,13 @@ export default {
     beforeMount() {
         this.thisDeal.all_fields = this.castFieldValue(this.thisDeal.all_fields);
         this.thisDeal.client.all_fields = this.castFieldValue(this.thisDeal.client.all_fields);
+    },
+    computed: {
+        dealIsOverdue() {
+            let deadline = new Date(this.thisDeal.deadline).getTime();
+            let now = Date.now();
+            return deadline < now;
+        }
     },
     created() {
         console.log('Created')
