@@ -9,7 +9,7 @@
                     @change="send"
                 />
                 <div :class="this.dealIsOverdue ? 'entity-state title-overdue' : 'entity-state'">
-                    Необходимо закрыть сделку до {{ thisDeal.string_deadline }}
+                    Необходимо закрыть сделку до <br> {{ thisDeal.string_deadline }}
                 </div>
                 <el-divider content-position="center">СДЕЛКА</el-divider>
                 <el-form-item label="Воронка/Стадия" class="select-container">
