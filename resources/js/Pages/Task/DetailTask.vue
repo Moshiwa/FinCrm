@@ -40,8 +40,8 @@
                         filterable
                         remote
                         reserve-keyword
-                        placeholder="Please enter a keyword"
-                        @change="send"
+                        placeholder="Выберите ответственного"
+                        @change="changeResponsible"
                     >
                         <el-option
                             v-for="user in users"
@@ -59,7 +59,7 @@
                         filterable
                         remote
                         reserve-keyword
-                        placeholder="Please enter a keyword"
+                        placeholder="Выберите наблюдателя"
                         @change="send"
                     >
                         <el-option
@@ -78,7 +78,7 @@
                         filterable
                         remote
                         reserve-keyword
-                        placeholder="Please enter a keyword"
+                        placeholder="Выберите исполнителя"
                         @change="send"
                     >
                         <el-option
@@ -210,6 +210,7 @@ export default {
     },
     data() {
         return {
+            defaultResponsible: this.task.responsible ?? {},
             loading: false,
             visibleCommentForm: false,
             visibleFileUploadForm: false,
@@ -264,6 +265,22 @@ export default {
         changeCustomField(field) {
             this.action = field;
             this.send();
+        },
+        changeResponsible() {
+            ElMessageBox.confirm(
+                'Вы уверены? Вы можете потерять возможность редактировать задачу.',
+                'Сменить ответственного',
+                {
+                    confirmButtonText: 'Хорошо',
+                    cancelButtonText: 'Отмена',
+                    type: 'warning',
+                })
+                .then(() => {
+                    this.send()
+                }).catch(() => {
+                    this.thisTask.responsible = this.defaultResponsible;
+                }
+            );
         },
         loadMore (e) {
             if (this.loading) {

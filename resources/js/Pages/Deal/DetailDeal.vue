@@ -45,8 +45,8 @@
                         filterable
                         remote
                         reserve-keyword
-                        placeholder="Please enter a keyword"
-                        @change="send"
+                        placeholder="Выберите ответственного"
+                        @change="changeResponsible()"
                     >
                         <el-option
                             v-for="user in responsibles"
@@ -205,6 +205,8 @@ export default {
     },
     data() {
         return {
+            defaultResponsible: this.deal.responsible ?? {},
+
             loading: false,
             visibleCommentForm: false,
             visibleFileUploadForm: false,
@@ -253,6 +255,21 @@ export default {
                     this.thisDeal.stage = response.data[0] ?? {}
                     this.send();
                 });
+        },
+        changeResponsible() {
+            ElMessageBox.confirm(
+                'Вы уверены? Вы можете потерять возможность редактировать сделку.',
+                'Сменить ответственного',
+                {
+                    confirmButtonText: 'Хорошо',
+                    cancelButtonText: 'Отмена',
+                    type: 'warning',
+                })
+                .then(() => {
+                    this.send()
+                }).catch(() => {
+                    this.thisDeal.responsible = this.defaultResponsible;
+            });
         },
         changeCustomField(field) {
             this.action = field;
