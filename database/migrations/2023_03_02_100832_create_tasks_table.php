@@ -14,8 +14,7 @@ return new class extends Migration
             $table->string('name');
             $table->foreignId('task_stage_id')->constrained();
             $table->text('description')->nullable();
-            $table->dateTime('start');
-            $table->dateTime('end')->nullable();
+            $table->dateTime('deadline');
             $table->foreignId('responsible_id')
                 ->nullable()
                 ->constrained('users')

@@ -112,35 +112,32 @@
                         </div>
                     </div>
                     <div class="popup__item">
-                        <div class="item__title">Изменить время старта задачи</div>
+                        <div class="item__title">Смена дедлайна</div>
                         <el-checkbox
-                            v-model="actionChangeStart"
+                            v-model="actionChangeDeadline"
                             label="Менять"
                         />
-                        <el-date-picker
-                            v-model="currentButton.action.start_time"
-                            v-if="actionChangeStart"
-                            type="datetime"
-                            placeholder="Select date and time"
-                            format="YYYY/MM/DD HH:mm:ss"
-                            value-format="YYYY-MM-DD H:m:s"
-                        />
+                        <div v-if="actionChangeDeadline">
+                            Смена дедлайна на
+
+                            <el-input-number
+                                v-model="currentButton.action.deadline_value"
+                            />
+                            <el-select
+                                v-model="currentButton.action.deadline_format_id"
+                                value-key="id"
+                                clearable
+                            >
+                                <el-option
+                                    v-for="format in deadlineFormats"
+                                    :key="format.id"
+                                    :label="format.name"
+                                    :value="format.id"
+                                />
+                            </el-select>
+                        </div>
                     </div>
-                    <div class="popup__item">
-                        <div class="item__title">Изменить время окончание задачи</div>
-                        <el-checkbox
-                            v-model="actionChangeEnd"
-                            label="Менять"
-                        />
-                        <el-date-picker
-                            v-model="currentButton.action.end_time"
-                            v-if="actionChangeEnd"
-                            type="datetime"
-                            placeholder="Select date and time"
-                            format="YYYY/MM/DD HH:mm:ss"
-                            value-format="YYYY-MM-DD H:m:s"
-                        />
-                    </div>
+
                     <div class="popup__item">
                         <div class="item__title">Смена ответственного</div>
                         <el-checkbox
@@ -263,6 +260,10 @@ export default {
         users: {
             type: Array,
             default: []
+        },
+        deadlineFormats: {
+            type: Array,
+            default: []
         }
     },
     data() {
@@ -282,8 +283,7 @@ export default {
             actionChangeManager: false,
             actionChangeExecutor: false,
             actionLeaveComment: false,
-            actionChangeStart: false,
-            actionChangeEnd: false,
+            actionChangeDeadline: false,
 
             permissions: {
                 can_delete: this.auth.permission_names.find((item) => item === 'task_buttons.delete'),
@@ -323,16 +323,14 @@ export default {
             this.actionChangeManager = false;
             this.actionChangeExecutor = false;
             this.actionLeaveComment = false;
-            this.actionChangeStart = false;
-            this.actionChangeEnd = false;
+            this.actionChangeDeadline = false;
             if (!!button) {
                 this.actionLeaveComment = !!button.action.comment;
                 this.actionChangeStage = !!button.action.task_stage_id;
                 this.actionChangeResponsible = !!button.action.responsible_id;
                 this.actionChangeManager = !!button.action.manager_id;
                 this.actionChangeExecutor = !!button.action.executor_id;
-                this.actionChangeStart = !!button.action.start_time;
-                this.actionChangeEnd = !!button.action.end_time;
+                this.actionChangeDeadline = !!button.action.deadline_value && !!button.action.deadline_format_id;
             } else {
                 button = {
                     name: '',
@@ -381,8 +379,8 @@ export default {
             this.currentButton.action.responsible_id = this.actionChangeResponsible ? this.currentButton.action.responsible_id : '';
             this.currentButton.action.manager_id = this.actionChangeManager ? this.currentButton.action.manager_id : '';
             this.currentButton.action.executor_id = this.actionChangeExecutor ? this.currentButton.action.executor_id : '';
-            this.currentButton.action.start_time = this.actionChangeStart ? this.currentButton.action.start_time : '';
-            this.currentButton.action.end_time = this.actionChangeEnd ? this.currentButton.action.end_time : '';
+            this.currentButton.action.deadline_value = this.actionChangeDeadline ? this.currentButton.action.deadline_value : '';
+            this.currentButton.action.deadline_format_id = this.actionChangeDeadline ? this.currentButton.action.deadline_format_id : '';
             this.currentButton.action.comment = !!this.actionLeaveComment;
         },
         remove() {

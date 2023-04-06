@@ -6,6 +6,7 @@ use App\Traits\SpaceableTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TaskStage extends Model
 {
@@ -14,12 +15,26 @@ class TaskStage extends Model
     use SpaceableTrait;
 
     protected $fillable = [
-        'name'
+        'name',
+        'deadline',
+        'deadline_format_id'
     ];
+
+    protected $appends = [ 'calculated_deadline' ];
 
     public function buttons()
     {
         return $this->belongsToMany(TaskButton::class, 'task_button_stages');
+    }
+
+    public function deadline_format(): BelongsTo
+    {
+        return $this->belongsTo(DeadlineFormat::class);
+    }
+
+    public function getCalculatedDeadlineAttribute()
+    {
+        return $this->deadline_format->value ?? 0 * $this->deadline;
     }
 
     protected static function booted()

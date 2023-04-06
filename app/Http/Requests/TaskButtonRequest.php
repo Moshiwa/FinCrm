@@ -27,8 +27,8 @@ class TaskButtonRequest extends FormRequest
             'action.manager_id' => 'nullable|exists:App\Models\User,id',
             'action.executor_id' => 'nullable|exists:App\Models\User,id',
             'action.comment' => 'nullable|boolean',
-            'action.start_time' => 'nullable|date',
-            'action.end_time' => 'nullable|date',
+            'action.deadline_value' => 'nullable|integer',
+            'action.deadline_format_id' => 'nullable|exists:App\Models\DeadlineFormat,id',
         ];
     }
 

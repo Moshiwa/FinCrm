@@ -175,7 +175,6 @@
                                 />
                             </el-select>
                         </div>
-
                     </div>
                     <div class="popup__item">
                         <div class="item__title">Смена ответственного</div>

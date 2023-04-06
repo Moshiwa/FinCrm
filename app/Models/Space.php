@@ -121,9 +121,18 @@ class Space extends Model
 
     private static function createDefaultTaskStage($space): array
     {
+        $deadline_format = DeadlineFormat::query()->where('name', 'day')->first();
         $task_stages = [
-            [ 'name' => 'Новая' ],
-            [ 'name' => 'Завершена' ]
+            [
+                'name' => 'Новая',
+                'deadline' => 1,
+                'deadline_format_id' => $deadline_format->id
+            ],
+            [
+                'name' => 'Завершена',
+                'deadline' => 1,
+                'deadline_format_id' => $deadline_format->id
+            ]
         ];
 
         $result = [];

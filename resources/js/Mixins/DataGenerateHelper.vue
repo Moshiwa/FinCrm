@@ -63,7 +63,6 @@ export default {
             deal.responsible.id = !!action.responsible_id ? action.responsible_id : deal.responsible.id;
 
             if (!!action.deadline) {
-                console.log(action.deadline)
                 let currentSeconds = Math.floor(Date.now() / 1000);
                 let newDeadline = action.deadline + currentSeconds;
                 let dateObj = new Date(newDeadline * 1000);
@@ -71,7 +70,6 @@ export default {
                 let date = new Date(dateObj.getTime() - (dateObj.getTimezoneOffset() * 60000 ))
                     .toISOString()
                     .split("T")[0];
-                console.log(date);
                 deal.deadline = `${date} ${dateObj.getHours()}:${dateObj.getMinutes()}`;
             }
 
@@ -88,11 +86,8 @@ export default {
             if (!!task.description) {
                 formData.append('description', task.description);
             }
-            if (!!task.start) {
-                formData.append('start', task.start);
-            }
-            if (!!task.end) {
-                formData.append('end', task.end);
+            if (!!task.deadline) {
+                formData.append('deadline', task.deadline);
             }
             if (!!task.stage?.id) {
                 formData.append('task_stage_id', task.stage.id);
@@ -139,7 +134,26 @@ export default {
             }
 
             return formData;
-        }
+        },
+        taskPrepareDataByButtonOptions(action, task) {
+            task.stage.id = !!action.task_stage_id ? action.task_stage_id : task.stage?.id;
+            task.responsible = !!action.responsible_id ? {id: action.responsible_id} : task.responsible;
+            task.manager = !!action.manager_id ? {id: action.manager_id} : task.manager;
+            task.executor = !!action.executor_id ? {id: action.executor_id} : task.executor;
+
+            if (!!action.deadline) {
+                let currentSeconds = Math.floor(Date.now() / 1000);
+                let newDeadline = action.deadline + currentSeconds;
+                let dateObj = new Date(newDeadline * 1000);
+
+                let date = new Date(dateObj.getTime() - (dateObj.getTimezoneOffset() * 60000 ))
+                    .toISOString()
+                    .split("T")[0];
+                task.deadline = `${date} ${dateObj.getHours()}:${dateObj.getMinutes()}`;
+            }
+
+            return task;
+        },
     }
 }
 </script>

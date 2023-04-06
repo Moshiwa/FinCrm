@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\TaskStageRequest;
+use App\Models\DeadlineFormat;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -42,6 +43,24 @@ class TaskStageCrudController extends CrudController
     {
         CRUD::setValidation(TaskStageRequest::class);
         CRUD::field('name')->label('Наименование');
+        CRUD::field('deadline')
+            ->label('Срок для сделки')
+            ->type('number')
+            ->allows_null(false)
+            ->wrapper([
+                'class' => 'form-group col-md-3',
+                'required' => true
+            ]);
+        CRUD::field('deadline_format_id')
+            ->label('Формат')
+            ->type('relationship')
+            ->attribute('tr_name')
+            ->model(DeadlineFormat::class)
+            ->allows_null(false)
+            ->wrapper([
+                'class' => 'form-group col-md-3',
+                'required' => true
+            ]);
     }
 
 

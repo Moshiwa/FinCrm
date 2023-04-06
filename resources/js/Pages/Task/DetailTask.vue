@@ -90,15 +90,16 @@
                     </el-select>
                 </el-form-item>
 
-                <el-form-item label="Даты начала/окончания" class="select-container">
+                <el-form-item label="Срок до">
                     <el-date-picker
-                        v-model="datetime"
-                        :disabled="!permissions.can_update_task"
-                        type="datetimerange"
-                        format="YYYY-MM-DD HH:mm"
-                        value-format="YYYY-MM-DD HH:mm"
-                        :shortcuts="shortcuts"
-                        @change="changeDateTime"
+                        v-model="thisTask.deadline"
+                        :disabled="!(permissions.can_update_task || permissions.can_change_members_self)"
+                        type="datetime"
+                        placeholder="Выберите дату и время"
+                        format="YYYY/MM/DD HH:mm"
+                        :clearable="false"
+                        value-format="YYYY-MM-DD H:m"
+                        @change="send"
                     />
                 </el-form-item>
 
@@ -288,7 +289,7 @@ export default {
                 this.thisTask.comments.unshift(this.newComment);
             }
 
-            this.prepareDataByButtonOptions(e.button.action);
+            this.thisTask = this.taskPrepareDataByButtonOptions(e.button.action, this.thisTask);
 
             this.newComment = { id: '', type: 'comment', content: '', author_id: null, files: [] };
             this.send();
@@ -312,28 +313,8 @@ export default {
             this.deleteCommentId = null;
         },
         changeData(options) {
-            this.prepareDataByButtonOptions(options);
+            this.thisTask = this.taskPrepareDataByButtonOptions(options, this.thisTask);
             this.send();
-        },
-        changeDateTime() {
-            let times = [];
-            if (this.datetime?.length > 0) {
-                this.datetime.forEach((date) => {
-                    times.push(date);
-                });
-            }
-
-            this.thisTask.start = times[0] ?? this.thisTask.start;
-            this.thisTask.end = times[1] ?? this.thisTask.end;
-            this.send();
-        },
-        prepareDataByButtonOptions(action) {
-            this.thisTask.stage.id = !!action.task_stage_id ? action.task_stage_id : this.thisTask.stage?.id;
-            this.thisTask.responsible = !!action.responsible_id ? {id: action.responsible_id} : this.thisTask.responsible;
-            this.thisTask.manager = !!action.manager_id ? {id: action.manager_id} : this.thisTask.manager;
-            this.thisTask.executor = !!action.executor_id ? {id: action.executor_id} : this.thisTask.executor;
-            this.thisTask.start = !!action.start_time ? action.start_time : this.thisTask.start;
-            this.thisTask.end = !!action.end_time ? action.end_time : this.thisTask.end;
         },
         deleteTask() {
             ElMessageBox.confirm(

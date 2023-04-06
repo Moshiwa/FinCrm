@@ -83,8 +83,8 @@ class TaskButtonCrudController extends CrudController
             'manager_id' => $data['action']['manager_id'] ?? null,
             'executor_id' => $data['action']['executor_id'] ?? null,
             'comment' => $data['action']['comment'] ?? false,
-            'start_time' => $data['action']['start_time'] ?? null,
-            'end_time' => $data['action']['end_time'] ?? null,
+            'deadline_value' => $data['action']['deadline_value'] ?? null,
+            'deadline_format_id' => $data['action']['deadline_format_id'] ?? null,
         ]);
 
         $buttons = TaskButton::query()->with(['visible', 'action'])->get();

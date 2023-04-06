@@ -30,9 +30,9 @@ return new class extends Migration
                 ->nullable()
                 ->constrained('users')
                 ->nullOnDelete();
-            $table->dateTime('start_time')->nullable();
-            $table->dateTime('end_time')->nullable();
             $table->boolean('comment')->default(false);
+            $table->foreignId('deadline_format_id')->nullable();
+            $table->integer('deadline_value')->nullable();
         });
     }
 

@@ -17,9 +17,13 @@ class TaskButtonAction extends Model
         'responsible_id',
         'manager_id',
         'executor_id',
-        'start_time',
-        'end_time',
-        'comment'
+        'comment',
+        'deadline_format_id',
+        'deadline_value',
+    ];
+
+    protected $appends = [
+        'deadline'
     ];
 
     public function stage(): BelongsTo
@@ -40,5 +44,20 @@ class TaskButtonAction extends Model
     public function executor(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function deadline_format(): BelongsTo
+    {
+        return $this->belongsTo(DeadlineFormat::class);
+    }
+
+    public function getDeadlineAttribute(): string|int
+    {
+        $value = (int)$this->deadline_value ?? 0;
+        $format = (int)$this->deadline_format?->value ?? 0;
+
+        $result = $value * $format;
+
+        return empty($result) ? '' : $result;
     }
 }

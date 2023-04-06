@@ -4,6 +4,8 @@
     use \App\Models\TaskStage;
     use \App\Services\Button\ButtonService;
     use \App\Models\User;
+    use \App\Models\DeadlineFormat;
+
     $defaultBreadcrumbs = [
       trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
       trans('backpack::crud.add') => false,
@@ -21,6 +23,7 @@
         $ready_task_stages[] = $service->mergeTaskButtonsSettings($task_stage);
     }*/
     $users = User::query()->select(['id', 'name'])->get();
+    $deadline_formats = DeadlineFormat::query()->get();
 @endphp
 
 
@@ -38,6 +41,7 @@
             <detail-task-button
                 :auth="{{ backpack_user() }}"
                 :buttons="{{ json_encode($buttons) }}"
+                :deadline-formats="{{ json_encode($deadline_formats) }}"
                 :task-stages="{{ $task_stages }}"
                 :users="{{ $users }}"
             />

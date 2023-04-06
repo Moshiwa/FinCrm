@@ -175,14 +175,14 @@ class TaskCrudController extends CrudController
     {
         $stage = TaskStage::query()->first();
         $first_stage = $stage->id;
-        $now = now();
+
+        $deadline = time() + $stage->calculated_deadline;
 
         $task = Task::query()->create([
             'name' => 'Новая задача',
             'task_stage_id' => $first_stage,
             'description' => '',
-            'start' => $now,
-            'end' => null,
+            'deadline' => Carbon::createFromTimestamp($deadline),
             'responsible_id' => backpack_user()->id,
             'manager_id' => null,
             'executor_id' => null,

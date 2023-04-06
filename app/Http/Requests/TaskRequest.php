@@ -18,8 +18,7 @@ class TaskRequest extends FormRequest
             'id' => 'required|exists:tasks,id',
             'name' => 'required|max:255',
             'description' => 'nullable',
-            'start' => 'nullable',
-            'end' => 'nullable',
+            'deadline' => 'nullable',
 
             'task_stage_id' => 'nullable|exists:task_stages,id',
             'responsible_id' => 'nullable|exists:App\Models\User,id',

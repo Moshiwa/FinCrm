@@ -21,8 +21,7 @@ class TaskService
             }
 
             $task->description = $data['description'] ?? '';
-            $task->start = empty($data['start']) ? null : Carbon::make($data['start']);
-            $task->end = empty($data['end']) ? null : Carbon::make($data['end']);
+            $task->deadline = empty($data['deadline']) ? null : Carbon::make($data['deadline']);
 
             if (backpack_user()->can('tasks.change_members_self')) {
                 if (backpack_user()->id == $task->responsible_id || backpack_user()->hasRole('admin')) {
