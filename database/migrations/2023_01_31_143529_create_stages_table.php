@@ -11,6 +11,9 @@ return new class extends Migration
         Schema::create('stages', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->integer('deadline');
+            $table->foreignId('deadline_format_id')
+                ->constrained();
             $table->foreignId('pipeline_id')
                 ->constrained()
                 ->cascadeOnDelete()

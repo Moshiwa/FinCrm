@@ -7,6 +7,7 @@ export default {
 
             formData.append('id', deal.id);
             formData.append('name', deal.name);
+            formData.append('deadline', deal.deadline);
             formData.append('pipeline_id', deal.pipeline.id);
             formData.append('stage_id', deal.stage.id);
             formData.append('responsible_id', deal.responsible.id);
@@ -60,6 +61,19 @@ export default {
             deal.pipeline.id = !!action.pipeline_id ? action.pipeline_id : deal.pipeline.id;
             deal.stage.id = !!action.stage_id ? action.stage_id : deal.stage.id;
             deal.responsible.id = !!action.responsible_id ? action.responsible_id : deal.responsible.id;
+
+            if (!!action.deadline) {
+                console.log(action.deadline)
+                let currentSeconds = Math.floor(Date.now() / 1000);
+                let newDeadline = action.deadline + currentSeconds;
+                let dateObj = new Date(newDeadline * 1000);
+
+                let date = new Date(dateObj.getTime() - (dateObj.getTimezoneOffset() * 60000 ))
+                    .toISOString()
+                    .split("T")[0];
+                console.log(date);
+                deal.deadline = `${date} ${dateObj.getHours()}:${dateObj.getMinutes()}`;
+            }
 
             return deal;
         },

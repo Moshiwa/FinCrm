@@ -13,6 +13,7 @@ use App\Services\Field\FieldService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Backpack\CRUD\app\Library\Widget;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
@@ -117,6 +118,7 @@ class DealCrudController extends CrudController
 
         if (backpack_user()->can('deals.update')) {
             $deal->name = $data['name'];
+            $deal->deadline = $data['deadline'];
             if (backpack_user()->can('deals.change_pipeline')) {
                 $deal->pipeline_id = $data['pipeline_id'];
             }
@@ -222,8 +224,12 @@ class DealCrudController extends CrudController
 
         $client_id = $this->crud->getCurrentEntryId();
         $client = Client::query()->find($client_id);
+
+        $deadline = time() + $stage->calculated_deadline;
+
         $deal = $client->deals()->create([
             'name' => 'Новая сделка',
+            'deadline' => Carbon::createFromTimestamp($deadline),
             'pipeline_id' => $pipeline->id,
             'stage_id' => $stage->id,
             'responsible_id' => backpack_user()->id,

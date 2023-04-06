@@ -16,6 +16,7 @@ class DealRequest extends FormRequest
         return [
             'id' => 'required|exists:deals,id',
             'name' => 'required|max:255',
+            'deadline' => 'required|date',
 
             'stage_id' => 'nullable|exists:stages,id',
             'pipeline_id' => 'nullable|exists:pipelines,id',

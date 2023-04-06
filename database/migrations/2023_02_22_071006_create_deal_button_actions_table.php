@@ -27,6 +27,8 @@ return new class extends Migration
                 ->constrained('users')
                 ->nullOnDelete();
             $table->boolean('comment')->default(false);
+            $table->foreignId('deadline_format_id')->nullable();
+            $table->integer('deadline_value')->nullable();
         });
     }
 

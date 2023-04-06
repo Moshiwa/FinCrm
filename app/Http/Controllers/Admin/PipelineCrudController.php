@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\PipelineRequest;
+use App\Models\DeadlineFormat;
 use App\Services\Stage\StageService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -56,6 +57,28 @@ class PipelineCrudController extends CrudController
                     'type' => 'text',
                     'wrapper' => [
                         'class' => 'form-group col-md-6',
+                    ],
+                ],
+                [
+                    'name' => 'deadline',
+                    'label' => 'Срок для сделки',
+                    'type' => 'number',
+                    'wrapper' => [
+                        'class' => 'form-group col-md-3',
+                        'required' => true
+                    ],
+                ],
+                [
+                    'name' => 'deadline_format_id',
+                    'entity' => 'deadline_format',
+                    'label' => 'Формат',
+                    'attribute' => 'tr_name',
+                    'type' => 'relationship',
+                    'model' => DeadlineFormat::class,
+                    'allows_null' => false,
+                    'wrapper' => [
+                        'class' => 'form-group col-md-3',
+                        'required' => true
                     ],
                 ],
             ]

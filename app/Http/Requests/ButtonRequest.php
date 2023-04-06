@@ -26,6 +26,8 @@ class ButtonRequest extends FormRequest
             'action.pipeline_id' => 'nullable|exists:pipelines,id',
             'action.responsible_id' => 'nullable|exists:App\Models\User,id',
             'action.comment' => 'nullable|boolean',
+            'action.deadline_value' => 'nullable|integer',
+            'action.deadline_format_id' => 'nullable|exists:App\Models\DeadlineFormat,id',
         ];
     }
 

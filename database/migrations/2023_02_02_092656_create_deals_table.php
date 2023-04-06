@@ -12,6 +12,7 @@ return new class extends Migration
         Schema::create('deals', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->dateTime('deadline');
             $table->foreignId('pipeline_id')
                 ->constrained();
             $table->foreignId('client_id')

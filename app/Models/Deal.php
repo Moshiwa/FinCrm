@@ -27,6 +27,7 @@ class Deal extends Model
 
     protected $fillable = [
         'name',
+        'deadline',
         'pipeline_id',
         'stage_id',
         'responsible_id',

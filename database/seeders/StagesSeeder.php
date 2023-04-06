@@ -33,6 +33,8 @@ class StagesSeeder extends Seeder
             Stage::query()->firstOrCreate([
                 'pipeline_id' => $stage['pipeline_id'],
                 'name' => $stage['name'],
+                'deadline' => 4,
+                'deadline_format_id' => 1
             ], $stage);
         }
     }

@@ -83,6 +83,8 @@ class DealButtonCrudController extends CrudController
             'stage_id' => $data['action']['stage_id'] ?? null,
             'responsible_id' => $data['action']['responsible_id'] ?? null,
             'comment' => $data['action']['comment'] ?? false,
+            'deadline_value' => $data['action']['deadline_value'] ?? null,
+            'deadline_format_id' => $data['action']['deadline_format_id'] ?? null,
         ]);
 
         $pipeline = Pipeline::query()->find($data['pipeline_id']);

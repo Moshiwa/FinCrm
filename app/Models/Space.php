@@ -84,18 +84,26 @@ class Space extends Model
 
     private static function createDefaultStages($space, $pipeline): array
     {
+        $deadline_format = DeadlineFormat::query()->where('name', 'day')->first();
+
         $stages = [
             [
                 'name' => 'В работе',
                 'pipeline_id' => $pipeline->id,
+                'deadline' => 1,
+                'deadline_format_id' => $deadline_format->id
             ],
             [
                 'name' => 'Выполнено',
                 'pipeline_id' => $pipeline->id,
+                'deadline' => 1,
+                'deadline_format_id' => $deadline_format->id
             ],
             [
                 'name' => 'Отменено',
                 'pipeline_id' => $pipeline->id,
+                'deadline' => 1,
+                'deadline_format_id' => $deadline_format->id
             ],
         ];
 

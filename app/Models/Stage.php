@@ -17,9 +17,12 @@ class Stage extends Model
     use HasFactory;
     use SpaceableTrait;
 
+    protected $appends = [ 'calculated_deadline' ];
     protected $fillable = [
         'name',
-        'pipeline_id'
+        'deadline',
+        'pipeline_id',
+        'deadline_format_id',
     ];
 
     protected $guarded = ['id'];
@@ -38,6 +41,16 @@ class Stage extends Model
     public function pipeline(): BelongsTo
     {
         return $this->belongsTo(Pipeline::class);
+    }
+
+    public function deadline_format(): BelongsTo
+    {
+        return $this->belongsTo(DeadlineFormat::class);
+    }
+
+    public function getCalculatedDeadlineAttribute()
+    {
+        return $this->deadline_format->value ?? 0 * $this->deadline;
     }
 
     protected static function booted()

@@ -4,6 +4,7 @@
     use \App\Models\Pipeline;
     use \App\Services\Button\ButtonService;
     use \App\Models\User;
+    use \App\Models\DeadlineFormat;
 
     $defaultBreadcrumbs = [
       trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
@@ -22,6 +23,7 @@
         $ready_pipelines[] = $service->mergeDealButtonsSettings($pipeline);
     }
     $users = User::query()->select(['id', 'name'])->get();
+    $deadline_formats = DeadlineFormat::query()->get();
 
 @endphp
 
@@ -39,6 +41,7 @@
             </section>
             <detail-deal-button
                 :pipelines="{{ json_encode($ready_pipelines) }}"
+                :deadline-formats="{{ json_encode($deadline_formats) }}"
                 :auth="{{ backpack_user() }}"
                 :users="{{ $users }}"
             />

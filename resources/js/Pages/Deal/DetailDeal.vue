@@ -56,6 +56,18 @@
                         />
                     </el-select>
                 </el-form-item>
+                <el-form-item label="Срок до">
+                    <el-date-picker
+                        v-model="thisDeal.deadline"
+                        :disabled="!(permissions.can_update_deal || permissions.can_change_members_self)"
+                        type="datetime"
+                        placeholder="Выберите дату и время"
+                        format="YYYY/MM/DD HH:mm"
+                        :clearable="false"
+                        value-format="YYYY-MM-DD H:m"
+                        @change="send"
+                    />
+                </el-form-item>
 
                 <el-divider content-position="left">Дополнительные поля</el-divider>
                 <el-form-item

@@ -148,6 +148,34 @@
                                 />
                             </el-select>
                         </div>
+
+                    </div>
+                    <div class="popup__item">
+                        <div class="item__title">Смена дедлайна</div>
+                        <el-checkbox
+                            v-model="actionChangeDeadline"
+                            label="Менять"
+                        />
+                        <div v-if="actionChangeDeadline">
+                            Смена дедлайна на
+
+                            <el-input-number
+                                v-model="currentDeadlineValue"
+                            />
+                            <el-select
+                                v-model="currentDeadlineFormat"
+                                value-key="id"
+                                clearable
+                            >
+                                <el-option
+                                    v-for="format in deadlineFormats"
+                                    :key="format.id"
+                                    :label="format.name"
+                                    :value="format.id"
+                                />
+                            </el-select>
+                        </div>
+
                     </div>
                     <div class="popup__item">
                         <div class="item__title">Смена ответственного</div>
@@ -220,7 +248,11 @@ export default {
         },
         users: {
             type: Array,
-            default: [{}]
+            default: []
+        },
+        deadlineFormats: {
+            type: Array,
+            default: []
         }
     },
     data() {
@@ -233,10 +265,13 @@ export default {
             currentPipeline: this.pipelines[0] ?? { buttons: [] },
             currentButton: {},
             currentActionPipeline: {},
+            currentDeadlineValue: {},
+            currentDeadlineFormat: {},
             currentColor: '',
             currentIcon: '',
 
             actionChangeStage: false,
+            actionChangeDeadline: false,
             actionChangeResponsible: false,
             actionLeaveComment: false,
 
@@ -279,19 +314,25 @@ export default {
         openEditButton(button = null) {
             this.currentResponsible = {};
             this.currentActionPipeline = {};
+            this.currentDeadlineValue = {};
+            this.currentDeadlineFormat = {};
 
             this.actionChangeStage = false;
             this.actionChangeResponsible = false;
             this.actionLeaveComment = false;
+            this.actionChangeDeadline = false;
             if (!!button) {
                 this.allPipelines.forEach((pipeline) => {
                     if (pipeline.id === button.pipeline_id) {
                         this.currentActionPipeline = this.findStagesForPipeline(button.action?.pipeline?.id);
                         this.currentResponsible = button.action.responsible ?? {};
+                        this.currentDeadlineValue = button.action.deadline_value ?? '';
+                        this.currentDeadlineFormat = button.action.deadline_format_id
 
                         this.actionChangeStage = !!button.action.stage_id;
                         this.actionChangeResponsible = !!button.action.responsible_id;
                         this.actionLeaveComment = !!button.action.comment;
+                        this.actionChangeDeadline = !!button.action.deadline_value && !!button.action.deadline_format_id;
                     }
                 })
             } else {
@@ -365,6 +406,8 @@ export default {
             this.currentButton.action.pipeline_id = this.actionChangeStage ? this.currentButton.action.pipeline_id : '';
             this.currentButton.action.responsible_id = this.actionChangeResponsible ? this.currentResponsible.id : '';
             this.currentButton.action.comment = !!this.actionLeaveComment;
+            this.currentButton.action.deadline_value = !!this.actionChangeDeadline ? this.currentDeadlineValue : '';
+            this.currentButton.action.deadline_format_id = !!this.actionChangeDeadline ? this.currentDeadlineFormat : '';
         },
         findStagesForPipeline(pipeline_id) {
             let result = {};

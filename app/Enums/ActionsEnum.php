@@ -24,8 +24,8 @@ enum ActionsEnum: string
     case CHANGE_NAME = 'change_name';
     case CHANGE_DESCRIPTION = 'change_description';
     case CHANGE_CLIENT_NAME = 'change_client_name';
-
     case CHANGE_CUSTOM_FIELD = 'change_custom_field';
+    case CHANGE_DEADLINE = 'change_deadline';
 
     public static function definitionActionsByRequest(): ?array
     {
@@ -42,8 +42,8 @@ enum ActionsEnum: string
             ActionsEnum::CHANGE_NAME->value => 'name',
             ActionsEnum::CHANGE_DESCRIPTION->value => 'description',
             ActionsEnum::CHANGE_CLIENT_NAME->value => 'client.name',
-
             ActionsEnum::CHANGE_CUSTOM_FIELD->value => 'change_custom_field.value',
+            ActionsEnum::CHANGE_DEADLINE->value => 'deadline',
         ];
     }
 
@@ -75,6 +75,7 @@ enum ActionsEnum: string
             ActionsEnum::CHANGE_NAME->value => 'name',
             ActionsEnum::CHANGE_DESCRIPTION->value => 'description',
             ActionsEnum::CHANGE_CLIENT_NAME->value => 'client.name',
+            ActionsEnum::CHANGE_DEADLINE->value => 'deadline',
             default => null
         };
     }
@@ -95,7 +96,8 @@ enum ActionsEnum: string
             ActionsEnum::CHANGE_NAME->value => 'Смена наименования',
             ActionsEnum::CHANGE_DESCRIPTION->value => 'Смена описания',
             ActionsEnum::CHANGE_CLIENT_NAME->value => 'Смена имени клиента',
-            ActionsEnum::CHANGE_CUSTOM_FIELD->value => 'Изменено поле'
+            ActionsEnum::CHANGE_CUSTOM_FIELD->value => 'Изменено поле',
+            ActionsEnum::CHANGE_DEADLINE->value => 'Сроки изменены',
         };
     }
 }
