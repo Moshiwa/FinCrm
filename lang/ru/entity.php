@@ -54,7 +54,7 @@ return [
             'field_deal' => 'Полe сделки',
             'field_client' => 'Полe клиентов',
             'field_task' => 'Полe задачи',
-            'task_stage' => 'Стадия задачи',
+            'task_stage' => 'Стадию задачи',
         ],
     ]
 ];
