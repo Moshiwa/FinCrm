@@ -88,17 +88,14 @@ class Space extends Model
             [
                 'name' => 'В работе',
                 'pipeline_id' => $pipeline->id,
-                'color' => '#0050FF'
             ],
             [
                 'name' => 'Выполнено',
                 'pipeline_id' => $pipeline->id,
-                'color' => '#28FC2A'
             ],
             [
                 'name' => 'Отменено',
                 'pipeline_id' => $pipeline->id,
-                'color' => '#FE3F6D'
             ],
         ];
 
@@ -117,14 +114,8 @@ class Space extends Model
     private static function createDefaultTaskStage($space): array
     {
         $task_stages = [
-            [
-                'name' => 'Новая',
-                'color' => '#0c84e4'
-            ],
-            [
-                'name' => 'Завершена',
-                'color' => '#04AA6D'
-            ]
+            [ 'name' => 'Новая' ],
+            [ 'name' => 'Завершена' ]
         ];
 
         $result = [];

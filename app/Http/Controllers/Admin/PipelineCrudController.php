@@ -51,14 +51,6 @@ class PipelineCrudController extends CrudController
             ->min_rows(1)
             ->subfields([
                 [
-                    'name' => 'color',
-                    'label' => 'Цвет',
-                    'type' => 'color',
-                    'wrapper' => [
-                        'class' => 'form-group col-md-1',
-                    ],
-                ],
-                [
                     'name' => 'name',
                     'label' => 'Наименование',
                     'type' => 'text',

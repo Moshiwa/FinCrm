@@ -14,8 +14,7 @@ class TaskStage extends Model
     use SpaceableTrait;
 
     protected $fillable = [
-        'name',
-        'color'
+        'name'
     ];
 
     public function buttons()

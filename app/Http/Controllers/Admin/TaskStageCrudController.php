@@ -35,19 +35,13 @@ class TaskStageCrudController extends CrudController
     protected function setupListOperation()
     {
         CRUD::column('name')->label('Наименование');
-        CRUD::column('color')->label('Цвет')->type('color');
         CRUD::column('created_at')->label('Дата создания');
     }
 
     protected function setupCreateOperation()
     {
         CRUD::setValidation(TaskStageRequest::class);
-
         CRUD::field('name')->label('Наименование');
-        CRUD::field('color')->label('Цвет')->type('color')->wrapper([
-            'class' => 'form-group col-md-1',
-        ]);
-
     }
 
 

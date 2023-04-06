@@ -19,8 +19,7 @@ class Stage extends Model
 
     protected $fillable = [
         'name',
-        'color',
-        'pipeline_id',
+        'pipeline_id'
     ];
 
     protected $guarded = ['id'];

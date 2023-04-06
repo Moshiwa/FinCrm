@@ -16,17 +16,14 @@ class StagesSeeder extends Seeder
             [
                 'name' => 'В работе',
                 'pipeline_id' => $pipeline_id->id,
-                'color' => '#0050FF'
             ],
             [
                 'name' => 'Выполнено',
                 'pipeline_id' => $pipeline_id->id,
-                'color' => '#28FC2A'
             ],
             [
                 'name' => 'Отменено',
                 'pipeline_id' => $pipeline_id->id,
-                'color' => '#FE3F6D'
             ],
 
         ];
