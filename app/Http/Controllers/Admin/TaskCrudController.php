@@ -42,6 +42,21 @@ class TaskCrudController extends CrudController
             $this->crud->addClause('where', 'task_stage_id', $value);
         });
 
+        $this->crud->addFilter([
+            'name'  => 'deadline',
+            'type'  => 'dropdown',
+            'label' => 'Статус'
+        ], [
+            1 => 'Просрочена',
+            2 => 'Не просрочена',
+        ], function($value) {
+            if ($value == 1) {
+                $this->crud->addClause('where', 'deadline', '<', Carbon::now());
+            } else {
+                $this->crud->addClause('where', 'deadline', '>=', Carbon::now());
+            }
+        });
+
         CRUD::addButton('top', 'task_create', 'view', 'crud::buttons.task_create');
 
         CRUD::column('name')->label('Наименование');
@@ -49,8 +64,17 @@ class TaskCrudController extends CrudController
         CRUD::column('responsible')->label('Ответственный');
         CRUD::column('manager')->label('Наблюдатель');
         CRUD::column('executor')->label('Исполнитель');
-        CRUD::column('start')->label('Дата начала');
-        CRUD::column('end')->label('Дата завершения');
+        CRUD::column('deadline')->label('Срок')->wrapper(['class' => 'test']);
+        CRUD::column('overdue')
+            ->label('')
+            ->type('custom_html')
+            ->value(function ($entry) {
+                if ($entry->deadline < Carbon::now()) {
+                    return '<a class="column-overdue" style="color: #d7556c;">Просрочена</a>';
+                }
+                return '<a class="column-not-overdue" style="color: #04AA6D;">Не просрочена</a>';
+            });
+
     }
 
     public function show($id)

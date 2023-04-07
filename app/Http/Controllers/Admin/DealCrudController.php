@@ -41,12 +41,22 @@ class DealCrudController extends CrudController
         CRUD::column('stage')->label('Стадия');
         CRUD::column('responsible')->label('Ответственный');
         CRUD::column('created_at')->label('Дата создания');
+        CRUD::column('overdue')
+            ->label('')
+            ->type('custom_html')
+            ->value(function ($entry) {
+                if ($entry->deadline < Carbon::now()) {
+                    return '<a class="column-overdue" style="color: #d7556c;">Просрочена</a>';
+                }
+                return '<a class="column-not-overdue" style="color: #04AA6D;">Не просрочена</a>';
+            });
 
         $this->hiddenClientFilter();
         $this->hiddenResponsibleFilter();
         $this->hiddenPipelineFilter();
 
         CRUD::addButton('top', 'pipelines', 'view', 'crud::buttons.pipelines');
+
         $pipeline_id = CRUD::getRequest()->get('pipeline');
         $stages = Stage::query()->select('id', 'name')->when($pipeline_id, function ($query) use ($pipeline_id) {
             $query->where('pipeline_id', $pipeline_id);
@@ -58,6 +68,21 @@ class DealCrudController extends CrudController
             'label' => 'Стадия'
         ], $stages, function($value) { // if the filter is active (the GET parameter "draft" exits)
             $this->crud->addClause('where', 'stage_id', $value);
+        });
+
+        $this->crud->addFilter([
+            'name'  => 'deadline',
+            'type'  => 'dropdown',
+            'label' => 'Статус'
+        ], [
+            1 => 'Просрочена',
+            2 => 'Не просрочена',
+        ], function($value) {
+            if ($value == 1) {
+                $this->crud->addClause('where', 'deadline', '<', Carbon::now());
+            } else {
+                $this->crud->addClause('where', 'deadline', '>=', Carbon::now());
+            }
         });
     }
 
