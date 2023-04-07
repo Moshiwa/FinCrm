@@ -64,7 +64,7 @@ class TaskCrudController extends CrudController
         CRUD::column('responsible')->label('Ответственный');
         CRUD::column('manager')->label('Наблюдатель');
         CRUD::column('executor')->label('Исполнитель');
-        CRUD::column('deadline')->label('Срок')->wrapper(['class' => 'test']);
+        CRUD::column('deadline')->label('Срок')->type('datetime')->format('D MMM GGGG, HH:mm');
         CRUD::column('overdue')
             ->label('')
             ->type('custom_html')
