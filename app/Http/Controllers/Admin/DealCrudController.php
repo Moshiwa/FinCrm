@@ -41,6 +41,7 @@ class DealCrudController extends CrudController
         CRUD::column('stage')->label('Стадия');
         CRUD::column('responsible')->label('Ответственный');
         CRUD::column('created_at')->label('Дата создания');
+        CRUD::column('deadline')->label('Срок');
         CRUD::column('overdue')
             ->label('')
             ->type('custom_html')
