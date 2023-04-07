@@ -141,33 +141,9 @@ class DealCrudController extends CrudController
         $deal = Deal::query()->find($data['id']);
 
         $comment_data = $service->prepareCommentData($deal, $data);
+        $deal = $service->updateDeal($deal, $data);
 
         if (backpack_user()->can('deals.update')) {
-            $deal->name = $data['name'];
-            $deal->deadline = $data['deadline'];
-            if (backpack_user()->can('deals.change_pipeline')) {
-                $deal->pipeline_id = $data['pipeline_id'];
-            }
-
-            if (backpack_user()->can('deals.change_stage')) {
-                $deal->stage_id = $data['stage_id'];
-            }
-
-            if (backpack_user()->can('deals.change_members_self')) {
-                if (backpack_user()->id == $deal->responsible_id) {
-                    $deal->responsible_id = $data['responsible_id'];
-                }
-            }
-
-            if(backpack_user()->can('deals.change_responsible')) {
-                $deal->responsible_id = $data['responsible_id'];
-            }
-
-
-
-            $deal->client_id = $data['client_id'];
-            $deal->save();
-
             $deal->fields()->sync($data['fields'] ?? []);
         }
 

@@ -132,7 +132,10 @@ class TaskCrudController extends CrudController
         $comment_data = $service->prepareCommentData($task, $data);
         $task = $service->updateTask($task, $data);
         $service->createNewMessage($task, $comment_data);
-        $task->fields()->sync($data['fields'] ?? []);
+        if (backpack_user()->can('tasks.update')) {
+            $task->fields()->sync($data['fields'] ?? []);
+        }
+
         $service->updateComments($task, $data);
 
         $comment_count = $data['comment_count'] ?? 10;

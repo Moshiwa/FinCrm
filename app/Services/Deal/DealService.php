@@ -7,10 +7,41 @@ use App\Models\Comment;
 use App\Models\File;
 use App\Services\Button\ActionService;
 use App\Services\Space\SpaceService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 class DealService
 {
+    public function updateDeal($deal, $data)
+    {
+        if (backpack_user()->can('deals.update')) {
+            $deal->name = $data['name'];
+            $deal->deadline = $data['deadline'];
+            if (backpack_user()->can('deals.change_pipeline')) {
+                $deal->pipeline_id = $data['pipeline_id'];
+            }
+
+            if (backpack_user()->can('deals.change_stage')) {
+                $deal->stage_id = $data['stage_id'];
+            }
+
+            if (backpack_user()->can('deals.change_members_self')) {
+                if (backpack_user()->id == $deal->responsible_id) {
+                    $deal->responsible_id = $data['responsible_id'];
+                }
+            }
+
+            if(backpack_user()->can('deals.change_responsible')) {
+                $deal->responsible_id = $data['responsible_id'];
+            }
+
+            $deal->client_id = $data['client_id'];
+            $deal->save();
+        }
+
+        return $deal;
+    }
+
     public function prepareCommentData($deal, $data): array
     {
         $result = [
