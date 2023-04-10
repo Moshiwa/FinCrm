@@ -18,7 +18,7 @@ class SpaceApi
 
         // Проверяем существует ли организация с таким кодом
         $spaces = $request->user()->spaces()->pluck('name', 'code')->toArray();
-        if (! array_key_exists($space_code, $spaces)) {
+        if (! array_key_exists($space_code, $spaces) && !$request->user()->hasRole('admin')) {
             abort(403, 'Organization not found');
         }
 
