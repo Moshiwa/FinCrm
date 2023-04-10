@@ -11,8 +11,14 @@ return new class extends Migration
     {
         Schema::create('user_spaces', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('space_id')->constrained();
+            $table->foreignId('user_id')
+                ->nullable()
+                ->constrained()
+                ->nullOnDelete();
+            $table->foreignId('space_id')
+                ->nullable()
+                ->constrained()
+                ->nullOnDelete();
         });
     }
 
