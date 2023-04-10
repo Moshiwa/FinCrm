@@ -14,7 +14,7 @@ class SmsCenterEmailService extends SenderService
     {
         $this->title = IntegrationEnum::getTitle(IntegrationEnum::SMS_CENTER_EMAIL->value);
         $this->client = new SmsCenterClient();
-        $this->integration = Integration::query()->where('name', IntegrationEnum::SMS_CENTER_EMAIL->value);
+        $this->integration = Integration::query()->where('name', 'sms_center')->first();
     }
 
     public function send($message, $recipient)
@@ -22,8 +22,8 @@ class SmsCenterEmailService extends SenderService
         $response = $this->client->get('send.php', [
             'mes' => $message,
             'phones' => $recipient,
-            'subj' => $this->integration->data->theme ?? '',
-            'sender' => $this->integration->data->sender ?? '',
+            'subj' => $this->integration->data['theme'] ?? '',
+            'sender' => $this->integration->data['sender'] ?? '',
             'mail' => 1
         ]);
 
