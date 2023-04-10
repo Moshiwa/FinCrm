@@ -91,19 +91,22 @@ class Space extends Model
                 'name' => 'В работе',
                 'pipeline_id' => $pipeline->id,
                 'deadline' => 1,
-                'deadline_format_id' => $deadline_format->id
+                'deadline_format_id' => $deadline_format->id,
+                'lft' => 0
             ],
             [
                 'name' => 'Выполнено',
                 'pipeline_id' => $pipeline->id,
                 'deadline' => 1,
-                'deadline_format_id' => $deadline_format->id
+                'deadline_format_id' => $deadline_format->id,
+                'lft' => 0
             ],
             [
                 'name' => 'Отменено',
                 'pipeline_id' => $pipeline->id,
                 'deadline' => 1,
-                'deadline_format_id' => $deadline_format->id
+                'deadline_format_id' => $deadline_format->id,
+                'lft' => 0
             ],
         ];
 
