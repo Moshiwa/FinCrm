@@ -43,7 +43,7 @@
         'executor',
     ]);
 
-    $stages = \App\Models\TaskStage::query()->get();
+    $stages = \App\Models\TaskStage::query()->orderBy('lft')->get();
     $users = User::query()->select(['id', 'name'])->get();
     $buttons = TaskButton::query()->with(['visible', 'action'])->get();
 @endphp

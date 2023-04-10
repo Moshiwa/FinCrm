@@ -32,7 +32,7 @@ class TaskCrudController extends CrudController
         $this->hiddenManagerFilter();
         $this->hiddenResponsibleFilter();
 
-        $stages = TaskStage::query()->get()->toArray();
+        $stages = TaskStage::query()->orderBy('lft')->get()->toArray();
         $stages = Arr::pluck($stages, 'name', 'id');
         CRUD::addFilter([
             'type'  => 'dropdown',
@@ -169,7 +169,7 @@ class TaskCrudController extends CrudController
 
         return response()->json([
             'task' => $task,
-            'stages' => TaskStage::query()->get(),
+            'stages' => TaskStage::query()->orderBy('lft')->get(),
             'users' => User::query()->select('id', 'name')->get(),
         ]);
     }
