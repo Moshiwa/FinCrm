@@ -92,7 +92,6 @@
                         />
                     </el-select>
                 </el-form-item>
-
                 <el-form-item label="Срок до">
                     <el-date-picker
                         v-model="thisTask.deadline"

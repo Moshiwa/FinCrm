@@ -39,6 +39,10 @@ class Deal extends Model
         'string_deadline',
     ];
 
+    public $casts = [
+        'deadline' => 'datetime:Y-m-d H:i:s'
+    ];
+
     public function fields()
     {
         return $this->belongsToMany(Field::class, 'deal_fields')
