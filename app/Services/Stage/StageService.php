@@ -11,9 +11,9 @@ class StageService
     public static function getDefaultStages(): array
     {
         return [
-            [ 'name' => 'В работе', 'lft' => 0 ],
-            [ 'name' => 'Выполнено', 'lft' => 0 ],
-            [ 'name' => 'Отменено', 'lft' => 0 ],
+            [ 'name' => 'В работе', 'deadline' => 1, 'lft' => 0 ],
+            [ 'name' => 'Выполнено', 'deadline' => 1, 'lft' => 0 ],
+            [ 'name' => 'Отменено', 'deadline' => 1, 'lft' => 0 ],
         ];
     }
 }
