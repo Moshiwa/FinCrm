@@ -14,6 +14,7 @@ class TaskStageCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\ReorderOperation;
 
     public function setup()
     {
@@ -67,6 +68,11 @@ class TaskStageCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    protected function setupReorderOperation()
+    {
+        CRUD::set('reorder.label', 'name');
     }
 
     public function destroy($id)

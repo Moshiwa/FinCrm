@@ -59,7 +59,7 @@ class DealCrudController extends CrudController
         CRUD::addButton('top', 'pipelines', 'view', 'crud::buttons.pipelines');
 
         $pipeline_id = CRUD::getRequest()->get('pipeline');
-        $stages = Stage::query()->select('id', 'name')->when($pipeline_id, function ($query) use ($pipeline_id) {
+        $stages = Stage::query()->select('id', 'name', 'lft')->orderBy('lft')->when($pipeline_id, function ($query) use ($pipeline_id) {
             $query->where('pipeline_id', $pipeline_id);
         })->get()->toArray();
         $stages = Arr::pluck($stages, 'name', 'id');
@@ -183,7 +183,7 @@ class DealCrudController extends CrudController
 
         return response()->json([
             'deal' => $deal,
-            'stages' => $deal->pipeline->stages,
+            'stages' => $deal->pipeline->stages()->orderBy('lft', 'asc')->get(),
             'users' => User::query()->select(['id', 'name'])->get(),
             'pipelines' => Pipeline::query()->select(['id', 'name'])->get(),
         ]);

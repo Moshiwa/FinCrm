@@ -47,6 +47,7 @@ class PipelineCrudController extends CrudController
         CRUD::field('name')->label('Наименование');
         CRUD::field('stages')
             ->label('Стадии')
+            ->reorder('lft')
             ->type('relationship')
             ->default(StageService::getDefaultStages())
             ->min_rows(1)

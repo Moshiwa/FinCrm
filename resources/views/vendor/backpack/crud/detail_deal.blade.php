@@ -27,7 +27,9 @@
     }
 
     $deal->load([
-            'stage',
+            'stage' => function ($query) {
+                $query->orderBy('lft');
+            },
             'pipeline',
             'responsible',
             'client',
@@ -45,7 +47,7 @@
         ]);
 
     $pipelines = Pipeline::query()->select('id', 'name')->get();
-    $stages = $deal->pipeline->stages;
+    $stages = $deal->pipeline->stages()->orderBy('lft')->get();
     $buttons = DealButton::query()->with(['visible', 'action'])->where('pipeline_id', $deal->pipeline->id)->get();
     $users = User::query()->select(['id', 'name'])->get();
 @endphp

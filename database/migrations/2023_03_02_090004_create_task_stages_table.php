@@ -14,6 +14,10 @@ return new class extends Migration
             $table->integer('deadline');
             $table->foreignId('deadline_format_id')
                 ->constrained();
+            $table->integer('parent_id')->nullable();
+            $table->integer('lft')->default(0);
+            $table->integer('rgt')->default(0);
+            $table->integer('depth')->default(0);
             $table->timestamps();
         });
     }

@@ -18,6 +18,10 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
+            $table->integer('parent_id')->nullable();
+            $table->integer('lft')->default(0);
+            $table->integer('rgt')->default(0);
+            $table->integer('depth')->default(0);
             $table->timestamps();
         });
     }

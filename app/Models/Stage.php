@@ -23,6 +23,8 @@ class Stage extends Model
         'deadline',
         'pipeline_id',
         'deadline_format_id',
+        'lft',
+        'rgt'
     ];
 
     protected $guarded = ['id'];
