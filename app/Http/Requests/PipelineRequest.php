@@ -16,7 +16,8 @@ class PipelineRequest extends FormRequest
         return [
             'id' => 'nullable',
             'name' => 'required|min:3|max:255',
-            'stages' => 'nullable|array',
+            'stages' => 'array',
+            'stages.deadline' => 'required|integer',
         ];
     }
 
