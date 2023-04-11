@@ -16,11 +16,14 @@
     </div>
 
     <div v-else-if="field.type.name === 'date'">
-        <el-input
+        <el-date-picker
             v-model="field.pivot.value"
+            type="date"
             :disabled="disabled"
             :name="'fields['+ fieldIndex +'][value]'"
-            type="date"
+            format="YYYY/MM/DD"
+            value-format="YYYY-MM-DD"
+            placeholder="Выберите дату"
             @change="send"
         />
     </div>
