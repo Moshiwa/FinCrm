@@ -11,6 +11,7 @@
                     start-placeholder="Дата начала"
                     end-placeholder="Дата окончания"
                     :default-time="defaultTime"
+                    :editable="false"
                 />
             </div>
             <div class="report-button">

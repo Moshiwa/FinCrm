@@ -19,6 +19,7 @@
         <el-date-picker
             v-model="field.pivot.value"
             type="date"
+            :editable="false"
             :disabled="disabled"
             :name="'fields['+ fieldIndex +'][value]'"
             format="YYYY/MM/DD"

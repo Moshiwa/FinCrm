@@ -99,6 +99,7 @@
                         type="datetime"
                         placeholder="Выберите дату и время"
                         format="YYYY/MM/DD HH:mm"
+                        :editable="false"
                         :clearable="false"
                         value-format="YYYY-MM-DD H:m"
                         @change="send"

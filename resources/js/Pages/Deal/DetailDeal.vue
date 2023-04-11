@@ -64,6 +64,7 @@
                         v-model="thisDeal.deadline"
                         :disabled="!(permissions.can_update_deal || permissions.can_change_members_self)"
                         type="datetime"
+                        :editable="false"
                         placeholder="Выберите дату и время"
                         format="YYYY/MM/DD HH:mm"
                         :clearable="false"

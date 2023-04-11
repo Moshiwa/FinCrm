@@ -27,6 +27,7 @@
         <el-date-picker
             v-if="daterangeFilter"
             v-model="datetime"
+            :editable="false"
             type="datetimerange"
             start-placeholder="Дата создания (с)"
             end-placeholder="Дата создания (до)"
