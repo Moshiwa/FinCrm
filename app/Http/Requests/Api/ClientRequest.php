@@ -33,10 +33,6 @@ class ClientRequest extends FormRequest
             'id.exists' => 'Сделка с таким id не существует',
             'name.required' => 'Наименование сделки является обязательным полем',
             'name.max' => 'Наименование не должно превышать :max',
-            'stage.id.exists' => 'Стадии с таким id не существует',
-            'pipeline.id.exists' => 'Воронки с таким id не существует',
-            'responsible.id.exists' => 'Пользователя с таким id не существует',
-            'client.id.exists' => 'Клиента с таким id не существует',
         ];
     }
 }
