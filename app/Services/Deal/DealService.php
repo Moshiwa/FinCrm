@@ -86,7 +86,7 @@ class DealService
 
     public function createNewMessage($deal, $comment): void
     {
-        if ($comment['comment']['type']) {
+        if (!empty($comment['comment']['type'])) {
             $commentModel = $deal->comments()->create($comment['comment']);
             $files = $this->saveFiles($comment['files'] ?? [], $deal);
             $commentModel->files()->attach($files);
@@ -97,6 +97,10 @@ class DealService
     {
         if (! empty($data['delete_comment_id'])) {
             $model_comment = Comment::query()->find($data['delete_comment_id']);
+
+            if (empty($model_comment)) {
+                return false;
+            }
             //Action нельзя удалять
             if ($model_comment->type === CommentTypeEnum::ACTION->value) {
                 $model_comment->update(['content' => '']);
