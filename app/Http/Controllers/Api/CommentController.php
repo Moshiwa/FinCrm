@@ -32,7 +32,7 @@ class CommentController extends Controller
             ], 400);
         }
 
-        $entity->comments()->create([
+        $comment = $entity->comments()->create([
             'type' => CommentTypeEnum::COMMENT->value,
             'title' => 'Комментарий',
             'content' => $data['content'],
@@ -41,6 +41,9 @@ class CommentController extends Controller
 
         return response()->json([
             'success' => true,
+            'data' => [
+                'id' => $comment->id
+            ]
         ]);
     }
 
