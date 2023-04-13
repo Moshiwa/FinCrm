@@ -66,9 +66,9 @@ class DealController extends Controller
             'deadline' => $data['deadline'] ?? Carbon::createFromTimestamp($deadline)
         ]);
 
-        $comment_data = $service->prepareCommentData($deal, $data);
+       /* $comment_data = $service->prepareCommentData($deal, $data);
         $service->createNewMessage($deal, $comment_data);
-        $service->updateComments($deal, $data);
+        $service->updateComments($deal, $data);*/
 
         $deal->fields()->sync($data['fields'] ?? []);
 

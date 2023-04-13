@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ClientController;
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\DealController;
 use App\Http\Controllers\Api\FieldController;
 use App\Http\Controllers\Api\PipelineController;
@@ -35,6 +36,7 @@ Route::group([
             'deals' => DealController::class,
             'pipelines' => PipelineController::class,
             'fields' => FieldController::class,
+            'comments' => CommentController::class,
         ]);
     });
 });
