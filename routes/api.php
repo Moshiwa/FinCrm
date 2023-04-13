@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\DealController;
 use App\Http\Controllers\Api\FieldController;
 use App\Http\Controllers\Api\PipelineController;
+use App\Http\Controllers\Api\SpaceController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,7 @@ Route::group([
         return $request->user();
     });
 
+    Route::resource('spaces',SpaceController::class);
     Route::group(['middleware' => 'space.api'], function () {
         Route::resources([
             'clients' => ClientController::class,

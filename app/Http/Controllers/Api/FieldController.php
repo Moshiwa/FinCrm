@@ -4,11 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\FieldsEntitiesEnum;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\PipelineRequest;
 use App\Http\Resources\FieldResource;
-use App\Http\Resources\PipelineResource;
 use App\Models\Field;
-use App\Models\Pipeline;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
