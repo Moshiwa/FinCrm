@@ -33,15 +33,7 @@ class ClientController extends Controller
             ]);
         }
 
-        if (isset($data['fields'])) {
-            $client->fields()->detach();
-            foreach ($data['fields'] as $field) {
-                if (empty($field['id']) || empty($field['value'])) {
-                    continue;
-                }
-                $client->fields()->attach($field['id'], ['value' => $field['value']]);
-            }
-        }
+        $client->fields()->sync($data['fields'] ?? []);
 
         return ClientResource::make($client);
     }
@@ -60,15 +52,7 @@ class ClientController extends Controller
             'name' => $data['name']
         ]);
 
-        if (isset($data['fields'])) {
-            $client->fields()->detach();
-            foreach ($data['fields'] as $field) {
-                if (empty($field['id']) || empty($field['value'])) {
-                    continue;
-                }
-                $client->fields()->attach($field['id'], ['value' => $field['value']]);
-            }
-        }
+        $client->fields()->sync($data['fields'] ?? []);
 
         return ClientResource::make($client);
     }
