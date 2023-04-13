@@ -70,7 +70,6 @@ class ClientController extends Controller
             }
         }
 
-
         return ClientResource::make($client);
     }
 }

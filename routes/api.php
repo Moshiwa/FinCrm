@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\DealController;
+use App\Http\Controllers\Api\FieldController;
 use App\Http\Controllers\Api\PipelineController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
@@ -31,6 +32,7 @@ Route::group([
             'users' => UserController::class,
             'deals' => DealController::class,
             'pipelines' => PipelineController::class,
+            'fields' => FieldController::class,
         ]);
     });
 });

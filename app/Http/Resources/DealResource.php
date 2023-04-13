@@ -11,7 +11,12 @@ class DealResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'fields' => $this->fields
+            'fields' => $this->fields,
+            'pipeline' => $this->pipeline,
+            'stage' => $this->stage,
+            'client' => ClientResource::make($this->client ?? null),
+            'responsible' => UserResource::make($this->responsible ?? []),
+            'comments' => $this->comments,
         ];
     }
 }
