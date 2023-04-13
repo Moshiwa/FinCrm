@@ -32,6 +32,7 @@ class Deal extends Model
         'pipeline_id',
         'stage_id',
         'responsible_id',
+        'client_id'
     ];
 
     protected $appends = [

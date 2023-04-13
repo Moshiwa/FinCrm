@@ -16,21 +16,14 @@ class DealRequest extends FormRequest
         return [
             'name' => 'required|max:255',
             'deadline' => 'nullable|date',
-
             'stage_id' => 'required|exists:stages,id',
             'pipeline_id' => 'required|exists:pipelines,id',
-            'responsible_id' => 'nullable|exists:App\Models\User,id',
+            'responsible_id' => 'nullable|exists:users,id',
             'client_id' => 'required|exists:clients,id',
-
-            'client.*' => 'nullable',
             'fields.*' => 'nullable',
-            'comments.*' => 'nullable',
             'new_comment.*' => 'nullable',
-
+            'delete_comment_id' => 'nullable|exists:comments,id',
             'action' => 'nullable|array',
-
-            'delete_comment_id' => 'nullable|numeric',
-            'comment_offset' => 'nullable|numeric',
         ];
     }
 

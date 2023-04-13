@@ -37,7 +37,8 @@ class DealController extends Controller
             'pipeline_id' => $data['pipeline_id'],
             'client_id' => $data['client_id'],
             'stage_id' => $data['stage_id'],
-            'responsible_id' => backpack_user()->id
+            'responsible_id' => backpack_user()->id,
+            'deadline' => $data['deadline'] ?? $deal->deadline
         ]);
 
         $service->createNewMessage($deal, $comment_data);
@@ -70,5 +71,7 @@ class DealController extends Controller
         $service->updateComments($deal, $data);
 
         $deal->fields()->sync($data['fields'] ?? []);
+
+        return DealResource::make($deal);
     }
 }
