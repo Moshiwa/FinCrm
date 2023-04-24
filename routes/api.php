@@ -21,16 +21,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resources([
-    'clients' => ClientController::class,
-    'users' => UserController::class,
-    'deals' => DealController::class,
-    'pipelines' => PipelineController::class,
-    'fields' => FieldController::class,
-    'comments' => CommentController::class,
-]);
-
-/*Route::group([
+Route::group([
     'middleware' => 'auth:sanctum',
 ], function () {
     Route::get('user', function (Request $request) {
@@ -48,4 +39,4 @@ Route::resources([
             'comments' => CommentController::class,
         ]);
     });
-});*/
+});
