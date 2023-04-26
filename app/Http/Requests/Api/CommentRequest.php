@@ -8,7 +8,7 @@ class CommentRequest extends FormRequest
 {
     public function authorize()
     {
-        return backpack_auth()->check();
+        return true;
     }
 
     public function rules(): array
