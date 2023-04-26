@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use App\Services\Space\SpaceService;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
@@ -19,23 +20,10 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Artisan::command('migrate2 {space=0}', function ($space) {
-    if($space) {
-        SpaceService::migrate($space);
-    } else {
-        SpaceService::migrateAll();
-    }
-});
-Artisan::command('migrate2:rollback {space=0} {--step=1}', function ($space, $step) {
-    if($space) {
-        SpaceService::migrateRollback($space, $step);
-    } else {
-        SpaceService::migrateRollbackAll($step);
-    }
-});
-Artisan::command('migrate2:reset {space}', function ($space) {
-    SpaceService::migrateReset($space);
-});
-Artisan::command('migrate2:fresh {space}', function ($space) {
-    SpaceService::migrateFresh($space);
+Artisan::command('api-token {userId}', function ($userId) {
+
+    $user = User::findOrFail($userId);
+    $token = $user->createToken('api');
+
+    dump(['token' => $token->plainTextToken]);
 });
