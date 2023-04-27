@@ -38,5 +38,7 @@ Route::group([
             'fields' => FieldController::class,
             'comments' => CommentController::class,
         ]);
+
+        Route::post('/deals/{deal}/stage/{stage}', [DealController::class, 'stageUpdate']);
     });
 });

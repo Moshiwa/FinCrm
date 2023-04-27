@@ -76,4 +76,14 @@ class DealController extends Controller
 
         return DealResource::make($deal);
     }
+
+    public function stageUpdate(Deal $deal, Stage $stage)
+    {
+        $deal->update([
+            'pipeline_id' => $stage->pipeline_id,
+            'stage_id' => $stage->id
+        ]);
+
+        return DealResource::make($deal);
+    }
 }
