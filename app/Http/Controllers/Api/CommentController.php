@@ -36,7 +36,7 @@ class CommentController extends Controller
             'type' => CommentTypeEnum::COMMENT->value,
             'title' => 'Комментарий',
             'content' => $data['content'],
-            'author_id' => backpack_user()->id
+            'author_id' => $data['author_id']
         ]);
 
         return response()->json([

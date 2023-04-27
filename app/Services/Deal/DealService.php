@@ -51,7 +51,7 @@ class DealService
 
         $result['comment'] += (new ActionService())->getActionMessage($deal, $data);
         $result['comment']['content'] = $data['new_comment']['content'] ?? '';
-        $result['comment']['author_id'] = backpack_user()->id;
+        $result['comment']['author_id'] = $data['responsible_id'] ?? backpack_user()->id;
 
        $result['files'] += $data['new_comment']['files'] ?? [];
 
