@@ -31,13 +31,15 @@ class DealController extends Controller
     {
         $data = $request->validated();
         $service = new DealService();
+        $stage = Stage::query()->find($data['stage_id']);
+        $data['pipeline_id'] = $stage->pipeline_id;
         $comment_data = $service->prepareCommentData($deal, $data);
         $deal->update([
             'name' => $data['name'],
             'pipeline_id' => $data['pipeline_id'],
             'client_id' => $data['client_id'],
             'stage_id' => $data['stage_id'],
-            'responsible_id' => backpack_user()->id,
+            'responsible_id' => $data['responsible_id'],
             'deadline' => $data['deadline'] ?? $deal->deadline
         ]);
 
@@ -52,10 +54,10 @@ class DealController extends Controller
     public function store(DealRequest $request)
     {
         $data = $request->validated();
-        $service = new DealService();
 
         $stage = Stage::query()->find($data['stage_id']);
         $deadline = time() + $stage->calculated_deadline;
+        $data['pipeline_id'] = $stage->pipeline_id;
 
         $deal = Deal::query()->create([
             'name' => $data['name'],
