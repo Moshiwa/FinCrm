@@ -17,7 +17,7 @@ class CommentRequest extends FormRequest
             'content' => 'required|min:3|max:255',
             'entity' => 'required',
             'entity_id' => 'required',
-            'author_id' => 'required|exists:users,id',
+            'author_id' => 'nullable|exists:users,id',
             'files' => 'nullable',
         ];
     }
