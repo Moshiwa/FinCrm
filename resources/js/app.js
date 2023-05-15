@@ -19,6 +19,7 @@ import DetailTask from "./Pages/Task/DetailTask.vue";
 import DetailManagerActions from "./Pages/User/DetailManagerActions.vue";
 import DetailReport from "./Pages/Report/DetailReport.vue";
 import DetailIntegration from "./Pages/Integration/DetailIntegration.vue";
+import DetailUserTokenGenerate from "./Pages/User/DetailUserTokenGenerate.vue";
 
 if (document.getElementById("vue-app")) {
 
@@ -35,7 +36,8 @@ if (document.getElementById("vue-app")) {
                 DetailTaskButton,
                 DetailManagerActions,
                 DetailReport,
-                DetailIntegration
+                DetailIntegration,
+                DetailUserTokenGenerate
             }
         });
 

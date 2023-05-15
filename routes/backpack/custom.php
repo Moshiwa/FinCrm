@@ -6,13 +6,13 @@ use App\Http\Controllers\Admin\DealCrudController;
 use App\Http\Controllers\Admin\FieldCrudController;
 use App\Http\Controllers\Admin\IntegrationCrudController;
 use App\Http\Controllers\Admin\ManagerCrudController;
+use App\Http\Controllers\Admin\PermissionManager\UserCrudController;
 use App\Http\Controllers\Admin\ReportCrudController;
 use App\Http\Controllers\Admin\SenderController;
 use App\Http\Controllers\Admin\StageCrudController;
 use App\Http\Controllers\Admin\TaskButtonCrudController;
 use App\Http\Controllers\Admin\TaskCrudController;
 use App\Http\Controllers\Admin\TelephonyController;
-use App\Http\Controllers\Admin\UserCrudController;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SpaceCrudController;
@@ -68,6 +68,7 @@ Route::group([
 
     Route::prefix('user')->name('user.')->group(function () {
         Route::get('/{user}/load_comments', [ManagerCrudController::class, 'loadComments'])->name('loadComments');
+        Route::get('/{user}/token_generate', [UserCrudController::class, 'generateToken'])->name('generateToken');
     });
 
     Route::prefix('stage')->name('stage.')->group(function () {

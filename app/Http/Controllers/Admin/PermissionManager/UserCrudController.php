@@ -98,6 +98,16 @@ class UserCrudController extends CrudController
 
     public function setupUpdateOperation()
     {
+        if (backpack_user()->hasRole('admin')) {
+            $this->crud->addField([
+                'name' => 'token',
+                'type' => 'user_token',
+                'wrapper' => [
+                    'class' => 'form-group col-md-12'
+                ]
+            ]);
+        }
+
         $this->addUserFields();
         $this->crud->setValidation(UpdateRequest::class);
     }
@@ -209,5 +219,23 @@ class UserCrudController extends CrudController
                 ],
             ],
         ]);
+    }
+
+    public function generateToken(User $user)
+    {
+        if (backpack_user()->hasRole('admin')) {
+            $user->tokens()->delete();
+            $token = $user->createToken('api');
+
+            return response()->json([
+                'success' => true,
+                'token' => $token->plainTextToken
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'У вас недостаточно прав'
+        ], 403);
     }
 }
