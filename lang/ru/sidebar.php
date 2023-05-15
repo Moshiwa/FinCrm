@@ -17,4 +17,5 @@ return [
     'managers' => 'Менеджеры',
     'reports' => 'Отчеты',
     'integrations' => 'Интеграции',
+    'roles' => 'Роли',
 ];

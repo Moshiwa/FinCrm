@@ -3,6 +3,7 @@
 
 @role('admin')
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('user') }}"><i class="nav-icon la la-user"></i> {{ __('sidebar.users') }} </a></li>
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('role') }}"><i class="nav-icon la la-question"></i> {{ __('sidebar.roles') }} </a></li>
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('manager') }}"><i class="nav-icon la la-user-friends"></i> {{ __('sidebar.managers') }}</a></li>
 @endrole
 @can('clients.list')

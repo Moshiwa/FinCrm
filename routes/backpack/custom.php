@@ -43,6 +43,7 @@ Route::group([
     Route::crud('manager', 'ManagerCrudController');
     Route::crud('report', 'ReportCrudController');
     Route::crud('integration', 'IntegrationCrudController');
+    Route::crud('role', 'RoleCrudController');
 
     Route::get('space-change/{code}', [SpaceCrudController::class, 'spaceChange'])->name('space.change');
 
