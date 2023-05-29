@@ -59,6 +59,8 @@ class DealController extends Controller
         $deadline = time() + $stage->calculated_deadline;
         $data['pipeline_id'] = $stage->pipeline_id;
 
+        $data['responsible_id'] = empty($data['responsible_id']) ? $request->user()->id : $data['responsible_id'];
+
         $deal = Deal::query()->create([
             'name' => $data['name'],
             'pipeline_id' => $data['pipeline_id'],
