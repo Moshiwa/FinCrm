@@ -15,11 +15,12 @@ class CreateDealNotification
 
     public function handle(CreateDeal $event)
     {
-        if (backpack_user()?->id) {
+        if (backpack_user()?->id || request()->user()?->id) {
+            $user_id = backpack_user()?->id ?? request()->user()?->id;
             $event->deal->comments()->create([
                 'type' => CommentTypeEnum::ACTION->value,
                 'title' => 'Сделка создана',
-                'author_id' => backpack_user()->id
+                'author_id' => $user_id
             ]);
         } else {
             $event->deal->comments()->create([
