@@ -126,7 +126,7 @@ class RoleCrudController extends CrudController
             'type'      => 'checklist',
             'name'      => 'permissions',
             'entity'    => 'permissions',
-            'attribute' => 'name',
+            'attribute' => 'display_name',
             'model'     => $this->permission_model,
             'pivot'     => true,
         ]);
