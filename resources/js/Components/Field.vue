@@ -145,9 +145,9 @@
         />
         <template #footer>
       <span class="dialog-footer">
-        <el-button @click="popupVisible = false">Cancel</el-button>
+        <el-button @click="popupVisible = false">Отменить</el-button>
         <el-button type="primary" @click="sendMessage">
-          Confirm
+          Отправить
         </el-button>
       </span>
         </template>
