@@ -34,7 +34,9 @@ class ButtonRequest extends FormRequest
     public function messages()
     {
         return [
-            //
+            'name.required' => 'Поле :attribute обязательное!',
+            'name.min' => 'Поле :attribute должно быть длиньше :min символов!',
+            'name.max' => 'Поле :attribute должно быть короче :max символов!',
         ];
     }
 }

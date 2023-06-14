@@ -43,11 +43,12 @@ class TaskStageCrudController extends CrudController
     protected function setupCreateOperation()
     {
         CRUD::setValidation(TaskStageRequest::class);
-        CRUD::field('name')->label('Наименование');
+        CRUD::field('name')->label('Наименование')->validationRules('required');
         CRUD::field('deadline')
             ->label('Срок для сделки')
             ->type('number')
             ->allows_null(false)
+            ->default(1)
             ->wrapper([
                 'class' => 'form-group col-md-3',
                 'required' => true
