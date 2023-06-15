@@ -22,7 +22,7 @@
             :editable="false"
             :disabled="disabled"
             :name="'fields['+ fieldIndex +'][value]'"
-            format="YYYY/MM/DD"
+            format="DD/MM/YYYY"
             value-format="YYYY-MM-DD"
             placeholder="Выберите дату"
             @change="send"

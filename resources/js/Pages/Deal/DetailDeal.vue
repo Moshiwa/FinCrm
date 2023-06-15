@@ -66,7 +66,7 @@
                         type="datetime"
                         :editable="false"
                         placeholder="Выберите дату и время"
-                        format="YYYY/MM/DD HH:mm"
+                        format="DD/MM/YYYY HH:mm"
                         :clearable="false"
                         value-format="YYYY-MM-DD H:m"
                         @change="send"
