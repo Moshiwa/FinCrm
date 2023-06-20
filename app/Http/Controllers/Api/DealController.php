@@ -33,6 +33,7 @@ class DealController extends Controller
         $service = new DealService();
         $stage = Stage::query()->find($data['stage_id']);
         $data['pipeline_id'] = $stage->pipeline_id;
+        $data['responsible_id'] = empty($data['responsible_id']) ? $request->user()->id : $data['responsible_id'];
         $comment_data = $service->prepareCommentData($deal, $data);
         $deal->update([
             'name' => $data['name'],
