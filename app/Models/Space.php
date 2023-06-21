@@ -16,6 +16,11 @@ class Space extends Model
     protected $table = 'spaces';
     protected $guarded = ['id'];
 
+    public function roles(): MorphToMany
+    {
+        return static::morphedByMany(Role::class, 'spaceable');
+    }
+
     public function deals(): MorphToMany
     {
         return static::morphedByMany(Deal::class, 'spaceable');
@@ -72,6 +77,7 @@ class Space extends Model
             $pipeline = self::createDefaultPipeline($space);
             $stages = self::createDefaultStages($space, $pipeline);
             $task_stages = self::createDefaultTaskStage($space);
+            $admin = self::createAdmin($space);
         });
     }
 
@@ -149,6 +155,22 @@ class Space extends Model
         return $result;
     }
 
+    private static function createAdmin($space)
+    {
+        $role = Role::query()->where('name', 'admin')->first();
+
+        if (!$role) {
+            $role = Role::create([
+                'name'       => 'admin',
+                'guard_name' => config('backpack.base.guard')
+            ]);
+        }
+
+        $role->spaces()->attach($space->id);
+
+        return $role;
+    }
+
     private static function deleteSubRelations($space)
     {
         $space->deals->each->delete();
@@ -160,6 +182,7 @@ class Space extends Model
         $space->task_stages->each->delete();
         $space->task_buttons->each->delete();
         $space->fields->each->delete();
+        $space->roles->each->delete();
 
         $deal_dir = 'deal_' . SpaceService::getCurrentSpaceCode();
         if(Storage::disk('public')->exists($deal_dir)){

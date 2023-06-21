@@ -183,11 +183,16 @@ class UserCrudController extends CrudController
                 'label' => trans('backpack::permissionmanager.password_confirmation'),
                 'type'  => 'password',
             ],
-            [
+            //TODo  изменил с чекбокса поле на множественный селект
+            /*[
                 'name'  => 'spaceAccess',
                 'label' => 'Доступ к организации',
                 'default' => true,
                 'type'  => 'boolean'
+            ],*/
+            [
+                'name'  => 'spaces',
+                'label' => 'Доступ к организациям',
             ],
             [
                 // two interconnected entities

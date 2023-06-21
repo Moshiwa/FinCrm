@@ -112,26 +112,26 @@ class User extends Authenticatable
         return $this->hasMany(Deal::class, 'responsible_id');
     }
 
-    public function getSpaceAccessAttribute() {
-
-        if($this->isFirstUser()) {
-            return true;
-        }
-
-        return $this->spaces()->where('code', SpaceService::getCurrentSpaceCode())->count() > 0;
-    }
-
     public function setSpaceAccessAttribute($value) {
         $this->spaceAccessTmp = $value;
     }
 
-    public function isFirstUser() {
-        return $this->id === User::query()->select('id')->orderBy('id','asc')->first()->id;
+    public function isAdminUser(): bool
+    {
+        $admins = User::query()->whereHas('roles', function($q) { $q->where('name', 'admin'); })->get();
+        foreach ($admins as $admin) {
+            if ($this->id === $admin->id) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function availableSpaces(): Collection
     {
-        if ($this->isFirstUser()) {
+        //Все админы получают доступ ко всем организациям
+        if ($this->isAdminUser()) {
             return Space::all();
         }
 
