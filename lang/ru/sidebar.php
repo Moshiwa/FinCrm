@@ -18,4 +18,5 @@ return [
     'reports' => 'Отчеты',
     'integrations' => 'Интеграции',
     'roles' => 'Роли',
+    'manage_rules' => 'Управление правами'
 ];

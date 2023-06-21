@@ -2,8 +2,14 @@
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('task') }}"><i class="nav-icon la la-tasks"></i> {{ __('sidebar.tasks') }} </a></li>
 
 @role('admin')
-<li class="nav-item"><a class="nav-link" href="{{ backpack_url('user') }}"><i class="nav-icon la la-user"></i> {{ __('sidebar.users') }} </a></li>
-<li class="nav-item"><a class="nav-link" href="{{ backpack_url('role') }}"><i class="nav-icon la la-user-shield"></i> {{ __('sidebar.roles') }} </a></li>
+<li class="nav-item nav-dropdown">
+    <a class="nav-link nav-dropdown-toggle " href="#"><i class="nav-icon la la-user-secret"></i>{{ __('sidebar.manage_rules') }}</a>
+    <ul class="nav-dropdown-items">
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('user') }}"><i class="nav-icon la la-user"></i> {{ __('sidebar.users') }} </a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('role') }}"><i class="nav-icon la la-user-shield"></i> {{ __('sidebar.roles') }} </a></li>
+    </ul>
+</li>
+
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('manager') }}"><i class="nav-icon la la-user-friends"></i> {{ __('sidebar.managers') }}</a></li>
 @endrole
 @can('clients.list')
