@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\PermissionManager;
 
+use App\Helpers\RequestHelper;
 use App\Models\User;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\PermissionManager\app\Http\Requests\UserStoreCrudRequest as StoreRequest;
@@ -11,8 +12,12 @@ use Illuminate\Support\Facades\Hash;
 class UserCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation {
+        store as traitStore;
+    }
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation {
+        update as traitUpdate;
+    }
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
 
     public function setup()
@@ -21,7 +26,7 @@ class UserCrudController extends CrudController
         $this->crud->setEntityNameStrings(trans('backpack::permissionmanager.user'), trans('backpack::permissionmanager.users'));
         $this->crud->setRoute(backpack_url('user'));
 
-        if (! backpack_user()->hasRole('admin')) {
+        if (!backpack_user()->hasRole('admin')) {
             $this->crud->denyAccess(['list', 'update', 'delete', 'show']);
         }
     }
@@ -30,30 +35,30 @@ class UserCrudController extends CrudController
     {
         $this->crud->addColumns([
             [
-                'name'  => 'name',
+                'name' => 'name',
                 'label' => trans('backpack::permissionmanager.name'),
-                'type'  => 'text',
+                'type' => 'text',
             ],
             [
-                'name'  => 'email',
+                'name' => 'email',
                 'label' => trans('backpack::permissionmanager.email'),
-                'type'  => 'email',
+                'type' => 'email',
             ],
             [ // n-n relationship (with pivot table)
-                'label'     => trans('backpack::permissionmanager.roles'), // Table column heading
-                'type'      => 'select_multiple',
-                'name'      => 'roles', // the method that defines the relationship in your Model
-                'entity'    => 'roles', // the method that defines the relationship in your Model
+                'label' => trans('backpack::permissionmanager.roles'), // Table column heading
+                'type' => 'select_multiple',
+                'name' => 'roles', // the method that defines the relationship in your Model
+                'entity' => 'roles', // the method that defines the relationship in your Model
                 'attribute' => 'name', // foreign key attribute that is shown to user
-                'model'     => config('permission.models.role'), // foreign key model
+                'model' => config('permission.models.role'), // foreign key model
             ],
             [ // n-n relationship (with pivot table)
-                'label'     => trans('backpack::permissionmanager.extra_permissions'), // Table column heading
-                'type'      => 'select_multiple',
-                'name'      => 'permissions', // the method that defines the relationship in your Model
-                'entity'    => 'permissions', // the method that defines the relationship in your Model
+                'label' => trans('backpack::permissionmanager.extra_permissions'), // Table column heading
+                'type' => 'select_multiple',
+                'name' => 'permissions', // the method that defines the relationship in your Model
+                'entity' => 'permissions', // the method that defines the relationship in your Model
                 'attribute' => 'name', // foreign key attribute that is shown to user
-                'model'     => config('permission.models.permission'), // foreign key model
+                'model' => config('permission.models.permission'), // foreign key model
             ],
         ]);
 
@@ -61,8 +66,8 @@ class UserCrudController extends CrudController
             // Role Filter
             $this->crud->addFilter(
                 [
-                    'name'  => 'role',
-                    'type'  => 'dropdown',
+                    'name' => 'role',
+                    'type' => 'dropdown',
                     'label' => trans('backpack::permissionmanager.role'),
                 ],
                 config('permission.models.role')::all()->pluck('name', 'id')->toArray(),
@@ -76,8 +81,8 @@ class UserCrudController extends CrudController
             // Extra Permission Filter
             $this->crud->addFilter(
                 [
-                    'name'  => 'permissions',
-                    'type'  => 'select2',
+                    'name' => 'permissions',
+                    'type' => 'select2',
                     'label' => trans('backpack::permissionmanager.extra_permissions'),
                 ],
                 config('permission.models.permission')::all()->pluck('name', 'id')->toArray(),
@@ -133,7 +138,7 @@ class UserCrudController extends CrudController
      */
     public function update()
     {
-        $this->crud->setRequest($this->crud->validateRequest());
+        $this->crud->setRequest(RequestHelper::updateRequestRoles($this->crud->validateRequest()));
         $this->crud->setRequest($this->handlePasswordInput($this->crud->getRequest()));
         $this->crud->unsetValidation(); // validation has already been run
 
@@ -164,24 +169,24 @@ class UserCrudController extends CrudController
     {
         $this->crud->addFields([
             [
-                'name'  => 'name',
+                'name' => 'name',
                 'label' => trans('backpack::permissionmanager.name'),
-                'type'  => 'text',
+                'type' => 'text',
             ],
             [
-                'name'  => 'email',
+                'name' => 'email',
                 'label' => trans('backpack::permissionmanager.email'),
-                'type'  => 'email',
+                'type' => 'email',
             ],
             [
-                'name'  => 'password',
+                'name' => 'password',
                 'label' => trans('backpack::permissionmanager.password'),
-                'type'  => 'password',
+                'type' => 'password',
             ],
             [
-                'name'  => 'password_confirmation',
+                'name' => 'password_confirmation',
                 'label' => trans('backpack::permissionmanager.password_confirmation'),
-                'type'  => 'password',
+                'type' => 'password',
             ],
             //TODo  изменил с чекбокса поле на множественный селект
             /*[
@@ -191,34 +196,34 @@ class UserCrudController extends CrudController
                 'type'  => 'boolean'
             ],*/
             [
-                'name'  => 'spaces',
+                'name' => 'spaces',
                 'label' => 'Доступ к организациям',
             ],
             [
                 // two interconnected entities
-                'label'             => trans('backpack::permissionmanager.user_role_permission'),
+                'label' => trans('backpack::permissionmanager.user_role_permission'),
                 'field_unique_name' => 'user_role_permission',
-                'type'              => 'checklist_dependency',
-                'name'              => ['roles', 'permissions'],
-                'subfields'         => [
+                'type' => 'checklist_dependency',
+                'name' => ['roles', 'permissions'],
+                'subfields' => [
                     'primary' => [
-                        'label'            => trans('backpack::permissionmanager.roles'),
-                        'name'             => 'roles', // the method that defines the relationship in your Model
-                        'entity'           => 'roles', // the method that defines the relationship in your Model
+                        'label' => trans('backpack::permissionmanager.roles'),
+                        'name' => 'roles', // the method that defines the relationship in your Model
+                        'entity' => 'roles', // the method that defines the relationship in your Model
                         'entity_secondary' => 'permissions', // the method that defines the relationship in your Model
-                        'attribute'        => 'name', // foreign key attribute that is shown to user
-                        'model'            => config('permission.models.role'), // foreign key model
-                        'pivot'            => true, // on create&update, do you need to add/delete pivot table entries?]
-                        'number_columns'   => 3, //can be 1,2,3,4,6
+                        'attribute' => 'name', // foreign key attribute that is shown to user
+                        'model' => config('permission.models.role'), // foreign key model
+                        'pivot' => true, // on create&update, do you need to add/delete pivot table entries?]
+                        'number_columns' => 3, //can be 1,2,3,4,6
                     ],
                     'secondary' => [
-                        'label'          => mb_ucfirst(trans('backpack::permissionmanager.permission_plural')),
-                        'name'           => 'permissions', // the method that defines the relationship in your Model
-                        'entity'         => 'permissions', // the method that defines the relationship in your Model
+                        'label' => mb_ucfirst(trans('backpack::permissionmanager.permission_plural')),
+                        'name' => 'permissions', // the method that defines the relationship in your Model
+                        'entity' => 'permissions', // the method that defines the relationship in your Model
                         'entity_primary' => 'roles', // the method that defines the relationship in your Model
-                        'attribute'      => 'display_name', // foreign key attribute that is shown to user
-                        'model'          => config('permission.models.permission'), // foreign key model
-                        'pivot'          => true, // on create&update, do you need to add/delete pivot table entries?]
+                        'attribute' => 'display_name', // foreign key attribute that is shown to user
+                        'model' => config('permission.models.permission'), // foreign key model
+                        'pivot' => true, // on create&update, do you need to add/delete pivot table entries?]
                         'number_columns' => 2, //can be 1,2,3,4,6
                     ],
                 ],
