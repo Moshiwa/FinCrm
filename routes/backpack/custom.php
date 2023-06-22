@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\FieldCrudController;
 use App\Http\Controllers\Admin\IntegrationCrudController;
 use App\Http\Controllers\Admin\ManagerCrudController;
 use App\Http\Controllers\Admin\PermissionManager\UserCrudController;
+use App\Http\Controllers\Admin\PipelineCrudController;
 use App\Http\Controllers\Admin\ReportCrudController;
 use App\Http\Controllers\Admin\SenderController;
 use App\Http\Controllers\Admin\StageCrudController;
@@ -99,5 +100,9 @@ Route::group([
         Route::post('/uiscom/save', [IntegrationCrudController::class, 'saveUiscom'])->name('saveUiscom');
         Route::get('/smsc/senders', [IntegrationCrudController::class, 'getSendersSmsCenter'])->name('getSendersSmsCenter');
         Route::post('/smsc/save', [IntegrationCrudController::class, 'saveSmsCenter'])->name('save');
+    });
+
+    Route::prefix('pipeline')->name('pipeline.')->group(function () {
+        Route::get('/copy/space', [PipelineCrudController::class, 'copyPipeline'])->name('copy.space');
     });
 });

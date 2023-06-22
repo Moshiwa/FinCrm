@@ -4,9 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\PipelineRequest;
 use App\Models\DeadlineFormat;
+use App\Models\Pipeline;
+use App\Models\Space;
+use App\Services\Space\SpaceService;
 use App\Services\Stage\StageService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Illuminate\Http\Request;
 
 class PipelineCrudController extends CrudController
 {
@@ -26,6 +30,10 @@ class PipelineCrudController extends CrudController
             CRUD::denyAccess(['update']);
         }
 
+        if (! backpack_user()->can('pipelines.create')) {
+            CRUD::denyAccess(['create']);
+        }
+
         if (! backpack_user()->can('pipelines.delete')) {
             CRUD::denyAccess(['delete']);
         }
@@ -38,6 +46,11 @@ class PipelineCrudController extends CrudController
     protected function setupListOperation()
     {
         CRUD::column('name')->label('Наименование');
+        if (backpack_user()->can('pipelines.create')) {
+            CRUD::column('Кастомные действия')
+                ->type('view')
+                ->view('crud::columns.copy_pipeline');
+        }
     }
 
     protected function setupCreateOperation()
@@ -148,5 +161,49 @@ class PipelineCrudController extends CrudController
         }
 
         return true;
+    }
+
+    public function copyPipeline(Request $request)
+    {
+        if (! backpack_user()->can('pipelines.create')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'У вас недостаточно прав'
+            ], 403);
+        }
+
+        $pipeline_id = $request->get('pipeline_id');
+        $space_id = $request->get('space_id');
+
+        $pipeline = Pipeline::query()->find($pipeline_id);
+        $stages = $pipeline->stages;
+        $space = Space::query()->find($space_id);
+
+        $new_pipeline = $space->pipelines()->create([
+            'name' => $pipeline->name . ' /Копия',
+        ]);
+
+        foreach ($stages as $stage) {
+            $space->stages()->create([
+                'name' => $stage->name,
+                'deadline' => $stage->deadline,
+                'deadline_format_id' => $stage->deadline_format_id,
+                'pipeline_id' => $new_pipeline->id,
+            ]);
+        }
+
+        $reload = false;
+        $current_space = SpaceService::getCurrentSpace();
+        if ($current_space->id === $space->id) {
+            $reload = true;
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'reload' => $reload
+            ]
+        ]);
+
     }
 }
