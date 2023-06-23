@@ -18,10 +18,5 @@ class IntegrationsSeeder extends Seeder
                 'sender' => ''
             ]
         ]);
-
-        Integration::query()->firstOrCreate(['name' => 'uiscom'], [
-            'name' => 'uiscom',
-            'title' => 'UIS',
-        ]);
     }
 }

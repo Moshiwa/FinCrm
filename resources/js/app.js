@@ -20,6 +20,7 @@ import DetailManagerActions from "./Pages/User/DetailManagerActions.vue";
 import DetailReport from "./Pages/Report/DetailReport.vue";
 import DetailIntegration from "./Pages/Integration/DetailIntegration.vue";
 import DetailUserTokenGenerate from "./Pages/User/DetailUserTokenGenerate.vue";
+import TelephonyAuthFields from "./Pages/User/TelephonyAuthFields.vue";
 
 if (document.getElementById("vue-app")) {
 
@@ -37,7 +38,8 @@ if (document.getElementById("vue-app")) {
                 DetailManagerActions,
                 DetailReport,
                 DetailIntegration,
-                DetailUserTokenGenerate
+                DetailUserTokenGenerate,
+                TelephonyAuthFields,
             }
         });
 

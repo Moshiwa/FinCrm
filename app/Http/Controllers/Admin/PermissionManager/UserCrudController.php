@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\PermissionManager;
 use App\Helpers\RequestHelper;
 use App\Models\User;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
+use Backpack\CRUD\app\Library\Widget;
 use Backpack\PermissionManager\app\Http\Requests\UserStoreCrudRequest as StoreRequest;
 use Backpack\PermissionManager\app\Http\Requests\UserUpdateCrudRequest as UpdateRequest;
 use Illuminate\Support\Facades\Hash;
@@ -103,17 +104,18 @@ class UserCrudController extends CrudController
 
     public function setupUpdateOperation()
     {
+        $this->addUserFields();
         if (backpack_user()->hasRole('admin')) {
+            $this->addTelephonyFields();
             $this->crud->addField([
                 'name' => 'token',
                 'type' => 'user_token',
+                'tab' => 'API',
                 'wrapper' => [
                     'class' => 'form-group col-md-12'
                 ]
             ]);
         }
-
-        $this->addUserFields();
         $this->crud->setValidation(UpdateRequest::class);
     }
 
@@ -172,32 +174,30 @@ class UserCrudController extends CrudController
                 'name' => 'name',
                 'label' => trans('backpack::permissionmanager.name'),
                 'type' => 'text',
+                'tab' => 'Основное'
             ],
             [
                 'name' => 'email',
                 'label' => trans('backpack::permissionmanager.email'),
                 'type' => 'email',
+                'tab' => 'Основное'
             ],
             [
                 'name' => 'password',
                 'label' => trans('backpack::permissionmanager.password'),
                 'type' => 'password',
+                'tab' => 'Основное'
             ],
             [
                 'name' => 'password_confirmation',
                 'label' => trans('backpack::permissionmanager.password_confirmation'),
                 'type' => 'password',
+                'tab' => 'Основное'
             ],
-            //TODo  изменил с чекбокса поле на множественный селект
-            /*[
-                'name'  => 'spaceAccess',
-                'label' => 'Доступ к организации',
-                'default' => true,
-                'type'  => 'boolean'
-            ],*/
             [
                 'name' => 'spaces',
                 'label' => 'Доступ к организациям',
+                'tab' => 'Права'
             ],
             [
                 // two interconnected entities
@@ -205,6 +205,7 @@ class UserCrudController extends CrudController
                 'field_unique_name' => 'user_role_permission',
                 'type' => 'checklist_dependency',
                 'name' => ['roles', 'permissions'],
+                'tab' => 'Права',
                 'subfields' => [
                     'primary' => [
                         'label' => trans('backpack::permissionmanager.roles'),
@@ -228,6 +229,76 @@ class UserCrudController extends CrudController
                     ],
                 ],
             ],
+        ]);
+    }
+
+    protected function addTelephonyFields()
+    {
+        $this->crud->addField([
+            'name' => 'uiscom_token',
+            'label' => 'Токен',
+            'tab' => 'Телефония',
+            'wrapper' => [
+                'class' => 'form-group col-md-12'
+            ]
+        ]);
+
+        $this->crud->addField([
+            'name' => 'uiscom_virtual_number',
+            'label' => 'Виртуальный номер',
+            'tab' => 'Телефония',
+            'wrapper' => [
+                'class' => 'form-group col-md-6'
+            ]
+        ]);
+
+        $this->crud->addField([
+            'name' => 'uiscom_employee_id',
+            'label' => 'Идентификатор менеджера',
+            'tab' => 'Телефония',
+            'wrapper' => [
+                'class' => 'form-group col-md-6'
+            ]
+        ]);
+        $this->crud->addField([
+            'name' => 'separator_first',
+            'type' => 'custom_html',
+            'tab' => 'Телефония',
+            'value' => '<hr>'
+        ]);
+
+
+        $this->crud->addField([
+            'name' => 'user_telephony_auth',
+            'type' => 'user_telephony_auth',
+            'tab' => 'Телефония',
+            'wrapper' => [
+                'class' => 'form-group col-md-12'
+            ]
+        ]);
+
+        $this->crud->addField([
+            'name' => 'separator_second',
+            'type' => 'custom_html',
+            'tab' => 'Телефония',
+            'value' => '<hr>'
+        ]);
+
+        $this->crud->addField([
+            'name' => 'helper',
+            'type' => 'custom_html',
+            'tab' => 'Телефония',
+            'value' => '<div>
+                            1. Как получить токен
+                            <br>
+                            <img style="width: 450px" src="/assets/images/info/uiscom_get_token.png"/>
+                            <br>
+                            2. Альтернативный способ получения Идентификатора пользователя
+                            <br>
+                            <img style="width: 450px" src="/assets/images/info/uiscom_get_id.png"/>
+                            <br>
+                        </div>
+            '
         ]);
     }
 
