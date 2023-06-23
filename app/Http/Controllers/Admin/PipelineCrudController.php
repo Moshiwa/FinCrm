@@ -166,10 +166,7 @@ class PipelineCrudController extends CrudController
     public function copyPipeline(Request $request)
     {
         if (! backpack_user()->can('pipelines.create')) {
-            return response()->json([
-                'success' => false,
-                'message' => 'У вас недостаточно прав'
-            ], 403);
+            return \Alert::add('error', 'У вас недостаточно прав')->flash();
         }
 
         $pipeline_id = $request->get('pipeline_id');
