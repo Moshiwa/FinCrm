@@ -13,7 +13,7 @@ $pipeline_id = $entry->getKey();
     <div id="dropdown-menu-copy-pipeline_{{$pipeline_id}}" class="dropdown-menu dropdown-menu-right pb-1 pt-1">
         <h6 class="dropdown-header">Выберите организацию</h6>
         @foreach($spaces as $space)
-        <a class="dropdown-item" onclick="copyPipeline('{{$space->id}}', '{{$pipeline_id}}')">
+        <a class="dropdown-item" style="cursor: pointer" onclick="copyPipeline('{{$space->id}}', '{{$pipeline_id}}')">
             <i class="la la-globe"></i>
             {{ $space->name }}
         </a>
@@ -36,9 +36,7 @@ $pipeline_id = $entry->getKey();
         fetch('/admin/pipeline/copy/space?pipeline_id=' + pipelineId + '&space_id=' + spaceId)
             .then(response => response.json())
             .then((result) => {
-                if(result.data.reload) {
-                    window.location.reload();
-                }
+                window.location.reload();
             });
     }
 

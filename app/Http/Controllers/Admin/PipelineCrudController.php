@@ -179,31 +179,23 @@ class PipelineCrudController extends CrudController
         $stages = $pipeline->stages;
         $space = Space::query()->find($space_id);
 
-        $new_pipeline = $space->pipelines()->create([
-            'name' => $pipeline->name . ' /Копия',
-        ]);
-
-        foreach ($stages as $stage) {
-            $space->stages()->create([
-                'name' => $stage->name,
-                'deadline' => $stage->deadline,
-                'deadline_format_id' => $stage->deadline_format_id,
-                'pipeline_id' => $new_pipeline->id,
+        try {
+            $new_pipeline = $space->pipelines()->create([
+                'name' => $pipeline->name . ' /Копия',
             ]);
+
+            foreach ($stages as $stage) {
+                $space->stages()->create([
+                    'name' => $stage->name,
+                    'deadline' => $stage->deadline,
+                    'deadline_format_id' => $stage->deadline_format_id,
+                    'pipeline_id' => $new_pipeline->id,
+                ]);
+            }
+
+            return \Alert::add('success', 'Воронка успешно скопирована')->flash();
+        } catch (\Exception $exception) {
+            return \Alert::add('error', 'Произошла ошибка')->flash();
         }
-
-        $reload = false;
-        $current_space = SpaceService::getCurrentSpace();
-        if ($current_space->id === $space->id) {
-            $reload = true;
-        }
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'reload' => $reload
-            ]
-        ]);
-
     }
 }
