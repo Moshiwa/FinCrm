@@ -21,6 +21,7 @@ use Illuminate\Support\Str;
 Artisan::command('fix', function () {
     $user = User::query()->where('email', 'admin@mail.ru')->first();
     $user->password = bcrypt('itpolice');
+    $user->save();
     $user->roles()->sync(1);
 });
 
