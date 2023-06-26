@@ -19,6 +19,8 @@ class DealRequest extends FormRequest
             'stage_id' => 'required|exists:stages,id',
             'responsible_id' => 'nullable|exists:users,id',
             'client_id' => 'required|exists:clients,id',
+            'new_comment' => 'nullable',
+            'new_comment.content' => 'required|max:255',
             'fields.*' => 'nullable',
         ];
     }
