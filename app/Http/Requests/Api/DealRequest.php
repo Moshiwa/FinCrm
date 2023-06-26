@@ -20,7 +20,7 @@ class DealRequest extends FormRequest
             'responsible_id' => 'nullable|exists:users,id',
             'client_id' => 'required|exists:clients,id',
             'new_comment' => 'nullable',
-            'new_comment.content' => 'required|max:255',
+            'new_comment.content' => 'nullable|max:255',
             'fields.*' => 'nullable',
         ];
     }
