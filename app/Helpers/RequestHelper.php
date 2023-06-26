@@ -54,10 +54,12 @@ class RequestHelper
         $save = [];
         foreach ($all_roles as $all_role_id) {
             foreach ($delete_role as $delete_role_id) {
-                if ($all_role_id !== $delete_role_id) {
-                    $save[] = $all_role_id;
+                if ($all_role_id === $delete_role_id) {
+                    continue(2);
                 }
             }
+
+            $save[] = $all_role_id;
         }
 
         $parameters['roles'] = [];
