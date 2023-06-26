@@ -45,10 +45,12 @@ class RequestHelper
         $delete_role = [];
         foreach ($space_roles as $space_role) {
             foreach ($save_roles as $save_role) {
-                if ($space_role != $save_role) {
-                    $delete_role[] = $space_role;
+                if ($space_role == $save_role) {
+                    continue(2);
                 }
             }
+
+            $delete_role[] = $space_role;
         }
 
         $save = [];
