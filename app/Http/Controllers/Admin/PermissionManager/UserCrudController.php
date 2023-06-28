@@ -234,61 +234,56 @@ class UserCrudController extends CrudController
 
     protected function addTelephonyFields()
     {
-        $this->crud->addField([
-            'name' => 'uiscom_token',
-            'label' => 'Токен',
-            'tab' => 'Телефония',
-            'wrapper' => [
-                'class' => 'form-group col-md-12'
-            ]
-        ]);
-
-        $this->crud->addField([
-            'name' => 'uiscom_virtual_number',
-            'label' => 'Виртуальный номер',
-            'tab' => 'Телефония',
-            'wrapper' => [
-                'class' => 'form-group col-md-6'
-            ]
-        ]);
-
-        $this->crud->addField([
-            'name' => 'uiscom_employee_id',
-            'label' => 'Идентификатор менеджера',
-            'tab' => 'Телефония',
-            'wrapper' => [
-                'class' => 'form-group col-md-6'
-            ]
-        ]);
-        $this->crud->addField([
-            'name' => 'separator_first',
-            'type' => 'custom_html',
-            'tab' => 'Телефония',
-            'value' => '<hr>'
-        ]);
-
-
-        $this->crud->addField([
-            'name' => 'user_telephony_auth',
-            'type' => 'user_telephony_auth',
-            'tab' => 'Телефония',
-            'wrapper' => [
-                'class' => 'form-group col-md-12'
-            ]
-        ]);
-
-        $this->crud->addField([
-            'name' => 'separator_second',
-            'type' => 'custom_html',
-            'tab' => 'Телефония',
-            'value' => '<hr>'
-        ]);
-
-        $this->crud->addField([
-            'name' => 'helper',
-            'type' => 'custom_html',
-            'tab' => 'Телефония',
-            'value' => '<div>
+        $this->crud->addFields([
+            [
+                'name' => 'uiscom_token',
+                'label' => 'Токен',
+                'tab' => 'Телефония',
+                'wrapper' => [
+                    'class' => 'form-group col-md-12'
+                ]
+            ],
+            [
+                'name' => 'uiscom_virtual_number',
+                'label' => 'Виртуальный номер',
+                'tab' => 'Телефония',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ]
+            ],
+            [
+                'name' => 'uiscom_employee_id',
+                'label' => 'Идентификатор менеджера',
+                'tab' => 'Телефония',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ]
+            ],
+            [
+                'name' => 'separator_first',
+                'type' => 'custom_html',
+                'tab' => 'Телефония',
+                'value' => '<hr>'
+            ],
+            [
+                'name' => 'user_telephony_auth',
+                'type' => 'user_telephony_auth',
+                'tab' => 'Телефония',
+                'wrapper' => [
+                    'class' => 'form-group col-md-12'
+                ]
+            ],
+            [
+                'name' => 'separator_second',
+                'type' => 'custom_html',
+                'tab' => 'Телефония',
+                'value' => '<hr>'
+            ],
+            [
+                'name' => 'helper',
+                'type' => 'custom_html',
+                'tab' => 'Телефония',
+                'value' => '<div>
                             1. Как получить токен
                             <br>
                             <img style="width: 450px" src="/assets/images/info/uiscom_get_token.png"/>
@@ -299,6 +294,7 @@ class UserCrudController extends CrudController
                             <br>
                         </div>
             '
+            ]
         ]);
     }
 

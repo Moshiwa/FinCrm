@@ -1,17 +1,19 @@
 <template>
-    <el-form-item label="Логин">
-        <el-input
-            v-model="login"
-            autocomplete="off"
-        />
-    </el-form-item>
-    <el-form-item label="Пароль">
-        <el-input
-            v-model="password"
-            autocomplete="off"
-        />
-    </el-form-item>
-    <el-button @click="getManagerId">Отправить</el-button>
+    <div>
+        <el-form-item label="Логин">
+            <el-input
+                v-model="login"
+                autocomplete="off"
+            />
+        </el-form-item>
+        <el-form-item label="Пароль">
+            <el-input
+                v-model="password"
+                autocomplete="off"
+            />
+        </el-form-item>
+        <el-button @click="getManagerId">Отправить</el-button>
+    </div>
 </template>
 
 <script>

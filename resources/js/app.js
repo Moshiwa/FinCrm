@@ -47,5 +47,18 @@ if (document.getElementById("vue-app")) {
         app.component(key, component)
     }
 
+    //Если два или более компонента на странице
+    if (document.getElementById('vue-app--token-generate')) {
+        const app = createApp({})
+            .use(ElementPlus)
+            .mixin({
+                components: {
+                    DetailUserTokenGenerate,
+                }
+            });
+        app.mount('#vue-app--token-generate')
+    }
+
+
     app.mount('#vue-app')
 }
