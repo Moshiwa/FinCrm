@@ -18,7 +18,6 @@
             <div v-else>
                 <a :href="file.full_path" target="_blank">
                     <i class="las la-file-alt"></i>
-                    efew
                     {{ file.original_name }}
                 </a>
             </div>
