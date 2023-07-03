@@ -7,8 +7,10 @@ use App\Http\Requests\Api\DealRequest;
 use App\Http\Resources\DealResource;
 use App\Models\Client;
 use App\Models\Deal;
+use App\Models\Field;
 use App\Models\Stage;
 use App\Services\Deal\DealService;
+use App\Services\Field\FieldService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -47,7 +49,8 @@ class DealController extends Controller
         $service->createNewMessage($deal, $comment_data);
         $service->updateComments($deal, $data);
 
-        $deal->fields()->sync($data['fields'] ?? []);
+        $fields = FieldService::prepareFieldsForSaveApi(Field::includedDeal()->get(), $data['fields']);
+        $deal->fields()->sync($fields ?? []);
 
         return DealResource::make($deal);
     }

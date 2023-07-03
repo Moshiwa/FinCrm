@@ -8,69 +8,6 @@ use Illuminate\Support\Str;
 
 class FieldService
 {
-    /*public function getClientFields($client): array
-    {
-        $included_fields = Field::includedClient()->get();
-        $filled_client_fields = $client->fields->toArray();
-        $all_client_fields = $included_fields->toArray();
-
-        $fields = [];
-        foreach ($all_client_fields as $index => $client_field) {
-            $client_field['pivot'] = [ 'value' => '' ];
-            $fields[$index] = $client_field;
-            foreach ($filled_client_fields as $filled_client_field) {
-                if ($client_field['id'] === $filled_client_field['id']) {
-                    $filled_client_field['pivot']['value'] = $this->castFieldValue($filled_client_field);
-                    $fields[$index] = $filled_client_field;
-                }
-            }
-        }
-
-        return $fields;
-    }
-
-    public function getDealFields($deal): array
-    {
-        $included_fields = Field::includedDeal()->get();
-        $filled_deal_fields = $deal->fields->toArray();
-        $all_deal_fields = $included_fields->toArray();
-
-        $fields = [];
-        foreach ($all_deal_fields as $index => $deal_field) {
-            $deal_field['pivot'] = [ 'value' => '' ];
-            $fields[$index] = $deal_field;
-            foreach ($filled_deal_fields as $filled_deal_field) {
-                if ($deal_field['id'] === $filled_deal_field['id']) {
-                    $filled_deal_field['pivot']['value'] = $this->castFieldValue($filled_deal_field);
-                    $fields[$index] = $filled_deal_field;
-                }
-            }
-        }
-
-        return $fields;
-    }
-
-    public function getTaskFields($task): array
-    {
-        $included_fields = Field::includedTask()->get();
-        $filled_task_fields = $task->fields->toArray();
-        $all_task_fields = $included_fields->toArray();
-
-        $fields = [];
-        foreach ($all_task_fields as $index => $task_field) {
-            $task_field['pivot'] = [ 'value' => '' ];
-            $fields[$index] = $task_field;
-            foreach ($filled_task_fields as $filled_task_field) {
-                if ($task_field['id'] === $filled_task_field['id']) {
-                    $filled_task_field['pivot']['value'] = $this->castFieldValue($filled_task_field);
-                    $fields[$index] = $filled_task_field;
-                }
-            }
-        }
-
-        return $fields;
-    }*/
-
     public static function getEntityFromRequest($request): FieldsEntitiesEnum
     {
         $request_entity = $request->get('entity');
@@ -92,14 +29,34 @@ class FieldService
         return empty($entity) ? FieldsEntitiesEnum::deal : $entity;
     }
 
-    /*private function castFieldValue($field)
+    public static function prepareFieldsForSaveApi($all_fields, $api_fields)
     {
-        $result = $field['pivot']['value'];
+        $fields = [];
+        foreach ($all_fields as $field) {
+            $type = $field->type?->name ?? '';
+            foreach ($api_fields as $api_field_id => $api_field) {
+                if ($api_field_id == $field->id) {
+                    //Подгонка данных под селект
+                    if ($type === 'select') {
+                        $options = $field->options;
+                        foreach ($options as $option) {
+                            $option = strtolower($option['value'] ?? '');
+                            $api_value = strtolower($api_field['value'] ?? '');
+                            if ($option === $api_value) {
+                                $fields[$field->id] = [
+                                    'value' => $api_field['value'] ?? ''
+                                ];
+                            }
+                        }
+                    } else {
+                        $fields[$field->id] = [
+                            'value' => $api_field['value'] ?? ''
+                        ];
+                    }
+                }
+            }
+        }
 
-        return match ($field['type']['name']) {
-            'checkbox' => !($result === 'false'),
-            'number' => (int) $result,
-            default => $result,
-        };
-    }*/
+        return $fields;
+    }
 }

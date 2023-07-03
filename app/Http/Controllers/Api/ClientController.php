@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\ClientRequest;
 use App\Http\Resources\ClientResource;
 use App\Models\Client;
+use App\Models\Field;
+use App\Services\Field\FieldService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -33,7 +35,8 @@ class ClientController extends Controller
             ]);
         }
 
-        $client->fields()->sync($data['fields'] ?? []);
+        $fields = FieldService::prepareFieldsForSaveApi(Field::includedClient()->get(), $data['fields']);
+        $client->fields()->sync($fields ?? []);
 
         return ClientResource::make($client);
     }
