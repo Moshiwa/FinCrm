@@ -49,8 +49,8 @@ class DealController extends Controller
         $service->createNewMessage($deal, $comment_data);
         $service->updateComments($deal, $data);
 
-        $fields = FieldService::prepareFieldsForSaveApi(Field::includedDeal()->get(), $data['fields']);
-        $deal->fields()->sync($fields ?? []);
+        //$fields = FieldService::prepareFieldsForSaveApi(Field::includedDeal()->get(), $data['fields']);
+        $deal->fields()->sync($data['fields'] ?? []);
 
         return DealResource::make($deal);
     }

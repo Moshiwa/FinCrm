@@ -35,8 +35,8 @@ class ClientController extends Controller
             ]);
         }
 
-        $fields = FieldService::prepareFieldsForSaveApi(Field::includedClient()->get(), $data['fields']);
-        $client->fields()->sync($fields ?? []);
+        //$fields = FieldService::prepareFieldsForSaveApi(Field::includedClient()->get(), $data['fields']);
+        $client->fields()->sync($data['fields'] ?? []);
 
         return ClientResource::make($client);
     }
