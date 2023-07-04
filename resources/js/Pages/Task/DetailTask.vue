@@ -344,34 +344,22 @@ export default {
             this.send();
         },
         deleteTask() {
-            ElMessageBox.confirm(
-                'Вы уверены?',
-                'Удалить задачу',
-                {
-                    confirmButtonText: 'Хорошо',
-                    cancelButtonText: 'Отмена',
-                    type: 'warning',
-                }
-            )
-            .then(() => {
-                axios
-                    .delete('/admin/task/' + this.thisTask.id)
-                    .then((response) => {
-                        location.href = '/admin/task/';
-                    })
-                    .catch((response) => {
-                        if (!!response.response?.data?.errors) {
-                            response.response.data.errors.forEach((error) => {
-                                ElNotification({
-                                    title: error,
-                                    type: 'error',
-                                    position: 'bottom-right',
-                                });
+            axios
+                .delete('/admin/task/' + this.thisTask.id)
+                .then((response) => {
+                    location.href = '/admin/task/';
+                })
+                .catch((response) => {
+                    if (!!response.response?.data?.errors) {
+                        response.response.data.errors.forEach((error) => {
+                            ElNotification({
+                                title: error,
+                                type: 'error',
+                                position: 'bottom-right',
                             });
-                        }
-                    });
-                }
-            );
+                        });
+                    }
+                });
         },
         send() {
             let formData = this.taskFormData(this.thisTask, this.action, this.deleteCommentId)
