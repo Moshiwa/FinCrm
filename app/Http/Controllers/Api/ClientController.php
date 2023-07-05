@@ -27,6 +27,7 @@ class ClientController extends Controller
 
     public function update(ClientRequest $request, Client $client): ClientResource
     {
+
         $data = $request->validated();
 
         if (! empty($data['name'])) {
